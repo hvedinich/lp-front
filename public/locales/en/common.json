@@ -1,0 +1,125 @@
+{
+  "app": {
+    "title": "LP",
+    "subtitle": "Form template: React Hook Form + Zod + Chakra v3 field primitives.",
+    "language": "Language",
+    "locale": {
+      "en": "English",
+      "pl": "Polish",
+      "ru": "Russian"
+    }
+  },
+  "workspace": {
+    "title": "Workspace",
+    "menuTitle": "Navigation",
+    "openMenu": "Open Menu",
+    "closeMenu": "Close Menu",
+    "menu": {
+      "reviews": "Reviews",
+      "surveys": "Surveys",
+      "scans": "Scans",
+      "campaigns": "Campaigns",
+      "locations": "Locations"
+    },
+    "sections": {
+      "reviews": {
+        "title": "Reviews",
+        "description": "Manage review collection flows and templates.",
+        "emptyState": "Review tools will appear in this section."
+      },
+      "surveys": {
+        "title": "Surveys",
+        "description": "Create and monitor survey programs for your audience.",
+        "emptyState": "Survey management widgets will be added here."
+      },
+      "scans": {
+        "title": "Scans",
+        "description": "Configure scan points and track engagement events.",
+        "emptyState": "Scan analytics and setup controls will be available here."
+      },
+      "campaigns": {
+        "title": "Campaigns",
+        "description": "Build outreach campaigns and track delivery quality.",
+        "emptyState": "Campaign tools are planned for this section."
+      },
+      "locations": {
+        "title": "Locations",
+        "description": "Configure business locations and map channels to them.",
+        "emptyState": "Location configuration modules will appear here."
+      }
+    }
+  },
+  "form": {
+    "companyNameLabel": "Company Name",
+    "companyNamePlaceholder": "Acme Inc",
+    "contactEmailLabel": "Contact Email",
+    "contactEmailPlaceholder": "owner@acme.com",
+    "distributionChannelLabel": "Distribution Channel",
+    "distributionChannels": {
+      "email": "Email Campaign",
+      "sms": "SMS Campaign",
+      "qr": "QR / Scan Campaign"
+    },
+    "includeNpsLabel": "Include NPS block",
+    "includeNpsHelper": "Adds a recommendation score question to the survey",
+    "notesLabel": "Campaign Notes",
+    "notesPlaceholder": "Any specifics for this campaign...",
+    "optional": "Optional",
+    "saveDraft": "Save Draft",
+    "submittedPayloadPreview": "Submitted payload preview:",
+    "submitToPreview": "Submit the form to preview data",
+    "validation": {
+      "companyNameMin": "Company name must be at least 2 characters",
+      "contactEmailInvalid": "Enter a valid email",
+      "notesMax": "Maximum 500 characters"
+    }
+  },
+  "signup": {
+    "title": "Create Account",
+    "subtitle": "Register and start working with reviews, surveys, scans, campaigns, and locations.",
+    "submit": "Sign Up",
+    "successTitle": "Account created successfully",
+    "successDescription": "Welcome, {{name}}. Authentication cookies were set by the server.",
+    "errorFallback": "Unable to create account. Please try again.",
+    "fields": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "nameLabel": "User Name",
+      "namePlaceholder": "John Doe",
+      "languageLabel": "Language",
+      "accountNameLabel": "Account Name",
+      "accountNamePlaceholder": "Main Account",
+      "regionLabel": "Region",
+      "contentLanguageLabel": "Account Content Language"
+    },
+    "regions": {
+      "us": "United States",
+      "pl": "Poland",
+      "ru": "Russia"
+    },
+    "validation": {
+      "emailInvalid": "Enter a valid email",
+      "passwordMin": "Password must be at least 8 characters",
+      "nameMin": "Name must be at least 2 characters",
+      "accountNameMin": "Account name must be at least 2 characters"
+    }
+  },
+  "login": {
+    "title": "Sign In",
+    "subtitle": "Log in to access your account workspace.",
+    "submit": "Log In",
+    "errorFallback": "Unable to log in. Please try again.",
+    "fields": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters"
+    },
+    "validation": {
+      "emailInvalid": "Enter a valid email",
+      "passwordMin": "Password must be at least 8 characters"
+    }
+  }
+}

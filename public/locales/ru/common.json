@@ -1,0 +1,125 @@
+{
+  "app": {
+    "title": "LP",
+    "subtitle": "Шаблон формы: React Hook Form + Zod + полевые примитивы Chakra v3.",
+    "language": "Язык",
+    "locale": {
+      "en": "Английский",
+      "pl": "Польский",
+      "ru": "Русский"
+    }
+  },
+  "workspace": {
+    "title": "Рабочее пространство",
+    "menuTitle": "Навигация",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню",
+    "menu": {
+      "reviews": "Отзывы",
+      "surveys": "Опросы",
+      "scans": "Сканы",
+      "campaigns": "Кампании",
+      "locations": "Локации"
+    },
+    "sections": {
+      "reviews": {
+        "title": "Отзывы",
+        "description": "Управляйте сценариями сбора отзывов и шаблонами.",
+        "emptyState": "Инструменты по отзывам появятся в этом разделе."
+      },
+      "surveys": {
+        "title": "Опросы",
+        "description": "Создавайте и отслеживайте опросные программы для вашей аудитории.",
+        "emptyState": "Виджеты управления опросами будут добавлены здесь."
+      },
+      "scans": {
+        "title": "Сканы",
+        "description": "Настраивайте точки сканирования и отслеживайте события вовлечения.",
+        "emptyState": "Аналитика и настройки сканов будут доступны здесь."
+      },
+      "campaigns": {
+        "title": "Кампании",
+        "description": "Создавайте рассылки и контролируйте качество доставки.",
+        "emptyState": "Инструменты кампаний запланированы для этого раздела."
+      },
+      "locations": {
+        "title": "Локации",
+        "description": "Настраивайте бизнес-локации и привязывайте к ним каналы.",
+        "emptyState": "Модули конфигурации локаций появятся здесь."
+      }
+    }
+  },
+  "form": {
+    "companyNameLabel": "Название компании",
+    "companyNamePlaceholder": "Acme Inc",
+    "contactEmailLabel": "Контактный e-mail",
+    "contactEmailPlaceholder": "owner@acme.com",
+    "distributionChannelLabel": "Канал рассылки",
+    "distributionChannels": {
+      "email": "E-mail кампания",
+      "sms": "SMS кампания",
+      "qr": "QR / скан кампания"
+    },
+    "includeNpsLabel": "Добавить блок NPS",
+    "includeNpsHelper": "Добавляет вопрос с оценкой лояльности в опрос",
+    "notesLabel": "Заметки по кампании",
+    "notesPlaceholder": "Дополнительные детали кампании...",
+    "optional": "Необязательно",
+    "saveDraft": "Сохранить черновик",
+    "submittedPayloadPreview": "Предпросмотр отправленных данных:",
+    "submitToPreview": "Отправьте форму, чтобы увидеть данные",
+    "validation": {
+      "companyNameMin": "Название компании должно содержать минимум 2 символа",
+      "contactEmailInvalid": "Введите корректный e-mail",
+      "notesMax": "Максимум 500 символов"
+    }
+  },
+  "signup": {
+    "title": "Создать аккаунт",
+    "subtitle": "Зарегистрируйтесь и начните работать с отзывами, опросами, сканами, кампаниями и локациями.",
+    "submit": "Зарегистрироваться",
+    "successTitle": "Аккаунт успешно создан",
+    "successDescription": "Добро пожаловать, {{name}}. Сервер установил auth cookies.",
+    "errorFallback": "Не удалось создать аккаунт. Попробуйте снова.",
+    "fields": {
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "Минимум 8 символов",
+      "nameLabel": "Имя пользователя",
+      "namePlaceholder": "Иван Иванов",
+      "languageLabel": "Язык",
+      "accountNameLabel": "Название аккаунта",
+      "accountNamePlaceholder": "Основной аккаунт",
+      "regionLabel": "Регион",
+      "contentLanguageLabel": "Язык контента аккаунта"
+    },
+    "regions": {
+      "us": "США",
+      "pl": "Польша",
+      "ru": "Россия"
+    },
+    "validation": {
+      "emailInvalid": "Введите корректный e-mail",
+      "passwordMin": "Пароль должен содержать минимум 8 символов",
+      "nameMin": "Имя должно содержать минимум 2 символа",
+      "accountNameMin": "Название аккаунта должно содержать минимум 2 символа"
+    }
+  },
+  "login": {
+    "title": "Вход",
+    "subtitle": "Войдите, чтобы получить доступ к рабочему пространству аккаунта.",
+    "submit": "Войти",
+    "errorFallback": "Не удалось выполнить вход. Попробуйте снова.",
+    "fields": {
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "Минимум 8 символов"
+    },
+    "validation": {
+      "emailInvalid": "Введите корректный e-mail",
+      "passwordMin": "Пароль должен содержать минимум 8 символов"
+    }
+  }
+}

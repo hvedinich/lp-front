@@ -1,0 +1,125 @@
+{
+  "app": {
+    "title": "LP",
+    "subtitle": "Szablon formularza: React Hook Form + Zod + prymitywy pól Chakra v3.",
+    "language": "Język",
+    "locale": {
+      "en": "Angielski",
+      "pl": "Polski",
+      "ru": "Rosyjski"
+    }
+  },
+  "workspace": {
+    "title": "Obszar roboczy",
+    "menuTitle": "Nawigacja",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "menu": {
+      "reviews": "Opinie",
+      "surveys": "Ankiety",
+      "scans": "Skany",
+      "campaigns": "Kampanie",
+      "locations": "Lokalizacje"
+    },
+    "sections": {
+      "reviews": {
+        "title": "Opinie",
+        "description": "Zarządzaj przepływami zbierania opinii i szablonami.",
+        "emptyState": "Narzędzia opinii pojawią się w tej sekcji."
+      },
+      "surveys": {
+        "title": "Ankiety",
+        "description": "Twórz i monitoruj programy ankietowe dla odbiorców.",
+        "emptyState": "Widżety zarządzania ankietami zostaną dodane tutaj."
+      },
+      "scans": {
+        "title": "Skany",
+        "description": "Konfiguruj punkty skanowania i śledź zdarzenia zaangażowania.",
+        "emptyState": "Analityka i ustawienia skanów będą dostępne tutaj."
+      },
+      "campaigns": {
+        "title": "Kampanie",
+        "description": "Buduj kampanie i monitoruj jakość dostarczania.",
+        "emptyState": "Narzędzia kampanii są planowane dla tej sekcji."
+      },
+      "locations": {
+        "title": "Lokalizacje",
+        "description": "Konfiguruj lokalizacje firmy i mapuj do nich kanały.",
+        "emptyState": "Moduły konfiguracji lokalizacji pojawią się tutaj."
+      }
+    }
+  },
+  "form": {
+    "companyNameLabel": "Nazwa firmy",
+    "companyNamePlaceholder": "Acme Inc",
+    "contactEmailLabel": "E-mail kontaktowy",
+    "contactEmailPlaceholder": "owner@acme.com",
+    "distributionChannelLabel": "Kanał dystrybucji",
+    "distributionChannels": {
+      "email": "Kampania e-mail",
+      "sms": "Kampania SMS",
+      "qr": "Kampania QR / skany"
+    },
+    "includeNpsLabel": "Dodaj blok NPS",
+    "includeNpsHelper": "Dodaje pytanie o wynik rekomendacji do ankiety",
+    "notesLabel": "Notatki kampanii",
+    "notesPlaceholder": "Dodatkowe szczegóły kampanii...",
+    "optional": "Opcjonalnie",
+    "saveDraft": "Zapisz szkic",
+    "submittedPayloadPreview": "Podgląd wysłanych danych:",
+    "submitToPreview": "Wyślij formularz, aby zobaczyć podgląd danych",
+    "validation": {
+      "companyNameMin": "Nazwa firmy musi mieć co najmniej 2 znaki",
+      "contactEmailInvalid": "Wprowadź poprawny adres e-mail",
+      "notesMax": "Maksymalnie 500 znaków"
+    }
+  },
+  "signup": {
+    "title": "Utwórz konto",
+    "subtitle": "Zarejestruj się i zarządzaj opiniami, ankietami, skanami, kampaniami oraz lokalizacjami.",
+    "submit": "Zarejestruj się",
+    "successTitle": "Konto zostało utworzone",
+    "successDescription": "Witaj, {{name}}. Serwer ustawił cookies autoryzacyjne.",
+    "errorFallback": "Nie udało się utworzyć konta. Spróbuj ponownie.",
+    "fields": {
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Minimum 8 znaków",
+      "nameLabel": "Nazwa użytkownika",
+      "namePlaceholder": "Jan Kowalski",
+      "languageLabel": "Język",
+      "accountNameLabel": "Nazwa konta",
+      "accountNamePlaceholder": "Główne konto",
+      "regionLabel": "Region",
+      "contentLanguageLabel": "Język treści konta"
+    },
+    "regions": {
+      "us": "Stany Zjednoczone",
+      "pl": "Polska",
+      "ru": "Rosja"
+    },
+    "validation": {
+      "emailInvalid": "Wprowadź poprawny adres e-mail",
+      "passwordMin": "Hasło musi mieć co najmniej 8 znaków",
+      "nameMin": "Nazwa musi mieć co najmniej 2 znaki",
+      "accountNameMin": "Nazwa konta musi mieć co najmniej 2 znaki"
+    }
+  },
+  "login": {
+    "title": "Zaloguj się",
+    "subtitle": "Zaloguj się, aby uzyskać dostęp do swojego konta.",
+    "submit": "Zaloguj",
+    "errorFallback": "Nie udało się zalogować. Spróbuj ponownie.",
+    "fields": {
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "user@example.com",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Minimum 8 znaków"
+    },
+    "validation": {
+      "emailInvalid": "Wprowadź poprawny adres e-mail",
+      "passwordMin": "Hasło musi mieć co najmniej 8 znaków"
+    }
+  }
+}
