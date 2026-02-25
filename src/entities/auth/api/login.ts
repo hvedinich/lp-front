@@ -1,5 +1,6 @@
 import type { LoginPayload, LoginResponse } from '../model/types';
 import { apiUrl, authPaths, parseErrorMessage } from './constants';
+import { tokenStorage } from '../lib/tokenStorage';
 
 export const loginUser = async (payload: LoginPayload): Promise<LoginResponse> => {
   const response = await fetch(`${apiUrl}${authPaths.login}`, {
@@ -24,5 +25,12 @@ export const loginUser = async (payload: LoginPayload): Promise<LoginResponse> =
     throw new Error(errorMessage ?? 'Request failed');
   }
 
-  return (await response.json()) as LoginResponse;
+  const data = (await response.json()) as LoginResponse;
+
+  // Save access token to localStorage
+  if (data.accessToken) {
+    tokenStorage.setToken(data.accessToken);
+  }
+
+  return data;
 };

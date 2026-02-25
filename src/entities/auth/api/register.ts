@@ -1,5 +1,6 @@
 import type { RegisterPayload, RegisterResponse } from '../model/types';
 import { apiUrl, authPaths, parseErrorMessage } from './constants';
+import { tokenStorage } from '../lib/tokenStorage';
 
 export const registerUser = async (payload: RegisterPayload): Promise<RegisterResponse> => {
   const response = await fetch(`${apiUrl}${authPaths.register}`, {
@@ -24,5 +25,12 @@ export const registerUser = async (payload: RegisterPayload): Promise<RegisterRe
     throw new Error(errorMessage ?? 'Request failed');
   }
 
-  return (await response.json()) as RegisterResponse;
+  const data = (await response.json()) as RegisterResponse;
+
+  // Save access token to localStorage
+  if (data.accessToken) {
+    tokenStorage.setToken(data.accessToken);
+  }
+
+  return data;
 };
