@@ -1,8 +1,8 @@
-# LP Repository Architecture Rules
+# LP Application Architecture Rules
 
 ## 1. Scope
 
-This document defines architecture rules for `apps/lp` only:
+This document defines architecture rules for the LP application:
 
 - Feature-Sliced Design (FSD) layer boundaries
 - import/export policy
@@ -70,13 +70,13 @@ Cross-slice imports must use slice public API (`index.ts`).
 Valid:
 
 ```ts
-import { useReviewsQuery } from "@/entities/review";
+import { useReviewsQuery } from '@/entities/review';
 ```
 
 Invalid:
 
 ```ts
-import { useReviewsQuery } from "@/entities/review/model/useReviewsQuery";
+import { useReviewsQuery } from '@/entities/review/model/useReviewsQuery';
 ```
 
 ### 5.2 No layer leakage

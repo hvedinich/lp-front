@@ -1,8 +1,1 @@
-export {
-  Form,
-  CheckboxField,
-  InputField,
-  SelectField,
-  TextareaField,
-  FormFieldMeta,
-} from './form';
+export { Form, CheckboxField, InputField, SelectField, TextareaField, FormFieldMeta } from './form';

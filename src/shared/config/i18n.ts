@@ -23,9 +23,7 @@ const parseLanguages = (value: string | undefined): AppLanguage[] => {
   const parsed = value
     .split(',')
     .map((language) => language.trim())
-    .filter((language): language is AppLanguage =>
-      allLanguages.includes(language as AppLanguage),
-    );
+    .filter((language): language is AppLanguage => allLanguages.includes(language as AppLanguage));
 
   if (!parsed.length) {
     return [...allLanguages];
