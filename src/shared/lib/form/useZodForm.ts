@@ -8,8 +8,10 @@ import {
 } from 'react-hook-form';
 import { z } from 'zod';
 
-export interface UseZodFormOptions<TFormValues extends FieldValues>
-  extends Omit<UseFormProps<TFormValues>, 'resolver'> {
+export interface UseZodFormOptions<TFormValues extends FieldValues> extends Omit<
+  UseFormProps<TFormValues>,
+  'resolver'
+> {
   schema: z.ZodTypeAny;
 }
 

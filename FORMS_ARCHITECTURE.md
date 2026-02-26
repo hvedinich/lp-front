@@ -2,7 +2,7 @@
 
 ## 1. Goal
 
-Define one standard way to build forms in `apps/lp` with:
+Define one standard way to build forms in the LP application with:
 
 - Chakra UI v3 inputs
 - typed validation
@@ -83,9 +83,21 @@ const methods = useZodForm({
 });
 
 return (
-  <Form methods={methods} onSubmit={onSubmit}>
-    <InputField name='companyName' label='Company Name' isRequired />
-    <InputField name='contactEmail' label='Contact Email' type='email' isRequired />
+  <Form
+    methods={methods}
+    onSubmit={onSubmit}
+  >
+    <InputField
+      name='companyName'
+      label='Company Name'
+      isRequired
+    />
+    <InputField
+      name='contactEmail'
+      label='Contact Email'
+      type='email'
+      isRequired
+    />
     <Button type='submit'>Save</Button>
   </Form>
 );

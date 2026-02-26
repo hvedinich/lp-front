@@ -120,7 +120,9 @@ export default function SignupPage() {
               p={4}
             >
               <Text fontWeight='semibold'>{t('signup.successTitle')}</Text>
-              <Text color='fg.muted'>{t('signup.successDescription', { name: registeredUser.name })}</Text>
+              <Text color='fg.muted'>
+                {t('signup.successDescription', { name: registeredUser.name })}
+              </Text>
             </Box>
           ) : null}
 
