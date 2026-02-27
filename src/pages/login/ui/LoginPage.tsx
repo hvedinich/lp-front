@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Card, Center, Flex, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -63,7 +63,7 @@ export default function LoginPage() {
   if (isCheckingSession) {
     return (
       <Center
-        minH='100dvh'
+        minH='dvh'
         width='full'
       >
         <Spinner size='lg' />
@@ -73,33 +73,43 @@ export default function LoginPage() {
 
   return (
     <Flex
-      minH='100vh'
+      minH='dvh'
       align='center'
       justify='center'
-      p={6}
+      p='6'
+      bg='bg.gradient.hero'
     >
-      <Box
+      <Card.Root
         width='full'
-        maxW='lg'
-        borderWidth='1px'
-        borderRadius='xl'
-        p={8}
+        maxW='xl'
+        p={{ base: '6', md: '12' }}
+        variant='elevated'
       >
-        <Stack gap={6}>
-          <Stack gap={2}>
+        <Stack gap='6'>
+          <Stack
+            gap='1'
+            align='center'
+            textAlign='center'
+          >
             <Heading size='2xl'>{t('login.title')}</Heading>
-            <Text color='fg.muted'>{t('login.subtitle')}</Text>
+            <Text
+              color='fg.muted'
+              fontSize='sm'
+              textAlign='center'
+            >
+              {t('login.subtitle')}
+            </Text>
           </Stack>
 
           {requestError ? (
             <Box
-              borderWidth='1px'
-              borderRadius='lg'
-              borderColor='red.300'
-              bg='red.50'
-              p={4}
+              borderWidth='[1px]'
+              borderRadius='card'
+              borderColor='border.error'
+              bg='bg.error'
+              p='4'
             >
-              <Text color='red.700'>{requestError}</Text>
+              <Text color='fg.error'>{requestError}</Text>
             </Box>
           ) : null}
 
@@ -127,12 +137,14 @@ export default function LoginPage() {
               type='submit'
               loading={methods.formState.isSubmitting || isLoginPending}
               width='full'
+              marginTop='8'
+              colorPalette='black'
             >
               {t('login.submit')}
             </Button>
           </Form>
         </Stack>
-      </Box>
+      </Card.Root>
     </Flex>
   );
 }

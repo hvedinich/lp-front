@@ -8,14 +8,17 @@
   },
   "scripts": {
     "preinstall": "npx only-allow npm",
+    "postinstall": "chakra typegen src/shared/config/theme/index.ts",
+    "typegen": "chakra typegen src/shared/config/theme/index.ts",
     "dev": "next dev --port 4000",
     "build": "next build",
     "start": "next start --port 4000",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "tc": "tsc --noEmit",
+    "tc": "npm run typegen && tsc --noEmit",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,md}\"",
+    "fix": "npm run lint:fix && npm run format",
     "validate": "npm run tc && npm run lint && npm run format:check",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -35,6 +38,7 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^3.33.0",
     "@types/node": "25.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

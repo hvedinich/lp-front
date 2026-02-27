@@ -30,7 +30,7 @@ const Form = <TFormValues extends FieldValues>({
       >
         <Stack
           width='full'
-          gap={4}
+          gap='4'
           {...layoutProps}
         >
           {children}

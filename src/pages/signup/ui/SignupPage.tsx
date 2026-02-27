@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Card, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -81,45 +81,61 @@ export default function SignupPage() {
 
   return (
     <Flex
-      minH='100vh'
+      minH='dvh'
       align='center'
       justify='center'
-      p={6}
+      p='6'
+      bg='bg.gradient.hero'
     >
-      <Box
+      <Card.Root
         width='full'
         maxW='xl'
-        borderWidth='1px'
-        borderRadius='xl'
-        p={8}
+        p={{ base: '6', md: '12' }}
+        variant='elevated'
       >
-        <Stack gap={6}>
-          <Stack gap={2}>
+        <Stack gap='6'>
+          <Stack
+            gap='1'
+            align='center'
+            textAlign='center'
+          >
             <Heading size='2xl'>{t('signup.title')}</Heading>
-            <Text color='fg.muted'>{t('signup.subtitle')}</Text>
+            <Text
+              color='fg.muted'
+              fontSize='sm'
+              textAlign='center'
+              maxW='sm'
+            >
+              {t('signup.subtitle')}
+            </Text>
           </Stack>
 
           {requestError ? (
             <Box
-              borderWidth='1px'
-              borderRadius='lg'
-              borderColor='red.300'
-              bg='red.50'
-              p={4}
+              borderWidth='thin'
+              borderRadius='card'
+              borderColor='border.error'
+              bg='bg.error'
+              p='4'
             >
-              <Text color='red.700'>{requestError}</Text>
+              <Text color='fg.error'>{requestError}</Text>
             </Box>
           ) : null}
 
           {registeredUser ? (
             <Box
-              borderWidth='1px'
-              borderRadius='lg'
-              borderColor='green.300'
-              bg='green.50'
-              p={4}
+              borderWidth='thin'
+              borderRadius='card'
+              borderColor='border.default'
+              bg='bg.success'
+              p='4'
             >
-              <Text fontWeight='semibold'>{t('signup.successTitle')}</Text>
+              <Text
+                fontWeight='semibold'
+                color='fg.success'
+              >
+                {t('signup.successTitle')}
+              </Text>
               <Text color='fg.muted'>
                 {t('signup.successDescription', { name: registeredUser.name })}
               </Text>
@@ -185,12 +201,13 @@ export default function SignupPage() {
               type='submit'
               loading={methods.formState.isSubmitting || isRegisterPending}
               width='full'
+              marginTop='8'
             >
               {t('signup.submit')}
             </Button>
           </Form>
         </Stack>
-      </Box>
+      </Card.Root>
     </Flex>
   );
 }

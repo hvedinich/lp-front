@@ -72,13 +72,13 @@ export default function HomePage() {
 
   return (
     <Stack
-      gap={5}
+      gap='5'
       maxW='3xl'
     >
       <Heading size='4xl'>{t(`workspace.sections.${activeSection}.title`)}</Heading>
       <Text color='fg.muted'>{t(`workspace.sections.${activeSection}.description`)}</Text>
 
-      <Stack gap={3}>
+      <Stack gap='3'>
         <Text fontWeight='medium'>{t('app.language')}</Text>
         <ButtonGroup>
           {availableLocales.map((locale) => (
@@ -138,7 +138,8 @@ export default function HomePage() {
             <Button
               type='submit'
               loading={methods.formState.isSubmitting}
-              width='fit-content'
+              width='[fit-content]'
+              colorPalette='brand'
             >
               {t('form.saveDraft')}
             </Button>
@@ -146,11 +147,11 @@ export default function HomePage() {
 
           <Separator />
 
-          <Stack gap={2}>
+          <Stack gap='2'>
             <Text fontWeight='medium'>{t('form.submittedPayloadPreview')}</Text>
             <Code
               display='block'
-              p={4}
+              p='4'
               whiteSpace='pre-wrap'
             >
               {submittedData ? JSON.stringify(submittedData, null, 2) : t('form.submitToPreview')}
@@ -159,11 +160,11 @@ export default function HomePage() {
         </>
       ) : (
         <Box
-          borderWidth='1px'
+          borderWidth='thin'
           borderColor='border.muted'
           borderRadius='xl'
-          bg='bg.panel'
-          p={6}
+          bg='bg.surface'
+          p='6'
         >
           <Text>{t(`workspace.sections.${activeSection}.emptyState`)}</Text>
         </Box>

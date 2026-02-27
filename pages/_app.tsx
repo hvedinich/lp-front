@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
-import { getPreferredLanguage, setAppLanguage } from '@/shared/config';
+import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
 import { MainPageLayout } from '@/widgets/mainLayout';
 
 function App({ Component, pageProps }: AppProps) {
@@ -26,7 +26,7 @@ function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={system}>
       <QueryClientProvider client={queryClient}>
         <MainPageLayout>
           <Component {...pageProps} />

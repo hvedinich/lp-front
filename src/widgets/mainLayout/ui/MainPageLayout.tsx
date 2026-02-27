@@ -17,7 +17,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
   if (isCheckingAuth) {
     return (
       <Center
-        minH='100dvh'
+        minH='[100dvh]'
         width='full'
       >
         <Spinner size='lg' />
@@ -26,12 +26,12 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
   }
 
   if (publicRoute) {
-    return <Box minH='100dvh'>{children}</Box>;
+    return <Box minH='[100dvh]'>{children}</Box>;
   }
 
   return (
     <Flex
-      h='100dvh'
+      h='[100dvh]'
       direction={{ base: 'column', md: 'row' }}
       bg='bg.subtle'
       overflow='hidden'
@@ -40,9 +40,9 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
       <Box
         as='main'
         flex='1'
-        minH='0'
+        minH='[0]'
         overflowY='auto'
-        p={{ base: 4, md: 8 }}
+        p={{ base: '4', md: '8' }}
       >
         {children}
       </Box>

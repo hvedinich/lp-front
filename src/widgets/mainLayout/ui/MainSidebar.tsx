@@ -61,17 +61,17 @@ export function MainSidebar() {
       <Box
         as='aside'
         display={{ base: 'none', md: 'block' }}
-        width={isDesktopMenuOpen ? '18rem' : '4rem'}
-        h='100dvh'
+        width={isDesktopMenuOpen ? '[18rem]' : '[4rem]'}
+        h='[100dvh]'
         overflowY='auto'
-        borderRightWidth='1px'
+        borderRightWidth='[1px]'
         borderColor='border.muted'
-        bg='bg.panel'
-        p={3}
-        transition='width 0.2s ease'
-        flexShrink={0}
+        bg='bg.surface'
+        p='3'
+        transition='[width 0.2s ease]'
+        flexShrink='[0]'
       >
-        <Stack gap={3}>
+        <Stack gap='3'>
           <Flex justify={isDesktopMenuOpen ? 'space-between' : 'center'}>
             {isDesktopMenuOpen ? <Heading size='lg'>{t('workspace.title')}</Heading> : null}
             <Button
@@ -84,7 +84,7 @@ export function MainSidebar() {
           </Flex>
 
           {isDesktopMenuOpen ? (
-            <Stack gap={2}>
+            <Stack gap='2'>
               <Text
                 color='fg.muted'
                 textTransform='uppercase'
@@ -94,7 +94,7 @@ export function MainSidebar() {
               >
                 {t('workspace.menuTitle')}
               </Text>
-              <Stack gap={1}>{menuButtons}</Stack>
+              <Stack gap='1'>{menuButtons}</Stack>
             </Stack>
           ) : null}
         </Stack>
@@ -102,16 +102,16 @@ export function MainSidebar() {
 
       <Box
         display={{ base: 'block', md: 'none' }}
-        borderBottomWidth='1px'
+        borderBottomWidth='[1px]'
         borderColor='border.muted'
-        bg='bg.panel'
+        bg='bg.surface'
       >
         <Flex
-          px={4}
-          py={3}
+          px='4'
+          py='3'
           align='center'
           justify='space-between'
-          gap={3}
+          gap='3'
         >
           <Heading size='md'>{t('workspace.title')}</Heading>
           <Button
@@ -124,15 +124,15 @@ export function MainSidebar() {
         </Flex>
 
         <Box
-          px={4}
-          pb={isMobileMenuOpen ? 4 : 0}
+          px='4'
+          pb={isMobileMenuOpen ? '4' : '[0]'}
           overflow='hidden'
-          maxH={isMobileMenuOpen ? '24rem' : '0'}
-          opacity={isMobileMenuOpen ? 1 : 0}
-          transform={isMobileMenuOpen ? 'translateY(0)' : 'translateY(-0.5rem)'}
-          transition='max-height 0.25s ease, opacity 0.25s ease, transform 0.25s ease, padding 0.25s ease'
+          maxH={isMobileMenuOpen ? '[24rem]' : '[0px]'}
+          opacity={isMobileMenuOpen ? '[1]' : '[0]'}
+          transform={isMobileMenuOpen ? 'translateY(0)' : '[translateY(-0.5rem)]'}
+          transition='[max-height 0.25s ease, opacity 0.25s ease, transform 0.25s ease, padding 0.25s ease]'
         >
-          <Stack gap={1}>{menuButtons}</Stack>
+          <Stack gap='1'>{menuButtons}</Stack>
         </Box>
       </Box>
     </>
