@@ -1,5 +1,17 @@
 # AI Agent Guidelines
 
+## Documentation references
+
+| Document                | Scope                                                                                                       |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `ARCHITECTURE.md`       | FSD layers, import/export policy, entity modelling, React Query standard, i18n infrastructure, auth routing |
+| `FORMS_ARCHITECTURE.md` | Form stack (RHF + Zod + Chakra v3), file layout, lifecycle, do/don't                                        |
+| `CONTRIBUTING.md`       | Dev setup, code style, naming, commit conventions, PR process                                               |
+
+This file (**AGENTS.md**) contains only the rules that AI agents must keep in active context on **every** code change. For full details, consult the documents above.
+
+---
+
 ## Mandatory post-implementation workflow
 
 After any code changes, always run in this order:
@@ -39,7 +51,7 @@ Interactive states (`_hover`, `_active`) belong **inside component recipes**, no
 
 Surface containers: use `layerStyle="card"` / `"panel"` / `"modal"` / `"subtle"` on `<Box>`.
 
-Full token reference: `src/shared/config/theme/` and `THEME_PLAN.md`.
+Full token reference: `src/shared/config/theme/`.
 
 ---
 
@@ -51,6 +63,16 @@ All comments in source files **must be written in English only** — no exceptio
 - ❌ `// Получаем сессию пользователя при монтировании`
 
 This applies to inline comments, block comments, and JSDoc.
+
+---
+
+## Forms
+
+Form architecture (React Hook Form + Zod + Chakra v3 field wrappers) is defined in `FORMS_ARCHITECTURE.md`. Key points:
+
+- Validation schemas live in `features/*/model` or `entities/*/model`, **never** in `shared/ui`
+- Submission handlers call React Query mutations only — no raw `fetch`/`axios` in UI
+- Shared field components (`@/shared/ui/form`) must stay domain-free
 
 ---
 
