@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Prepare CI dependencies
+        shell: bash
+        run: |
+          node -e "const fs=require('fs');const p=require('./package.json');if(p.devDependencies&&p.devDependencies['@repo/typescript-config']){delete p.devDependencies['@repo/typescript-config'];fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n');}"
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Provide fallback tsconfig package for CI
+        shell: bash
+        run: |
+          if [ ! -f node_modules/@repo/typescript-config/nextjs.json/tsconfig.json ]; then
+            mkdir -p node_modules/@repo/typescript-config/nextjs.json
+            cat > node_modules/@repo/typescript-config/nextjs.json/tsconfig.json <<'EOF'
+            {
+              "compilerOptions": {
+                "target": "ES2022",
+                "module": "ESNext",
+                "moduleResolution": "Bundler",
+                "jsx": "react-jsx",
+                "resolveJsonModule": true,
+                "esModuleInterop": true,
+                "allowSyntheticDefaultImports": true,
+                "skipLibCheck": true,
+                "strict": true
+              }
+            }
+            EOF
+          fi
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run tc
+
+      - name: Tests
+        run: pnpm run test
+

@@ -1,18 +1,29 @@
-import { apiUrl, authPaths } from './constants';
+import type { AuthSession, AuthSessionPayload } from '../model/types';
+import { apiRequest, isApiError } from '@/shared/api';
 
-export const hasActiveSession = async (): Promise<boolean> => {
+export const getAuthSessionState = async (): Promise<AuthSession> => {
   try {
-    const response = await fetch(`${apiUrl}${authPaths.session}`, {
+    const payload = await apiRequest<AuthSessionPayload>({
       method: 'GET',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-      },
       cache: 'no-store',
+      path: '/auth/me',
     });
 
-    return response.ok;
-  } catch {
-    return false;
+    return {
+      payload,
+      state: 'authenticated',
+    };
+  } catch (error) {
+    if (isApiError(error) && error.status === 401) {
+      return {
+        payload: null,
+        state: 'unauthenticated',
+      };
+    }
+
+    return {
+      payload: null,
+      state: 'unknown',
+    };
   }
 };

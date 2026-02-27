@@ -47,17 +47,18 @@ export default function LoginPage() {
   };
 
   const requestError = loginError ? loginError.message || t('login.errorFallback') : null;
-  const isCheckingSession = router.isReady && sessionQuery.isFetching;
+  const isCheckingSession = router.isReady && sessionQuery.isPending;
+  const sessionState = sessionQuery.data?.state;
 
   useEffect(() => {
-    if (!router.isReady || sessionQuery.isFetching) {
+    if (!router.isReady || sessionQuery.isPending) {
       return;
     }
 
-    if (sessionQuery.data === true) {
+    if (sessionState === 'authenticated') {
       void router.replace('/');
     }
-  }, [router, router.isReady, sessionQuery.data, sessionQuery.isFetching]);
+  }, [router, router.isReady, sessionState, sessionQuery.isPending]);
 
   if (isCheckingSession) {
     return (

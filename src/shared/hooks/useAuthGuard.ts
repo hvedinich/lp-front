@@ -1,11 +1,46 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useHasActiveSession } from '@/entities/auth';
+import { type AuthSessionState, useHasActiveSession } from '@/entities/auth';
 import { isPublicRoute } from '@/shared/config';
 
 interface AuthGuardState {
   isCheckingAuth: boolean;
 }
+
+interface ResolveAuthGuardStateInput {
+  isPublic: boolean;
+  isRouterReady: boolean;
+  isSessionPending: boolean;
+  sessionState: AuthSessionState | undefined;
+}
+
+interface ResolveAuthGuardStateResult {
+  isCheckingAuth: boolean;
+  shouldRedirectToLogin: boolean;
+}
+
+export const resolveAuthGuardState = (
+  input: ResolveAuthGuardStateInput,
+): ResolveAuthGuardStateResult => {
+  if (input.isPublic) {
+    return {
+      isCheckingAuth: false,
+      shouldRedirectToLogin: false,
+    };
+  }
+
+  if (!input.isRouterReady || input.isSessionPending) {
+    return {
+      isCheckingAuth: true,
+      shouldRedirectToLogin: false,
+    };
+  }
+
+  return {
+    isCheckingAuth: false,
+    shouldRedirectToLogin: input.sessionState === 'unauthenticated',
+  };
+};
 
 export const useAuthGuard = (): AuthGuardState => {
   const router = useRouter();
@@ -14,24 +49,30 @@ export const useAuthGuard = (): AuthGuardState => {
   const sessionQuery = useHasActiveSession({
     enabled: router.isReady && !isPublic,
   });
+  const sessionState = sessionQuery.data?.state;
 
   useEffect(() => {
-    if (!router.isReady) {
+    const guardState = resolveAuthGuardState({
+      isPublic,
+      isRouterReady: router.isReady,
+      isSessionPending: sessionQuery.isPending,
+      sessionState,
+    });
+    
+    if (!router.isReady || !guardState.shouldRedirectToLogin) {
       return;
     }
 
-    if (isPublic || sessionQuery.isPending) {
-      return;
-    }
+    const nextPath = encodeURIComponent(router.asPath || '/');
+    void router.replace(`/login?next=${nextPath}`);
+  }, [router, router.isReady, isPublic, router.asPath, sessionState, sessionQuery.isPending]);
 
-    if (sessionQuery.data === false) {
-      const nextPath = encodeURIComponent(router.asPath || '/');
-      void router.replace(`/login?next=${nextPath}`);
-    }
-  }, [router, router.isReady, isPublic, router.asPath, sessionQuery.data, sessionQuery.isPending]);
-
-  const isCheckingAuth =
-    !isPublic && (!router.isReady || sessionQuery.isPending || sessionQuery.data === false);
+  const { isCheckingAuth } = resolveAuthGuardState({
+    isPublic,
+    isRouterReady: router.isReady,
+    isSessionPending: sessionQuery.isPending,
+    sessionState,
+  });
 
   return { isCheckingAuth };
 };
