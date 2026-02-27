@@ -241,5 +241,5 @@ Access policy:
 Behavior:
 
 - protected routes are guarded in app shell (`pages/_app.tsx`)
-- auth check uses cookie-based session endpoint (`NEXT_PUBLIC_AUTH_SESSION_PATH`)
+- auth check uses cookie-based session endpoint (`/auth/me`)
 - unauthenticated users are redirected to `/login?next=<requested-path>`
