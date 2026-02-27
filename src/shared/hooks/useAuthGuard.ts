@@ -36,9 +36,11 @@ export const resolveAuthGuardState = (
     };
   }
 
+  const shouldRedirectToLogin = input.sessionState === 'unauthenticated';
+
   return {
-    isCheckingAuth: false,
-    shouldRedirectToLogin: input.sessionState === 'unauthenticated',
+    isCheckingAuth: shouldRedirectToLogin,
+    shouldRedirectToLogin,
   };
 };
 
@@ -50,29 +52,21 @@ export const useAuthGuard = (): AuthGuardState => {
     enabled: router.isReady && !isPublic,
   });
   const sessionState = sessionQuery.data?.state;
-
-  useEffect(() => {
-    const guardState = resolveAuthGuardState({
-      isPublic,
-      isRouterReady: router.isReady,
-      isSessionPending: sessionQuery.isPending,
-      sessionState,
-    });
-    
-    if (!router.isReady || !guardState.shouldRedirectToLogin) {
-      return;
-    }
-
-    const nextPath = encodeURIComponent(router.asPath || '/');
-    void router.replace(`/login?next=${nextPath}`);
-  }, [router, router.isReady, isPublic, router.asPath, sessionState, sessionQuery.isPending]);
-
-  const { isCheckingAuth } = resolveAuthGuardState({
+  const guardState = resolveAuthGuardState({
     isPublic,
     isRouterReady: router.isReady,
     isSessionPending: sessionQuery.isPending,
     sessionState,
   });
 
-  return { isCheckingAuth };
+  useEffect(() => {
+    if (!router.isReady || !guardState.shouldRedirectToLogin) {
+      return;
+    }
+
+    const nextPath = encodeURIComponent(router.asPath || '/');
+    void router.replace(`/login?next=${nextPath}`);
+  }, [guardState.shouldRedirectToLogin, router, router.asPath, router.isReady]);
+
+  return { isCheckingAuth: guardState.isCheckingAuth };
 };

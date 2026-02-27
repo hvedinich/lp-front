@@ -15,7 +15,7 @@ describe('resolveAuthGuardState', () => {
     });
   });
 
-  it('requests redirect only for explicit unauthenticated state', () => {
+  it('keeps auth check active while redirecting unauthenticated users', () => {
     expect(
       resolveAuthGuardState({
         isPublic: false,
@@ -24,7 +24,7 @@ describe('resolveAuthGuardState', () => {
         sessionState: 'unauthenticated',
       }),
     ).toEqual({
-      isCheckingAuth: false,
+      isCheckingAuth: true,
       shouldRedirectToLogin: true,
     });
   });
@@ -57,4 +57,3 @@ describe('resolveAuthGuardState', () => {
     });
   });
 });
-
