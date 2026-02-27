@@ -21,11 +21,11 @@ export const nativeSelectSlotRecipe = defineSlotRecipe({
       },
       _hover: {
         borderColor: 'border.default',
-        bg: 'bg.surface',
+        bg: 'bg.input',
       },
       _focusVisible: {
         borderColor: 'border.focus',
-        bg: 'bg.surface',
+        bg: 'bg.input',
         outlineColor: 'border.focusRing',
       },
       _invalid: {
@@ -43,13 +43,13 @@ export const nativeSelectSlotRecipe = defineSlotRecipe({
       outline: {
         field: {
           borderColor: 'border.muted',
-          bg: 'bg.surface',
+          bg: 'bg.input',
         },
       },
       subtle: {
         field: {
           borderColor: 'border.muted',
-          bg: 'bg.surface',
+          bg: 'bg.input',
         },
       },
     },

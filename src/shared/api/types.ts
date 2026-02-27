@@ -1,7 +1,9 @@
 export type ApiResponseParser = 'json' | 'text' | 'void' | 'raw';
 
-export interface ApiRequestOptions<TBody = unknown>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
+export interface ApiRequestOptions<TBody = unknown> extends Omit<
+  RequestInit,
+  'body' | 'headers' | 'method'
+> {
   path: string;
   method?: string;
   headers?: HeadersInit;

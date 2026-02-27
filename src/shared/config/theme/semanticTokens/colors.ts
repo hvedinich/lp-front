@@ -8,7 +8,7 @@ import { ratingColors } from '../tokens/colors';
  *
  * Format: { base: "light-value", _dark: "dark-value" }
  * _dark is currently a placeholder (same as base).
- * Dark mode activates by adding ColorModeProvider — no token refactoring needed.
+ * Dark mode activates via next-themes ThemeProvider (attribute="class") — no token refactoring needed.
  *
  * Rule: one token = one role. No two tokens with the same resolved value.
  * Rule: bg.brand.*, bg.interactive.* — only inside component recipes,
@@ -25,9 +25,9 @@ export const semanticColorTokens = {
       /** Primary page text */
       default: { value: { base: '{colors.gray.800}', _dark: '#E2E8F0' } },
       /** Secondary text, labels, captions */
-      muted: { value: { base: '{colors.gray.500}', _dark: '#9BA3AF' } },
+      muted: { value: { base: '{colors.gray.500}', _dark: '#858585' } },
       /** Placeholder, disabled text */
-      subtle: { value: { base: '{colors.gray.400}', _dark: '#6B7280' } },
+      subtle: { value: { base: '{colors.gray.400}', _dark: '#585858' } },
       /** Inverted text for dark backgrounds */
       inverse: { value: { base: 'white', _dark: '{colors.gray.900}' } },
 
@@ -69,21 +69,23 @@ export const semanticColorTokens = {
     // ─────────────────────────────────────────────────────────────
 
     bg: {
-      /** Page background (body, main area) — slightly off-white in light, near-black in dark */
-      canvas: { value: { base: '#F2F4F7', _dark: '#1A1D23' } },
-      /** Card, panel, sidebar — white on light canvas, elevated dark on dark canvas */
-      surface: { value: { base: 'white', _dark: '#252836' } },
+      /** Page background (body, main area) */
+      canvas: { value: { base: 'white', _dark: '#333333' } },
+      /** Card, panel */
+      surface: { value: { base: '#f9f9fa', _dark: '#535353' } },
       /** Modal, popover — same as surface in light, slightly elevated in dark */
-      elevated: { value: { base: 'white', _dark: '#2D3142' } },
+      elevated: { value: { base: 'white', _dark: '#252836' } },
+      /** Input fields, form elements */
+      input: { value: { base: 'white', _dark: '#2e2e2e' } },
       /** Secondary stripes, inset sections, zebra rows */
-      subtle: { value: { base: '{colors.gray.100}', _dark: '#252836' } },
+      subtle: { value: { base: '{colors.accent.100}', _dark: '{colors.accent.100}' } },
       /** Modal backdrop — uses rgba to avoid dependency on Chakra internal blackAlpha token */
       overlay: { value: { base: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(0, 0, 0, 0.75)' } },
 
       // ── Brand backgrounds (component recipes only) ────────────
       /** Main brand button — resting state */
       brand: {
-        DEFAULT: { value: { base: '{colors.brand.500}', _dark: '{colors.brand.600}' } },
+        DEFAULT: { value: { base: '{colors.brand.100}', _dark: '{colors.brand.600}' } },
         /** Hover state for brand button — recipes only */
         hover: { value: { base: '{colors.brand.600}', _dark: '{colors.brand.500}' } },
         /** Active state for brand button — recipes only */
@@ -105,9 +107,9 @@ export const semanticColorTokens = {
       interactive: {
         DEFAULT: { value: { base: 'transparent', _dark: 'transparent' } },
         /** Ghost/outline element hover — recipes only */
-        hover: { value: { base: '{colors.gray.100}', _dark: '{colors.gray.700}' } },
+        hover: { value: { base: '{colors.gray.100}', _dark: '#252D42' } },
         /** Ghost/outline element active — recipes only */
-        active: { value: { base: '{colors.gray.200}', _dark: '{colors.gray.600}' } },
+        active: { value: { base: '{colors.gray.200}', _dark: '#2D3555' } },
       },
 
       // ── Accent (white-label space) ────────────────────────────
@@ -144,7 +146,7 @@ export const semanticColorTokens = {
         hero: {
           value: {
             base: 'linear-gradient(0deg, {colors.brand.100} 0%, {colors.brand.50} 100%)',
-            _dark: 'linear-gradient(0deg, {colors.brand.100} 0%, {colors.brand.50} 100%)',
+            _dark: 'linear-gradient(0deg, {colors.gray.900} 0%, {colors.gray.700} 100%)',
           },
         },
       },
@@ -156,11 +158,11 @@ export const semanticColorTokens = {
 
     border: {
       /** Primary border for elements (input, card, divider) — subtle in SnowUI */
-      default: { value: { base: '{colors.gray.200}', _dark: '#353A4A' } },
+      default: { value: { base: '{colors.gray.200}', _dark: '#525252' } },
       /** Lighter border, background dividers */
-      muted: { value: { base: '{colors.gray.100}', _dark: '#2D3142' } },
+      muted: { value: { base: '{colors.gray.100}', _dark: '#585858' } },
       /** Barely-visible border — one step lighter than border.muted */
-      subtle: { value: { base: '{colors.gray.50}', _dark: '#252836' } },
+      subtle: { value: { base: '{colors.gray.50}', _dark: '#1C1F2E' } },
       /** Border on focus (keyboard navigation) */
       focus: { value: { base: '{colors.gray.400}', _dark: '#9BA3AF' } },
       /**
@@ -209,6 +211,25 @@ export const semanticColorTokens = {
       focusRing: { value: { base: '{colors.brand.400}', _dark: '{colors.brand.400}' } },
       /** Border for brand-context containers */
       border: { value: { base: '{colors.brand.200}', _dark: '{colors.brand.700}' } },
+    },
+
+    accent: {
+      /** Solid fill — violet accent for links, focus states */
+      solid: { value: { base: '{colors.accent.600}', _dark: '{colors.accent.400}' } },
+      /** Text on solid fill — must pass contrast check against accent.solid */
+      contrast: { value: { base: 'white', _dark: 'white' } },
+      /** Foreground text in accent context (links, tinted text) */
+      fg: { value: { base: '{colors.accent.600}', _dark: '{colors.accent.400}' } },
+      /** Lightest tinted background */
+      subtle: { value: { base: '{colors.accent.50}', _dark: '{colors.accent.900}' } },
+      /** Medium tinted background */
+      muted: { value: { base: '{colors.accent.100}', _dark: '{colors.accent.800}' } },
+      /** Stronger tinted background */
+      emphasized: { value: { base: '{colors.accent.200}', _dark: '{colors.accent.700}' } },
+      /** Focus ring for accent-colored interactive elements */
+      focusRing: { value: { base: '{colors.accent.500}', _dark: '{colors.accent.400}' } },
+      /** Border for accent-context containers */
+      border: { value: { base: '{colors.accent.200}', _dark: '{colors.accent.700}' } },
     },
 
     /**

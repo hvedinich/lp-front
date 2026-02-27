@@ -1,19 +1,17 @@
 import { defineRecipe } from '@chakra-ui/react';
 
 /**
- * Input recipe
+ * Textarea recipe
  *
- * Overrides the built-in Chakra v3 input recipe.
+ * Mirrors the input recipe — same base styles, same variant overrides.
  *
- * CRITICAL: Input in Chakra v3 uses a regular defineRecipe (NOT defineSlotRecipe).
- * This recipe MUST live in `recipes.input`, not `slotRecipes.input`.
- * A slot recipe under slotRecipes.input is a dead entry — <Input /> never reads it,
- * which is why borderRadius and color overrides had no effect.
+ * CRITICAL: Textarea in Chakra v3 uses a regular defineRecipe (NOT defineSlotRecipe).
+ * This recipe MUST live in `recipes.textarea`, not `slotRecipes.textarea`.
  *
  * This config is deep-merged with the built-in recipe via createSystem(defaultConfig, ...).
  * Only delta styles are specified here; unmodified built-in styles are preserved.
  */
-export const inputRecipe = defineRecipe({
+export const textareaRecipe = defineRecipe({
   base: {
     borderRadius: 'control',
     color: 'fg.default',

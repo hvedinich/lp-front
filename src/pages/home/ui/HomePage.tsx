@@ -86,6 +86,7 @@ export default function HomePage() {
               key={locale}
               onClick={() => handleLocaleChange(locale)}
               variant={activeLocale === locale ? 'solid' : 'outline'}
+              colorPalette='dark'
             >
               {t(`app.locale.${locale}`)}
             </Button>
@@ -163,7 +164,7 @@ export default function HomePage() {
           borderWidth='thin'
           borderColor='border.muted'
           borderRadius='xl'
-          bg='bg.surface'
+          bg='bg.canvas'
           p='6'
         >
           <Text>{t(`workspace.sections.${activeSection}.emptyState`)}</Text>

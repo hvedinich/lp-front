@@ -96,7 +96,8 @@ const extractErrorCode = (payload: unknown): string | null => {
 };
 
 const extractErrorMessage = (payload: unknown): string | null => {
-  const rootMessage = extractStringField(payload, 'message') ?? extractStringField(payload, 'error');
+  const rootMessage =
+    extractStringField(payload, 'message') ?? extractStringField(payload, 'error');
   if (rootMessage) {
     return rootMessage;
   }
@@ -170,7 +171,11 @@ const createHeaders = (defaultHeaders?: HeadersInit, headers?: HeadersInit): Hea
   return merged;
 };
 
-const normalizeUnknownError = (error: unknown, context: ApiRequestContext, durationMs: number): ApiError => {
+const normalizeUnknownError = (
+  error: unknown,
+  context: ApiRequestContext,
+  durationMs: number,
+): ApiError => {
   if (isApiError(error)) {
     return error;
   }
@@ -186,7 +191,12 @@ const normalizeUnknownError = (error: unknown, context: ApiRequestContext, durat
   });
 };
 
-const abortError = (code: string, context: ApiRequestContext, durationMs: number, message: string): ApiError => {
+const abortError = (
+  code: string,
+  context: ApiRequestContext,
+  durationMs: number,
+  message: string,
+): ApiError => {
   return new ApiError({
     code,
     context,
@@ -342,10 +352,9 @@ export const createApiClient = (config: ApiClientConfig): ApiClient => {
         return parsed;
       } catch (error) {
         const durationMs = Date.now() - startedAt;
-        const resolvedError =
-          timedOut
-            ? abortError('timeout', context, durationMs, `Request timed out after ${timeoutMs}ms`)
-            : normalizeUnknownError(error, context, durationMs);
+        const resolvedError = timedOut
+          ? abortError('timeout', context, durationMs, `Request timed out after ${timeoutMs}ms`)
+          : normalizeUnknownError(error, context, durationMs);
 
         throw resolvedError;
       } finally {

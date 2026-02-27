@@ -40,12 +40,12 @@ export const colorTokens = {
     100: { value: '#EDF2F7' },
     200: { value: '#E2E8F0' },
     300: { value: '#CBD5E0' },
-    400: { value: '#A0AEC0' },
-    500: { value: '#718096' },
-    600: { value: '#4A5568' },
-    700: { value: '#2D3748' },
-    800: { value: '#1A202C' },
-    900: { value: '#171923' },
+    400: { value: '#adb5c1' },
+    500: { value: '#818995' },
+    600: { value: '#565b65' },
+    700: { value: '#383d44' },
+    800: { value: '#212328' },
+    900: { value: '#1c1d22' },
   },
 
   /**

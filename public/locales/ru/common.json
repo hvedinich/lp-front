@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "LP",
+    "name": "LocalProf",
     "subtitle": "Шаблон формы: React Hook Form + Zod + полевые примитивы Chakra v3.",
     "language": "Язык",
     "locale": {
@@ -14,6 +15,9 @@
     "menuTitle": "Навигация",
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню",
+    "collapseSidebar": "Свернуть боковую панель",
+    "expandSidebar": "Развернуть боковую панель",
+    "logout": "Выйти",
     "menu": {
       "reviews": "Отзывы",
       "surveys": "Опросы",
@@ -48,6 +52,12 @@
         "emptyState": "Модули конфигурации локаций появятся здесь."
       }
     }
+  },
+  "theme": {
+    "toggle": "Переключить цветовую схему",
+    "light": "Светлая",
+    "system": "Системная",
+    "dark": "Тёмная"
   },
   "form": {
     "companyNameLabel": "Название компании",

@@ -1,20 +1,23 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 /**
- * _document.tsx — кастомный Document для Next.js Pages Router.
+ * Custom Document for Next.js Pages Router.
  *
- * Зачем: позволяет добавить глобальные атрибуты к <html> и <body>,
- * а также управлять тегами <head> которые нельзя поместить в _app.tsx.
+ * Allows adding global attributes to <html> and <body>,
+ * and managing <head> tags that cannot be placed in _app.tsx.
  *
- * Note по FOUC: Chakra UI v3 использует CSS-переменные (не dynamic CSS-in-JS),
- * поэтому стандартный @emotion/server cache не нужен — токены темы инжектируются
- * как :root CSS variables на стороне сервера через стандартный SSR механизм Next.js.
- * Это принципиальное отличие от Chakra v2 где требовался createEmotionCache().
+ * Note on FOUC: Chakra UI v3 uses CSS variables (not dynamic CSS-in-JS),
+ * so the standard @emotion/server cache is not needed — theme tokens are injected
+ * as :root CSS variables server-side via the standard Next.js SSR mechanism.
+ * This is the key difference from Chakra v2 which required createEmotionCache().
  */
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang='en'>
+      <Html
+        lang='en'
+        suppressHydrationWarning
+      >
         <Head />
         <body>
           <Main />

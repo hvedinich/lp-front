@@ -36,4 +36,3 @@ export class ApiError extends Error {
 export const isApiError = (value: unknown): value is ApiError => {
   return value instanceof ApiError;
 };
-

@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "LP",
+    "name": "LocalProf",
     "subtitle": "Szablon formularza: React Hook Form + Zod + prymitywy pól Chakra v3.",
     "language": "Język",
     "locale": {
@@ -14,6 +15,9 @@
     "menuTitle": "Nawigacja",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
+    "collapseSidebar": "Zwiń pasek boczny",
+    "expandSidebar": "Rozwiń pasek boczny",
+    "logout": "Wyloguj się",
     "menu": {
       "reviews": "Opinie",
       "surveys": "Ankiety",
@@ -48,6 +52,12 @@
         "emptyState": "Moduły konfiguracji lokalizacji pojawią się tutaj."
       }
     }
+  },
+  "theme": {
+    "toggle": "Przełącz tryb kolorów",
+    "light": "Jasny",
+    "system": "Systemowy",
+    "dark": "Ciemny"
   },
   "form": {
     "companyNameLabel": "Nazwa firmy",

@@ -1,11 +1,21 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChakraProvider } from '@chakra-ui/react';
+import { ThemeProvider } from 'next-themes';
+import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import type { ReactElement, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
-import { MainPageLayout } from '@/widgets/mainLayout';
 
-function App({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function App({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -25,13 +35,19 @@ function App({ Component, pageProps }: AppProps) {
     void setAppLanguage(getPreferredLanguage());
   }, []);
 
+  const getLayout = Component.getLayout ?? ((page: ReactElement) => page);
+
   return (
     <ChakraProvider value={system}>
-      <QueryClientProvider client={queryClient}>
-        <MainPageLayout>
-          <Component {...pageProps} />
-        </MainPageLayout>
-      </QueryClientProvider>
+      <ThemeProvider
+        attribute='class'
+        enableSystem
+        disableTransitionOnChange
+      >
+        <QueryClientProvider client={queryClient}>
+          {getLayout(<Component {...pageProps} />)}
+        </QueryClientProvider>
+      </ThemeProvider>
     </ChakraProvider>
   );
 }

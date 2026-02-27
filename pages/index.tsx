@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
+import { withMainLayout } from '@/widgets/mainLayout';
 
-const HomePage = dynamic(() => import('@/pages/home/ui/HomePage'), { ssr: false });
-
-export default HomePage;
+export default withMainLayout(dynamic(() => import('@/pages/home/ui/HomePage'), { ssr: false }));
