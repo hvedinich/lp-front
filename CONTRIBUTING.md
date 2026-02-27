@@ -37,7 +37,10 @@ Thank you for considering contributing to the LP project!
    # Format code
    npm run format
 
-   # Validate all (typecheck + lint + format check)
+   # Auto-fix lint + formatting issues
+   npm run fix
+
+   # Validate all (typecheck + lint + format check) — no auto-fix, read-only
    npm run validate
    ```
 
@@ -57,7 +60,7 @@ Thank you for considering contributing to the LP project!
 
 ### Code Style
 
-- **ESLint**: Follow configured rules, run `npm run lint` before committing
+- **ESLint**: Follow configured rules. Run `npm run fix` to auto-fix, `npm run lint` to check only
 - **Prettier**: Code is auto-formatted on save (if using recommended VSCode settings)
 - **TypeScript**: Strict mode enabled, no `any` types without justification
 - **Imports**:
@@ -96,10 +99,11 @@ docs(readme): update setup instructions
 
 1. Create a feature branch from `develop`
 2. Make your changes following the code standards
-3. Run `npm run validate` to ensure everything passes
-4. Create a PR with a clear description of changes
-5. Wait for code review and address feedback
-6. Once approved, your PR will be merged
+3. Run `npm run fix` to auto-fix lint and formatting issues
+4. Run `npm run validate` to ensure everything passes (read-only check)
+5. Create a PR with a clear description of changes
+6. Wait for code review and address feedback
+7. Once approved, your PR will be merged
 
 ## Questions?
 
