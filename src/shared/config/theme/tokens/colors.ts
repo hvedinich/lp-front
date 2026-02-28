@@ -133,3 +133,4 @@ export const ratingColors = {
   /** Inactive star in dark mode */
   inactiveDark: '#4a6d8c',
 } as const;
+// test

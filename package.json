@@ -14,14 +14,16 @@
     "build": "next build",
     "start": "next start --port 4000",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "tc": "npm run typegen && tsc --noEmit",
+    "tc": "tsc --noEmit",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,md}\"",
     "fix": "npm run lint:fix && npm run format",
-    "validate": "npm run tc && npm run lint && npm run format:check",
+    "lint:fsd": "steiger ./src",
+    "validate": "npm run tc && npm run lint && npm run format:check && npm run lint:fsd",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@chakra-ui/react": "3.33.0",
@@ -41,14 +43,24 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "^3.33.0",
+    "@feature-sliced/steiger-plugin": "^0.5.7",
     "@types/node": "25.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.19.0",
     "eslint-config-next": "16.1.6",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-boundaries": "^5.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
+    "steiger": "^0.5.11",
     "typescript": "5.9.3",
-    "zod-validation-error": "5.0.0",
-    "vitest": "^4.0.0"
+    "vitest": "^4.0.0",
+    "zod-validation-error": "5.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix",
+    "*.{js,ts,jsx,tsx,json,md}": "prettier --write"
   }
 }

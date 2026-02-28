@@ -1,0 +1,22 @@
+# Prevent direct commits to main
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "main" ]; then
+  echo "❌ Direct commits to main are not allowed."
+  exit 1
+fi
+
+# Prevent wrong package managers (project uses npm)
+if [ -f "pnpm-lock.yaml" ]; then
+  echo "❌ pnpm-lock.yaml detected. This project uses npm — remove it and run 'npm install'."
+  exit 1
+fi
+if [ -f "yarn.lock" ]; then
+  echo "❌ yarn.lock detected. This project uses npm — remove it and run 'npm install'."
+  exit 1
+fi
+
+# Regenerate Chakra types if theme files changed
+node scripts/typegen-if-changed.mjs
+
+# Lint and format staged files only
+npx lint-staged
