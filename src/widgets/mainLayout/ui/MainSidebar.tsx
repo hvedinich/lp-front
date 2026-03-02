@@ -1,4 +1,4 @@
-import { useLogoutUser } from '@/entities/auth';
+import { useLogoutUser } from '@/features/auth';
 import { AppBrand, LogoutIcon, XIcon } from '@/shared/ui';
 import { Box, Button, Drawer, Flex, Separator, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -11,7 +11,9 @@ export function MainSidebar() {
   const router = useRouter();
   const { t } = useTranslation('common');
   const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
-  const { mutate: logout, isPending: isLoggingOut } = useLogoutUser();
+  const { mutate: logout, isPending: isLoggingOut } = useLogoutUser({
+    onSettled: () => void router.replace('/login'),
+  });
 
   const activeSection = getWorkspaceSection(
     typeof router.query.section === 'string' ? router.query.section : undefined,

@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Spinner } from '@chakra-ui/react';
 import { type ReactNode } from 'react';
-import { useAuthGuard } from '../model/useAuthGuard';
+import { useAuthGuard } from '@/features/auth';
 import { SidebarProvider } from '../model/SidebarContext';
 import { AppHeader } from './AppHeader';
 import { MainSidebar } from './MainSidebar';
