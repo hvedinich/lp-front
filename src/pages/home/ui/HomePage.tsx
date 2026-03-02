@@ -1,21 +1,13 @@
 import { Box, Button, ButtonGroup, Code, Heading, Separator, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { appLanguages, setAppLanguage, type AppLanguage } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
 import { CheckboxField, Form, InputField, SelectField, TextareaField } from '@/shared/ui';
 import { getWorkspaceSection } from '@/widgets/mainLayout';
-
-type LeadFormValues = {
-  companyName: string;
-  contactEmail: string;
-  distributionChannel: 'email' | 'sms' | 'qr';
-  includeNps: boolean;
-  notes?: string;
-};
+import { createLeadSchema, type LeadFormValues } from '../model/leadSchema';
 
 const getLocale = (value: string | undefined): AppLanguage => {
   if (value && appLanguages.includes(value as AppLanguage)) {
@@ -33,13 +25,10 @@ export default function HomePage() {
     typeof router.query.section === 'string' ? router.query.section : undefined,
   );
 
-  const leadSchema = z.object({
-    companyName: z.string().trim().min(2, t('form.validation.companyNameMin')),
-    contactEmail: z.email(t('form.validation.contactEmailInvalid')),
-    distributionChannel: z.enum(['email', 'sms', 'qr']),
-    includeNps: z.boolean(),
-    notes: z.string().max(500, t('form.validation.notesMax')).optional(),
-  });
+  // TODO: DEMO — Remove this entire section when real workspace UI is implemented.
+  // This form exists only as a live reference for the shared form stack (RHF + Zod + Chakra).
+  // Do not copy these patterns directly into production feature slices.
+  const schema = useMemo(() => createLeadSchema(t), [t]);
 
   const channelOptions = [
     { label: t('form.distributionChannels.email'), value: 'email' },
@@ -55,7 +44,7 @@ export default function HomePage() {
   };
 
   const methods = useZodForm<LeadFormValues>({
-    schema: leadSchema,
+    schema,
     mode: 'onBlur',
     defaultValues: {
       companyName: '',
@@ -72,13 +61,13 @@ export default function HomePage() {
 
   return (
     <Stack
-      gap={5}
+      gap='5'
       maxW='3xl'
     >
       <Heading size='4xl'>{t(`workspace.sections.${activeSection}.title`)}</Heading>
       <Text color='fg.muted'>{t(`workspace.sections.${activeSection}.description`)}</Text>
 
-      <Stack gap={3}>
+      <Stack gap='3'>
         <Text fontWeight='medium'>{t('app.language')}</Text>
         <ButtonGroup>
           {availableLocales.map((locale) => (
@@ -86,6 +75,7 @@ export default function HomePage() {
               key={locale}
               onClick={() => handleLocaleChange(locale)}
               variant={activeLocale === locale ? 'solid' : 'outline'}
+              colorPalette='dark'
             >
               {t(`app.locale.${locale}`)}
             </Button>
@@ -138,7 +128,7 @@ export default function HomePage() {
             <Button
               type='submit'
               loading={methods.formState.isSubmitting}
-              width='fit-content'
+              colorPalette='brand'
             >
               {t('form.saveDraft')}
             </Button>
@@ -146,11 +136,11 @@ export default function HomePage() {
 
           <Separator />
 
-          <Stack gap={2}>
+          <Stack gap='2'>
             <Text fontWeight='medium'>{t('form.submittedPayloadPreview')}</Text>
             <Code
               display='block'
-              p={4}
+              p='4'
               whiteSpace='pre-wrap'
             >
               {submittedData ? JSON.stringify(submittedData, null, 2) : t('form.submitToPreview')}
@@ -159,11 +149,11 @@ export default function HomePage() {
         </>
       ) : (
         <Box
-          borderWidth='1px'
+          borderWidth='thin'
           borderColor='border.muted'
-          borderRadius='xl'
-          bg='bg.panel'
-          p={6}
+          borderRadius='card'
+          bg='bg.canvas'
+          p='6'
         >
           <Text>{t(`workspace.sections.${activeSection}.emptyState`)}</Text>
         </Box>

@@ -37,7 +37,10 @@ Thank you for considering contributing to the LP project!
    # Format code
    npm run format
 
-   # Validate all (typecheck + lint + format check)
+   # Auto-fix lint + formatting issues
+   npm run fix
+
+   # Validate all (typecheck + lint + format check) — no auto-fix, read-only
    npm run validate
    ```
 
@@ -57,7 +60,7 @@ Thank you for considering contributing to the LP project!
 
 ### Code Style
 
-- **ESLint**: Follow configured rules, run `npm run lint` before committing
+- **ESLint**: Follow configured rules. Run `npm run fix` to auto-fix, `npm run lint` to check only
 - **Prettier**: Code is auto-formatted on save (if using recommended VSCode settings)
 - **TypeScript**: Strict mode enabled, no `any` types without justification
 - **Imports**:
@@ -65,13 +68,44 @@ Thank you for considering contributing to the LP project!
   - Import from module barrels (`@/shared/hooks`) not deep paths
   - Organize imports: external → internal → types
 
+### Component style passthrough
+
+Every component must forward style props to its root (first rendered) element. This allows callers to control layout and spacing from the outside without wrapper `<Box>` elements.
+
+**Pattern:** extend the root Chakra element's props interface, omit internal named props, and spread the rest.
+
+```tsx
+// ✅ Correct — NavButtons example
+interface NavButtonsProps extends Omit<StackProps, 'children' | 'onSelect'> {
+  onSelect: (section: WorkspaceSection) => void;
+}
+
+export function NavButtons({ onSelect, ...stackProps }: NavButtonsProps) {
+  return <Stack {...stackProps}>{/* ... */}</Stack>;
+}
+
+// ❌ Wrong — caller cannot control margin, padding, width, etc.
+interface NavButtonsProps {
+  onSelect: (section: WorkspaceSection) => void;
+}
+
+export function NavButtons({ onSelect }: NavButtonsProps) {
+  return <Stack>{/* ... */}</Stack>;
+}
+```
+
+- Extend the **root element's** props type (e.g., `BoxProps`, `StackProps`, `FlexProps`)
+- `Omit` only props whose names clash with DOM / Chakra names (e.g., `children`, `onChange`)
+- Collect the rest with `...rest` / `...rootProps` and spread onto the root element
+
 ### Naming Conventions
 
-- **Files**: kebab-case for files (`use-auth-guard.ts`)
-- **Components**: PascalCase for components (`LoginPage.tsx`)
+- **Hooks and utilities**: camelCase (`useAuthGuard.ts`, `queryKeys.ts`)
+- **React components**: PascalCase (`LoginPage.tsx`, `MainSidebar.tsx`)
+- **Slice folders**: kebab-case (`main-layout/`, `auth/`)
 - **Functions/Variables**: camelCase
 - **Types/Interfaces**: PascalCase with descriptive names
-- **Constants**: UPPER_SNAKE_CASE for true constants
+- **Constants**: UPPER_SNAKE_CASE for true module-level constants
 
 ### Commits
 
@@ -96,10 +130,11 @@ docs(readme): update setup instructions
 
 1. Create a feature branch from `develop`
 2. Make your changes following the code standards
-3. Run `npm run validate` to ensure everything passes
-4. Create a PR with a clear description of changes
-5. Wait for code review and address feedback
-6. Once approved, your PR will be merged
+3. Run `npm run fix` to auto-fix lint and formatting issues
+4. Run `npm run validate` to ensure everything passes (read-only check)
+5. Create a PR with a clear description of changes
+6. Wait for code review and address feedback
+7. Once approved, your PR will be merged
 
 ## Questions?
 

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { type AuthSessionState, useHasActiveSession } from '@/entities/auth';
-import { isPublicRoute } from '@/shared/config';
+import { buildLoginRedirect, isPublicRoute } from '@/shared/config';
 
 interface AuthGuardState {
   isCheckingAuth: boolean;
@@ -11,6 +11,7 @@ interface ResolveAuthGuardStateInput {
   isPublic: boolean;
   isRouterReady: boolean;
   isSessionPending: boolean;
+  isSessionFetching: boolean;
   sessionState: AuthSessionState | undefined;
 }
 
@@ -29,7 +30,7 @@ export const resolveAuthGuardState = (
     };
   }
 
-  if (!input.isRouterReady || input.isSessionPending) {
+  if (!input.isRouterReady || input.isSessionPending || input.isSessionFetching) {
     return {
       isCheckingAuth: true,
       shouldRedirectToLogin: false,
@@ -56,6 +57,7 @@ export const useAuthGuard = (): AuthGuardState => {
     isPublic,
     isRouterReady: router.isReady,
     isSessionPending: sessionQuery.isPending,
+    isSessionFetching: sessionQuery.isFetching,
     sessionState,
   });
 
@@ -64,8 +66,12 @@ export const useAuthGuard = (): AuthGuardState => {
       return;
     }
 
-    const nextPath = encodeURIComponent(router.asPath || '/');
-    void router.replace(`/login?next=${nextPath}`);
+    const target = buildLoginRedirect(router.asPath || '/');
+    if (!target) {
+      return;
+    }
+
+    void router.replace(target);
   }, [guardState.shouldRedirectToLogin, router, router.asPath, router.isReady]);
 
   return { isCheckingAuth: guardState.isCheckingAuth };

@@ -1,12 +1,13 @@
-import { Box, Button, Center, Flex, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
+import { Button, Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { useHasActiveSession, useLoginUser, type LoginPayload } from '@/entities/auth';
 import { useZodForm } from '@/shared/lib';
-import { Form, InputField } from '@/shared/ui';
+import { AuthPageLayout } from '@/widgets/authLayout';
+import { Form, FormErrorAlert, InputField, PageSpinner } from '@/shared/ui';
+import { createLoginSchema } from '../model/loginSchema';
 
 export default function LoginPage() {
   const { t } = useTranslation('common');
@@ -19,13 +20,10 @@ export default function LoginPage() {
     reset: resetLoginError,
   } = useLoginUser();
 
-  const loginSchema = z.object({
-    email: z.email(t('login.validation.emailInvalid')),
-    password: z.string().min(8, t('login.validation.passwordMin')),
-  });
+  const schema = useMemo(() => createLoginSchema(t), [t]);
 
   const methods = useZodForm<LoginPayload>({
-    schema: loginSchema,
+    schema,
     mode: 'onBlur',
     defaultValues: {
       email: '',
@@ -61,78 +59,59 @@ export default function LoginPage() {
   }, [router, router.isReady, sessionState, sessionQuery.isPending]);
 
   if (isCheckingSession) {
-    return (
-      <Center
-        minH='100dvh'
-        width='full'
-      >
-        <Spinner size='lg' />
-      </Center>
-    );
+    return <PageSpinner />;
   }
 
   return (
-    <Flex
-      minH='100vh'
-      align='center'
-      justify='center'
-      p={6}
-    >
-      <Box
-        width='full'
-        maxW='lg'
-        borderWidth='1px'
-        borderRadius='xl'
-        p={8}
-      >
-        <Stack gap={6}>
-          <Stack gap={2}>
-            <Heading size='2xl'>{t('login.title')}</Heading>
-            <Text color='fg.muted'>{t('login.subtitle')}</Text>
-          </Stack>
-
-          {requestError ? (
-            <Box
-              borderWidth='1px'
-              borderRadius='lg'
-              borderColor='red.300'
-              bg='red.50'
-              p={4}
-            >
-              <Text color='red.700'>{requestError}</Text>
-            </Box>
-          ) : null}
-
-          <Form
-            methods={methods}
-            onSubmit={handleSubmit}
+    <AuthPageLayout>
+      <Stack gap='6'>
+        <Stack
+          gap='1'
+          align='center'
+          textAlign='center'
+        >
+          <Heading size='2xl'>{t('login.title')}</Heading>
+          <Text
+            color='fg.muted'
+            fontSize='sm'
+            textAlign='center'
           >
-            <InputField
-              name='email'
-              label={t('login.fields.emailLabel')}
-              placeholder={t('login.fields.emailPlaceholder')}
-              type='email'
-              isRequired
-            />
-
-            <InputField
-              name='password'
-              label={t('login.fields.passwordLabel')}
-              placeholder={t('login.fields.passwordPlaceholder')}
-              type='password'
-              isRequired
-            />
-
-            <Button
-              type='submit'
-              loading={methods.formState.isSubmitting || isLoginPending}
-              width='full'
-            >
-              {t('login.submit')}
-            </Button>
-          </Form>
+            {t('login.subtitle')}
+          </Text>
         </Stack>
-      </Box>
-    </Flex>
+
+        <FormErrorAlert message={requestError} />
+
+        <Form
+          methods={methods}
+          onSubmit={handleSubmit}
+        >
+          <InputField
+            name='email'
+            label={t('login.fields.emailLabel')}
+            placeholder={t('login.fields.emailPlaceholder')}
+            type='email'
+            isRequired
+          />
+
+          <InputField
+            name='password'
+            label={t('login.fields.passwordLabel')}
+            placeholder={t('login.fields.passwordPlaceholder')}
+            type='password'
+            isRequired
+          />
+
+          <Button
+            type='submit'
+            loading={methods.formState.isSubmitting || isLoginPending}
+            width='full'
+            marginTop='8'
+          >
+            {t('login.submit')}
+          </Button>
+        </Form>
+      </Stack>
+    </AuthPageLayout>
   );
 }

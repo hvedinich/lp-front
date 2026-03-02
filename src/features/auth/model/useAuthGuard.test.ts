@@ -7,6 +7,7 @@ describe('resolveAuthGuardState', () => {
         isPublic: true,
         isRouterReady: true,
         isSessionPending: false,
+        isSessionFetching: false,
         sessionState: 'unauthenticated',
       }),
     ).toEqual({
@@ -21,6 +22,7 @@ describe('resolveAuthGuardState', () => {
         isPublic: false,
         isRouterReady: true,
         isSessionPending: false,
+        isSessionFetching: false,
         sessionState: 'unauthenticated',
       }),
     ).toEqual({
@@ -35,6 +37,7 @@ describe('resolveAuthGuardState', () => {
         isPublic: false,
         isRouterReady: true,
         isSessionPending: false,
+        isSessionFetching: false,
         sessionState: 'unknown',
       }),
     ).toEqual({
@@ -49,10 +52,43 @@ describe('resolveAuthGuardState', () => {
         isPublic: false,
         isRouterReady: false,
         isSessionPending: true,
+        isSessionFetching: false,
         sessionState: undefined,
       }),
     ).toEqual({
       isCheckingAuth: true,
+      shouldRedirectToLogin: false,
+    });
+  });
+
+  it('keeps auth check active while session is fetching (prevents redirect loop after login)', () => {
+    // Scenario: user just logged in, RQ invalidated session, isFetching=true
+    // but cache still has stale 'unauthenticated' data → must NOT redirect.
+    expect(
+      resolveAuthGuardState({
+        isPublic: false,
+        isRouterReady: true,
+        isSessionPending: false,
+        isSessionFetching: true,
+        sessionState: 'unauthenticated',
+      }),
+    ).toEqual({
+      isCheckingAuth: true,
+      shouldRedirectToLogin: false,
+    });
+  });
+
+  it('does not redirect authenticated user on a protected route', () => {
+    expect(
+      resolveAuthGuardState({
+        isPublic: false,
+        isRouterReady: true,
+        isSessionPending: false,
+        isSessionFetching: false,
+        sessionState: 'authenticated',
+      }),
+    ).toEqual({
+      isCheckingAuth: false,
       shouldRedirectToLogin: false,
     });
   });

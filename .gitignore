@@ -38,3 +38,9 @@ yarn-error.log*
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+
+# Generated
+chakra-config.json
+
+# Planning / scratch files — never commit
+*_PLAN.md

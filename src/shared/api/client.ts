@@ -1,3 +1,4 @@
+import { buildLoginRedirect } from '@/shared/config';
 import { isApiError } from './ApiError';
 import { createApiClient } from './createApiClient';
 import type { ApiRequestOptions } from './types';
@@ -60,30 +61,13 @@ export const shouldRedirectToLoginOnAuthError = (error: unknown): boolean => {
   return error.status === 401 && error.context.path === '/auth/refresh';
 };
 
-export const getLoginRedirectTarget = (currentPath: string): string | null => {
-  const normalizedPath = currentPath.trim().length > 0 ? currentPath : '/';
-
-  let pathname = normalizedPath;
-  try {
-    pathname = new URL(normalizedPath, 'http://localhost').pathname;
-  } catch {
-    pathname = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
-  }
-
-  if (pathname === '/login' || pathname === '/signup') {
-    return null;
-  }
-
-  return `/login?next=${encodeURIComponent(normalizedPath)}`;
-};
-
 const redirectToLogin = () => {
   if (typeof window === 'undefined') {
     return;
   }
 
   const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-  const target = getLoginRedirectTarget(currentPath);
+  const target = buildLoginRedirect(currentPath);
 
   if (!target) {
     return;

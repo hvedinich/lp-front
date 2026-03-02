@@ -1,5 +1,6 @@
+import { buildLoginRedirect } from '@/shared/config';
 import { ApiError } from './ApiError';
-import { getLoginRedirectTarget, shouldRedirectToLoginOnAuthError } from './client';
+import { shouldRedirectToLoginOnAuthError } from './client';
 
 const createApiError = (path: string, status: number): ApiError => {
   return new ApiError({
@@ -33,13 +34,13 @@ describe('shared api auth redirect', () => {
   });
 
   it('builds login redirect target with next path', () => {
-    expect(getLoginRedirectTarget('/dashboard?tab=reports')).toBe(
+    expect(buildLoginRedirect('/dashboard?tab=reports')).toBe(
       '/login?next=%2Fdashboard%3Ftab%3Dreports',
     );
   });
 
   it('skips redirect target generation for login and signup routes', () => {
-    expect(getLoginRedirectTarget('/login')).toBe(null);
-    expect(getLoginRedirectTarget('/signup?from=invite')).toBe(null);
+    expect(buildLoginRedirect('/login')).toBe(null);
+    expect(buildLoginRedirect('/signup?from=invite')).toBe(null);
   });
 });

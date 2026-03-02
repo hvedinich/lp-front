@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "LP",
+    "name": "LocalProf",
     "subtitle": "Form template: React Hook Form + Zod + Chakra v3 field primitives.",
     "language": "Language",
     "locale": {
@@ -14,6 +15,9 @@
     "menuTitle": "Navigation",
     "openMenu": "Open Menu",
     "closeMenu": "Close Menu",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "logout": "Logout",
     "menu": {
       "reviews": "Reviews",
       "surveys": "Surveys",
@@ -48,6 +52,12 @@
         "emptyState": "Location configuration modules will appear here."
       }
     }
+  },
+  "theme": {
+    "toggle": "Toggle color mode",
+    "light": "Light",
+    "system": "System",
+    "dark": "Dark"
   },
   "form": {
     "companyNameLabel": "Company Name",

@@ -1,4 +1,9 @@
-import { Checkbox, Field, type CheckboxCheckedChangeDetails } from '@chakra-ui/react';
+import {
+  Checkbox,
+  Field,
+  type FieldRootProps,
+  type CheckboxCheckedChangeDetails,
+} from '@chakra-ui/react';
 import { type ReactNode } from 'react';
 import {
   useController,
@@ -20,13 +25,14 @@ type ValidationRules<
 export interface CheckboxFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> {
+> extends Omit<FieldRootProps, 'children'> {
   name: TName;
   control?: Control<TFieldValues>;
   label: ReactNode;
   helperText?: ReactNode;
   rules?: ValidationRules<TFieldValues, TName>;
   isRequired?: boolean;
+  checkboxProps?: Omit<React.ComponentProps<typeof Checkbox.Root>, 'checked' | 'onCheckedChange'>;
 }
 
 const CheckboxField = <
@@ -39,6 +45,8 @@ const CheckboxField = <
   helperText,
   rules,
   isRequired = false,
+  checkboxProps,
+  ...rest
 }: CheckboxFieldProps<TFieldValues, TName>) => {
   const {
     field: { name: fieldName, value, ref, onChange, onBlur },
@@ -49,7 +57,6 @@ const CheckboxField = <
     rules,
   });
 
-  const fieldId = String(name);
   const checked = value === true;
 
   const handleCheckedChange = ({ checked: nextChecked }: CheckboxCheckedChangeDetails) => {
@@ -60,13 +67,14 @@ const CheckboxField = <
     <Field.Root
       invalid={invalid}
       required={isRequired}
+      {...rest}
     >
       <Checkbox.Root
         checked={checked}
         onCheckedChange={handleCheckedChange}
+        {...checkboxProps}
       >
         <Checkbox.HiddenInput
-          id={fieldId}
           name={fieldName}
           onBlur={onBlur}
           ref={ref}

@@ -8,6 +8,8 @@
   },
   "scripts": {
     "preinstall": "npx only-allow npm",
+    "postinstall": "chakra typegen src/shared/config/theme/index.ts",
+    "typegen": "chakra typegen src/shared/config/theme/index.ts",
     "dev": "next dev --port 4000",
     "build": "next build",
     "start": "next start --port 4000",
@@ -16,9 +18,12 @@
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,md}\"",
-    "validate": "npm run tc && npm run lint && npm run format:check",
+    "fix": "npm run lint:fix && npm run format",
+    "lint:fsd": "steiger ./src",
+    "validate": "npm run tc && npm run lint && npm run format:check && npm run lint:fsd",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@chakra-ui/react": "3.33.0",
@@ -27,7 +32,9 @@
     "@hookform/resolvers": "5.2.2",
     "@tanstack/react-query": "^5.90.21",
     "i18next": "25.8.13",
+    "lucide-react": "^0.575.0",
     "next": "16.1.6",
+    "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "7.71.2",
@@ -35,14 +42,25 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^3.33.0",
+    "@feature-sliced/steiger-plugin": "^0.5.7",
     "@types/node": "25.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.19.0",
     "eslint-config-next": "16.1.6",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-boundaries": "^5.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
+    "steiger": "^0.5.11",
     "typescript": "5.9.3",
-    "zod-validation-error": "5.0.0",
-    "vitest": "^4.0.0"
+    "vitest": "^4.0.0",
+    "zod-validation-error": "5.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix",
+    "*.{js,ts,jsx,tsx,json,md}": "prettier --write"
   }
 }
