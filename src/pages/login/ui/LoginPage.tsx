@@ -1,5 +1,6 @@
-import { Box, Button, Card, Center, Flex, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
-import { AppBrand } from '@/shared/ui';
+import { Button, Center, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
+import { AuthPageLayout } from '@/widgets/authLayout';
+import { FormErrorAlert } from '@/shared/ui';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,87 +74,55 @@ export default function LoginPage() {
   }
 
   return (
-    <Flex
-      minH='dvh'
-      align='center'
-      direction='column'
-      p='6'
-      gap='6'
-      bg='bg.gradient.hero'
-    >
-      <AppBrand />
-      <Flex
-        align='center'
-        justify='center'
-        flex='1'
-        maxW='full'
-      >
-        <Card.Root
-          width='xl'
-          maxW='full'
-          bg='bg.canvas'
-          p={{ base: '6', md: '12' }}
+    <AuthPageLayout>
+      <Stack gap='6'>
+        <Stack
+          gap='1'
+          align='center'
+          textAlign='center'
         >
-          <Stack gap='6'>
-            <Stack
-              gap='1'
-              align='center'
-              textAlign='center'
-            >
-              <Heading size='2xl'>{t('login.title')}</Heading>
-              <Text
-                color='fg.muted'
-                fontSize='sm'
-                textAlign='center'
-              >
-                {t('login.subtitle')}
-              </Text>
-            </Stack>
+          <Heading size='2xl'>{t('login.title')}</Heading>
+          <Text
+            color='fg.muted'
+            fontSize='sm'
+            textAlign='center'
+          >
+            {t('login.subtitle')}
+          </Text>
+        </Stack>
 
-            {requestError ? (
-              <Box
-                borderWidth='thin'
-                borderRadius='card'
-                borderColor='border.error'
-                bg='bg.error'
-                p='4'
-              >
-                <Text color='fg.error'>{requestError}</Text>
-              </Box>
-            ) : null}
+        <FormErrorAlert message={requestError} />
 
-            <Form
-              methods={methods}
-              onSubmit={handleSubmit}
-            >
-              <InputField
-                name='email'
-                label={t('login.fields.emailLabel')}
-                placeholder={t('login.fields.emailPlaceholder')}
-                type='email'
-                isRequired
-              />
+        <Form
+          methods={methods}
+          onSubmit={handleSubmit}
+        >
+          <InputField
+            name='email'
+            label={t('login.fields.emailLabel')}
+            placeholder={t('login.fields.emailPlaceholder')}
+            type='email'
+            isRequired
+          />
 
-              <InputField
-                name='password'
-                label={t('login.fields.passwordLabel')}
-                placeholder={t('login.fields.passwordPlaceholder')}
-                type='password'
-                isRequired
-              />
+          <InputField
+            name='password'
+            label={t('login.fields.passwordLabel')}
+            placeholder={t('login.fields.passwordPlaceholder')}
+            type='password'
+            isRequired
+          />
 
-              <Button
-                type='submit'
-                loading={methods.formState.isSubmitting || isLoginPending}
-                width='full'
-                marginTop='8'
-              >
-                {t('login.submit')}
-              </Button>
-            </Form>
-          </Stack>
-        </Card.Root>
-      </Flex>
-    </Flex>
+          <Button
+            type='submit'
+            loading={methods.formState.isSubmitting || isLoginPending}
+            width='full'
+            marginTop='8'
+          >
+            {t('login.submit')}
+          </Button>
+        </Form>
+      </Stack>
+    </AuthPageLayout>
   );
 }

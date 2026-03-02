@@ -1,5 +1,6 @@
-import { Box, Button, Card, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import { AppBrand } from '@/shared/ui';
+import { Box, Button, Heading, Stack, Text } from '@chakra-ui/react';
+import { AuthPageLayout } from '@/widgets/authLayout';
+import { FormErrorAlert } from '@/shared/ui';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -81,143 +82,111 @@ export default function SignupPage() {
   const requestError = registerError ? registerError.message || t('signup.errorFallback') : null;
 
   return (
-    <Flex
-      minH='dvh'
-      align='center'
-      direction='column'
-      p='6'
-      gap='6'
-      bg='bg.gradient.hero'
-    >
-      <AppBrand />
-      <Flex
-        align='center'
-        justify='center'
-        flex='1'
-        maxW='full'
-      >
-        <Card.Root
-          width='xl'
-          maxW='full'
-          bg='bg.canvas'
-          p={{ base: '6', md: '12' }}
+    <AuthPageLayout>
+      <Stack gap='6'>
+        <Stack
+          gap='1'
+          align='center'
+          textAlign='center'
         >
-          <Stack gap='6'>
-            <Stack
-              gap='1'
-              align='center'
-              textAlign='center'
+          <Heading size='2xl'>{t('signup.title')}</Heading>
+          <Text
+            color='fg.muted'
+            fontSize='sm'
+            textAlign='center'
+            maxW='sm'
+          >
+            {t('signup.subtitle')}
+          </Text>
+        </Stack>
+
+        <FormErrorAlert message={requestError} />
+
+        {registeredUser ? (
+          <Box
+            borderWidth='thin'
+            borderRadius='card'
+            borderColor='border.default'
+            bg='bg.success'
+            p='4'
+          >
+            <Text
+              fontWeight='semibold'
+              color='fg.success'
             >
-              <Heading size='2xl'>{t('signup.title')}</Heading>
-              <Text
-                color='fg.muted'
-                fontSize='sm'
-                textAlign='center'
-                maxW='sm'
-              >
-                {t('signup.subtitle')}
-              </Text>
-            </Stack>
+              {t('signup.successTitle')}
+            </Text>
+            <Text color='fg.muted'>
+              {t('signup.successDescription', { name: registeredUser.name })}
+            </Text>
+          </Box>
+        ) : null}
 
-            {requestError ? (
-              <Box
-                borderWidth='thin'
-                borderRadius='card'
-                borderColor='border.error'
-                bg='bg.error'
-                p='4'
-              >
-                <Text color='fg.error'>{requestError}</Text>
-              </Box>
-            ) : null}
+        <Form
+          methods={methods}
+          onSubmit={handleSubmit}
+        >
+          <InputField
+            name='email'
+            label={t('signup.fields.emailLabel')}
+            placeholder={t('signup.fields.emailPlaceholder')}
+            type='email'
+            isRequired
+          />
 
-            {registeredUser ? (
-              <Box
-                borderWidth='thin'
-                borderRadius='card'
-                borderColor='border.default'
-                bg='bg.success'
-                p='4'
-              >
-                <Text
-                  fontWeight='semibold'
-                  color='fg.success'
-                >
-                  {t('signup.successTitle')}
-                </Text>
-                <Text color='fg.muted'>
-                  {t('signup.successDescription', { name: registeredUser.name })}
-                </Text>
-              </Box>
-            ) : null}
+          <InputField
+            name='password'
+            label={t('signup.fields.passwordLabel')}
+            placeholder={t('signup.fields.passwordPlaceholder')}
+            type='password'
+            isRequired
+          />
 
-            <Form
-              methods={methods}
-              onSubmit={handleSubmit}
-            >
-              <InputField
-                name='email'
-                label={t('signup.fields.emailLabel')}
-                placeholder={t('signup.fields.emailPlaceholder')}
-                type='email'
-                isRequired
-              />
+          <InputField
+            name='name'
+            label={t('signup.fields.nameLabel')}
+            placeholder={t('signup.fields.namePlaceholder')}
+            isRequired
+          />
 
-              <InputField
-                name='password'
-                label={t('signup.fields.passwordLabel')}
-                placeholder={t('signup.fields.passwordPlaceholder')}
-                type='password'
-                isRequired
-              />
+          <SelectField
+            name='language'
+            label={t('signup.fields.languageLabel')}
+            options={languageOptions}
+            isRequired
+          />
 
-              <InputField
-                name='name'
-                label={t('signup.fields.nameLabel')}
-                placeholder={t('signup.fields.namePlaceholder')}
-                isRequired
-              />
+          <InputField
+            name='account.name'
+            label={t('signup.fields.accountNameLabel')}
+            placeholder={t('signup.fields.accountNamePlaceholder')}
+            isRequired
+          />
 
-              <SelectField
-                name='language'
-                label={t('signup.fields.languageLabel')}
-                options={languageOptions}
-                isRequired
-              />
+          <SelectField
+            name='account.region'
+            label={t('signup.fields.regionLabel')}
+            options={regionOptions}
+            isRequired
+          />
 
-              <InputField
-                name='account.name'
-                label={t('signup.fields.accountNameLabel')}
-                placeholder={t('signup.fields.accountNamePlaceholder')}
-                isRequired
-              />
+          <SelectField
+            name='account.contentLanguage'
+            label={t('signup.fields.contentLanguageLabel')}
+            options={languageOptions}
+            isRequired
+          />
 
-              <SelectField
-                name='account.region'
-                label={t('signup.fields.regionLabel')}
-                options={regionOptions}
-                isRequired
-              />
-
-              <SelectField
-                name='account.contentLanguage'
-                label={t('signup.fields.contentLanguageLabel')}
-                options={languageOptions}
-                isRequired
-              />
-
-              <Button
-                type='submit'
-                loading={methods.formState.isSubmitting || isRegisterPending}
-                width='full'
-                marginTop='8'
-              >
-                {t('signup.submit')}
-              </Button>
-            </Form>
-          </Stack>
-        </Card.Root>
-      </Flex>
-    </Flex>
+          <Button
+            type='submit'
+            loading={methods.formState.isSubmitting || isRegisterPending}
+            width='full'
+            marginTop='8'
+          >
+            {t('signup.submit')}
+          </Button>
+        </Form>
+      </Stack>
+    </AuthPageLayout>
   );
 }
