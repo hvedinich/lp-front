@@ -56,7 +56,7 @@ export default defineConfig([
           default: 'disallow',
           rules: FSD_LAYERS.map((layer) => ({
             target: [layer],
-            allow: ['index.ts', 'index.tsx', '**'],
+            allow: ['index.ts', 'index.tsx'],
           })),
         },
       ],
