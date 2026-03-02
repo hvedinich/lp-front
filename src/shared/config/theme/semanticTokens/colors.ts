@@ -25,7 +25,7 @@ export const semanticColorTokens = {
       /** Primary page text */
       default: { value: { base: '{colors.gray.800}', _dark: '#E2E8F0' } },
       /** Secondary text, labels, captions */
-      muted: { value: { base: '{colors.gray.500}', _dark: '#858585' } },
+      muted: { value: { base: '{colors.gray.500}', _dark: '{colors.gray.400}' } },
       /** Placeholder, disabled text */
       subtle: { value: { base: '{colors.gray.400}', _dark: '#585858' } },
       /** Inverted text for dark backgrounds */
