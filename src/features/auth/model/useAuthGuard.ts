@@ -11,6 +11,7 @@ interface ResolveAuthGuardStateInput {
   isPublic: boolean;
   isRouterReady: boolean;
   isSessionPending: boolean;
+  isSessionFetching: boolean;
   sessionState: AuthSessionState | undefined;
 }
 
@@ -29,7 +30,7 @@ export const resolveAuthGuardState = (
     };
   }
 
-  if (!input.isRouterReady || input.isSessionPending) {
+  if (!input.isRouterReady || input.isSessionPending || input.isSessionFetching) {
     return {
       isCheckingAuth: true,
       shouldRedirectToLogin: false,
@@ -56,6 +57,7 @@ export const useAuthGuard = (): AuthGuardState => {
     isPublic,
     isRouterReady: router.isReady,
     isSessionPending: sessionQuery.isPending,
+    isSessionFetching: sessionQuery.isFetching,
     sessionState,
   });
 
