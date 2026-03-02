@@ -128,7 +128,6 @@ export default function HomePage() {
             <Button
               type='submit'
               loading={methods.formState.isSubmitting}
-              width='[fit-content]'
               colorPalette='brand'
             >
               {t('form.saveDraft')}
@@ -152,7 +151,7 @@ export default function HomePage() {
         <Box
           borderWidth='thin'
           borderColor='border.muted'
-          borderRadius='xl'
+          borderRadius='card'
           bg='bg.canvas'
           p='6'
         >

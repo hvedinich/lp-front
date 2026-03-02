@@ -15,7 +15,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html
-        lang='en'
+        lang={this.props.locale ?? 'en'}
         suppressHydrationWarning
       >
         <Head />

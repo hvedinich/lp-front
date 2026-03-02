@@ -5,10 +5,10 @@
  *   L1 (tokens/)         — raw primitives: brand.500, gray.200, shadows.sm
  *   L2 (semanticTokens/) — named roles: fg.error, bg.surface, border.focus
  *
- * Developer rules, white-label setup and token addition guide: THEME_PLAN.md
+ * Developer rules, white-label setup and token addition guide: ARCHITECTURE.md
  */
 
-import { createSystem, defaultConfig, defineConfig, defineRecipe } from '@chakra-ui/react';
+import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 
 import { colorTokens } from './tokens/colors';
 import { fontTokens } from './tokens/typography';
@@ -57,6 +57,12 @@ export const brandBaseConfig = defineConfig({
        * and can silently fail in some rendering contexts.
        */
       sizes: {
+        /**
+         * zero — explicit 0 size; used for flex min-height/min-width reset
+         * (overrides the implicit `min-height: auto` on flex children).
+         * Usage: minH='zero' instead of the escape-hatch '[0]' syntax.
+         */
+        zero: { value: '0px' },
         dvh: { value: '100dvh' },
         svh: { value: '100svh' },
         lvh: { value: '100lvh' },

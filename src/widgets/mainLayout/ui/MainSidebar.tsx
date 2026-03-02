@@ -41,7 +41,9 @@ export function MainSidebar() {
         overflow='hidden'
         p='3'
         gap='3'
-        transition='[width 0.2s ease]'
+        transitionProperty='size'
+        transitionDuration='moderate'
+        transitionTimingFunction='ease-in-out'
         flexShrink={0}
       >
         {/* Brand slot */}

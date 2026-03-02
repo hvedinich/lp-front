@@ -5,7 +5,7 @@
  * Components use 'control', 'card', 'modal', 'pill' — never raw values.
  *
  * Visual character hierarchy (tight → rounded):
- *   control (8px) < card (12px) < modal (16px) < pill (full)
+ *   control (lg=8px) < card (xl=12px) < modal (2xl=16px) < pill (full)
  *
  * To change overall UI roundness: update values here only.
  * Example — flat UI: set control → 'sm', card → 'md', modal → 'lg'
@@ -14,12 +14,12 @@
 
 export const semanticRadiiTokens = {
   radii: {
-    /** Interactive controls: inputs, buttons, selects — pill shape (matches target design) */
-    control: { value: { base: '{radii.2xl}' } },
+    /** Interactive controls: inputs, buttons, selects */
+    control: { value: { base: '{radii.lg}' } }, // 8px
     /** Cards, panels, content containers */
-    card: { value: { base: '{radii.3xl}' } }, // 12px
+    card: { value: { base: '{radii.xl}' } }, // 12px
     /** Modals, drawers, large overlays */
-    modal: { value: { base: '{radii.4xl}' } }, // 16px
+    modal: { value: { base: '{radii.2xl}' } }, // 16px
     /** Badges, tags, pill-shaped elements */
     pill: { value: { base: '{radii.full}' } },
   },

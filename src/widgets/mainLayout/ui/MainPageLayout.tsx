@@ -42,7 +42,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
           <Box
             as='main'
             flex='1'
-            minH='[0]'
+            minH='zero'
             overflowY='auto'
             p={{ base: '4', md: '8' }}
           >
