@@ -37,7 +37,7 @@ export function MainSidebar() {
         borderRightWidth='thin'
         borderColor='border.default'
         w={isCollapsed ? 'layout.sidebar.collapsedW' : 'layout.sidebar.w'}
-        h='dvh'
+        h='dvh100'
         overflow='hidden'
         p='3'
         gap='3'

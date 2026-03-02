@@ -9,7 +9,7 @@ interface AuthPageLayoutProps {
 export function AuthPageLayout({ children }: AuthPageLayoutProps) {
   return (
     <Flex
-      minH='dvh'
+      minH='dvh100'
       align='center'
       direction='column'
       p='6'

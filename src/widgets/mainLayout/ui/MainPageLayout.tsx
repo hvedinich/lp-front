@@ -15,7 +15,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
   if (isCheckingAuth) {
     return (
       <Center
-        minH='dvh'
+        minH='dvh100'
         width='full'
       >
         <Spinner size='lg' />
@@ -26,7 +26,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
   return (
     <SidebarProvider>
       <Flex
-        h='dvh'
+        h='dvh100'
         overflow='hidden'
         bg='bg.canvas'
       >

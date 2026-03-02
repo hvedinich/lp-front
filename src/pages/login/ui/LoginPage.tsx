@@ -62,7 +62,7 @@ export default function LoginPage() {
   if (isCheckingSession) {
     return (
       <Center
-        minH='dvh'
+        minH='dvh100'
         width='full'
       >
         <Spinner size='lg' />

@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
+import { useDvh } from '@/shared/hooks';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -16,6 +17,8 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function App({ Component, pageProps }: AppPropsWithLayout) {
+  useDvh();
+
   const [queryClient] = useState(
     () =>
       new QueryClient({

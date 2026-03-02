@@ -51,10 +51,7 @@ export const brandBaseConfig = defineConfig({
       ...shadowTokens,
       ...borderWidthTokens,
       /**
-       * Viewport size tokens.
-       * Usage: minH='dvh', minH='vh', minH='svh'
-       * Avoids escape-hatch strings like '[100dvh]' which bypass strictTokens
-       * and can silently fail in some rendering contexts.
+       * Size tokens.
        */
       sizes: {
         /**
@@ -63,10 +60,26 @@ export const brandBaseConfig = defineConfig({
          * Usage: minH='zero' instead of the escape-hatch '[0]' syntax.
          */
         zero: { value: '0px' },
-        dvh: { value: '100dvh' },
-        svh: { value: '100svh' },
-        lvh: { value: '100lvh' },
-        vh: { value: '100vh' },
+        /**
+         * dvh{n} — dynamic viewport height fractions backed by a JS CSS variable.
+         * `--dvh` is set to `window.innerHeight` in px by `useDvh()` (wired in _app.tsx).
+         * This fixes mobile Safari/Chrome where `100dvh` includes the address bar.
+         * Naming follows the old Reviews app convention (dvh100).
+         *
+         * Usage: h='dvh100', minH='dvh80', maxH='dvh50', etc.
+         */
+        dvh10: { value: 'calc(var(--dvh, 100vh) * 0.1)' },
+        dvh20: { value: 'calc(var(--dvh, 100vh) * 0.2)' },
+        dvh25: { value: 'calc(var(--dvh, 100vh) * 0.25)' },
+        dvh33: { value: 'calc(var(--dvh, 100vh) * 0.33)' },
+        dvh40: { value: 'calc(var(--dvh, 100vh) * 0.4)' },
+        dvh50: { value: 'calc(var(--dvh, 100vh) * 0.5)' },
+        dvh60: { value: 'calc(var(--dvh, 100vh) * 0.6)' },
+        dvh66: { value: 'calc(var(--dvh, 100vh) * 0.66)' },
+        dvh75: { value: 'calc(var(--dvh, 100vh) * 0.75)' },
+        dvh80: { value: 'calc(var(--dvh, 100vh) * 0.8)' },
+        dvh90: { value: 'calc(var(--dvh, 100vh) * 0.9)' },
+        dvh100: { value: 'var(--dvh, 100vh)' },
         /**
          * Layout dimension tokens.
          * Usage: width='layout.sidebar.w', h='layout.header.h', maxH='layout.mobileDrawer.h'
