@@ -22,7 +22,22 @@ export default defineConfig([
   {
     files: ['**/*.{jsx,tsx}'],
     rules: {
-      'react/jsx-no-literals': ['error', { noStrings: true, ignoreProps: true }],
+      'react/jsx-no-literals': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          // Catch hardcoded text children: <Button>Logout</Button>
+          selector: 'JSXText[value=/\\S/]',
+          message: 'Hardcoded string in JSX children. Use t() from react-i18next instead.',
+        },
+        {
+          // Catch hardcoded string literals in user-visible JSX props
+          selector:
+            "JSXAttribute[name.name=/^(aria-label|aria-description|placeholder|title|alt)$/][value.type='Literal']",
+          message:
+            'Hardcoded string in a user-visible JSX prop. Use t() from react-i18next instead.',
+        },
+      ],
     },
   },
 

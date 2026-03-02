@@ -1,6 +1,7 @@
-import { Box, Center, Flex, Spinner } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { type ReactNode } from 'react';
 import { useAuthGuard } from '@/features/auth';
+import { PageSpinner } from '@/shared/ui';
 import { SidebarProvider } from '../model/SidebarContext';
 import { AppHeader } from './AppHeader';
 import { MainSidebar } from './MainSidebar';
@@ -13,14 +14,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
   const { isCheckingAuth } = useAuthGuard();
 
   if (isCheckingAuth) {
-    return (
-      <Center
-        minH='dvh100'
-        width='full'
-      >
-        <Spinner size='lg' />
-      </Center>
-    );
+    return <PageSpinner />;
   }
 
   return (

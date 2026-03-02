@@ -104,26 +104,9 @@ Form architecture (React Hook Form + Zod + Chakra v3 field wrappers) is defined 
 
 ## Internationalisation (i18n)
 
-All user-visible text and accessibility strings **must go through `t()`** — no hardcoded strings in UI components.
+All user-visible strings must go through `t()`. Hardcoded text in JSX children and props (`aria-label`, `aria-description`, `placeholder`, `title`, `alt`) is a lint error.
 
-This includes:
-
-- Visible labels, headings, buttons, placeholders
-- `aria-label`, `aria-description`, `alt` attributes
-- Any other text exposed to users or assistive technology
-
-```tsx
-// ✅ Correct
-<Button aria-label={t('workspace.openMenu')}>{t('workspace.logout')}</Button>
-
-// ❌ Wrong — hardcoded
-<Button aria-label="Open menu">Logout</Button>
-```
-
-Translation keys live in `public/locales/{lang}/common.json`. Add the key to **all three locales** (`en`, `ru`, `pl`) whenever you introduce new text.
-
-- `useTranslation('common')` — default namespace, used everywhere
-- Brand names and product identifiers also go through i18n (`t('app.name')`) for consistency, even though the value is the same in every locale
+Add translation keys to **all three locales** (`en`, `ru`, `pl`) in `public/locales/{lang}/common.json`.
 
 ---
 

@@ -1,13 +1,12 @@
-import { Button, Center, Heading, Spinner, Stack, Text } from '@chakra-ui/react';
-import { AuthPageLayout } from '@/widgets/authLayout';
-import { FormErrorAlert } from '@/shared/ui';
+import { Button, Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type SubmitHandler } from 'react-hook-form';
 import { useHasActiveSession, useLoginUser, type LoginPayload } from '@/entities/auth';
 import { useZodForm } from '@/shared/lib';
-import { Form, InputField } from '@/shared/ui';
+import { AuthPageLayout } from '@/widgets/authLayout';
+import { Form, FormErrorAlert, InputField, PageSpinner } from '@/shared/ui';
 import { createLoginSchema } from '../model/loginSchema';
 
 export default function LoginPage() {
@@ -60,14 +59,7 @@ export default function LoginPage() {
   }, [router, router.isReady, sessionState, sessionQuery.isPending]);
 
   if (isCheckingSession) {
-    return (
-      <Center
-        minH='dvh100'
-        width='full'
-      >
-        <Spinner size='lg' />
-      </Center>
-    );
+    return <PageSpinner />;
   }
 
   return (
