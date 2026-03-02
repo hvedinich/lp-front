@@ -6,7 +6,7 @@
  *
  * To change visual character (flat / soft / high-contrast):
  *   - Set radii.card → radii.control (flat UI)
- *   - Remove shadow.card (flat design)
+ *   - Remove shadow: 'card' from the card layerStyle (flat design)
  *   - Set bg.surface → bg.subtle (tinted background)
  */
 

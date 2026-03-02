@@ -27,7 +27,7 @@ export const buttonRecipe = defineRecipe({
       outlineWidth: 'medium',
       outlineStyle: 'solid',
       outlineColor: 'border.focusRing',
-      outlineOffset: '[2px]',
+      outlineOffset: '2px',
     },
     _disabled: {
       layerStyle: 'disabled',

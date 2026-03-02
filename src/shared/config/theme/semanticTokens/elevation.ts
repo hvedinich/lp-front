@@ -1,11 +1,11 @@
 /**
  * Semantic Elevation Tokens — shadow roles
  *
- * Components use shadow.card, shadow.modal, etc. —
+ * Components use shadow='card', shadow='modal', etc. —
  * not raw values from the shadows scale.
  *
  * To change overall UI depth: update the mapping here.
- * Example — flat UI: shadow.card → shadows.xs
+ * Example — flat UI: change card value to '{shadows.xs}'
  */
 
 export const semanticElevationTokens = {

@@ -16,7 +16,8 @@ if [ -f "yarn.lock" ]; then
   exit 1
 fi
 
-# Regenerate Chakra types if theme files changed
+# Regenerate Chakra types if theme files changed, then run tsc to verify.
+# If theme files were not touched, this is a no-op (fast path).
 node scripts/typegen-if-changed.mjs
 
 # Lint and format staged files only

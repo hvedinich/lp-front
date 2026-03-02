@@ -44,10 +44,7 @@ export function ThemeSwitcher() {
         </Button>
       </Popover.Trigger>
       <Popover.Positioner>
-        <Popover.Content
-          minW='[120px]'
-          p='2'
-        >
+        <Popover.Content p='2'>
           <Stack gap='1'>
             {modes.map((m) => (
               <Button

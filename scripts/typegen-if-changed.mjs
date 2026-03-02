@@ -34,8 +34,10 @@ console.log(
 
 try {
   execSync('npm run typegen', { stdio: 'inherit' });
-  console.log('[typegen] Done.');
+  console.log('[typegen] Done. Running type check...');
+  execSync('npm run tc', { stdio: 'inherit' });
+  console.log('[typegen] Type check passed.');
 } catch {
-  console.error('[typegen] chakra typegen failed — commit aborted.');
+  console.error('[typegen] Failed — commit aborted.');
   process.exit(1);
 }

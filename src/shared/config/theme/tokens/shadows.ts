@@ -3,9 +3,9 @@
  *
  * Shadow scale for the elevation system.
  * Components use semantic shadow roles from semanticTokens/elevation.ts:
- *   shadow.card     → shadow.sm
- *   shadow.modal    → shadow.lg
- *   shadow.dropdown → shadow.md
+ *   shadow='card'     → maps to shadows.card
+ *   shadow='modal'    → maps to shadows.lg
+ *   shadow='dropdown' → maps to shadows.md
  *
  * To change overall UI depth: update semantic shadows in elevation.ts.
  */
