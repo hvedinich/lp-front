@@ -45,18 +45,13 @@ export function MainSidebar() {
         flexShrink={0}
       >
         {/* Brand slot */}
-        <Flex
-          align='center'
-          justify={isCollapsed ? 'center' : 'flex-start'}
-          py='2'
+        <AppBrand
+          collapsed={isCollapsed}
           px='1'
-          minH='10'
-        >
-          <AppBrand collapsed={isCollapsed} />
-        </Flex>
+        />
 
         {/* Section heading — visible only when expanded */}
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <Text
             color='fg.muted'
             textTransform='uppercase'
@@ -67,7 +62,7 @@ export function MainSidebar() {
           >
             {t('workspace.menuTitle')}
           </Text>
-        )}
+        )} */}
 
         {/* Navigation */}
         <NavButtons
@@ -76,6 +71,7 @@ export function MainSidebar() {
           collapsed={isCollapsed}
           onSelect={handleSelectSection}
           getLabel={getSectionLabel}
+          mt='3'
         />
 
         {/* Spacer — pushes logout to bottom */}
@@ -115,7 +111,7 @@ export function MainSidebar() {
                 justify='space-between'
                 w='full'
               >
-                <AppBrand />
+                <AppBrand px='1' />
                 <Button
                   variant='ghost'
                   size='sm'

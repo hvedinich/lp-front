@@ -55,6 +55,32 @@ Full token reference: `src/shared/config/theme/`.
 
 ---
 
+## Component API: style passthrough
+
+Every component **must** forward style props to its root element so callers can control layout without extra wrapper elements.
+
+```tsx
+// ✅ Correct
+interface Props extends Omit<StackProps, 'children' | 'onSelect'> {
+  onSelect: () => void;
+}
+export function MyWidget({ onSelect, ...rest }: Props) {
+  return <Stack {...rest}>{/* ... */}</Stack>;
+}
+
+// ❌ Wrong — caller cannot pass margin, padding, width, etc.
+export function MyWidget({ onSelect }: { onSelect: () => void }) {
+  return <Stack>{/* ... */}</Stack>;
+}
+```
+
+- Extend the root element's props type (`BoxProps`, `StackProps`, `FlexProps`, …)
+- `Omit` only props that clash with Chakra / DOM names
+- Spread the remainder onto the root element with `{...rest}`
+- Full guidance in `CONTRIBUTING.md` → **Component style passthrough**
+
+---
+
 ## Code comments language
 
 All comments in source files **must be written in English only** — no exceptions.

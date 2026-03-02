@@ -68,6 +68,36 @@ Thank you for considering contributing to the LP project!
   - Import from module barrels (`@/shared/hooks`) not deep paths
   - Organize imports: external → internal → types
 
+### Component style passthrough
+
+Every component must forward style props to its root (first rendered) element. This allows callers to control layout and spacing from the outside without wrapper `<Box>` elements.
+
+**Pattern:** extend the root Chakra element's props interface, omit internal named props, and spread the rest.
+
+```tsx
+// ✅ Correct — NavButtons example
+interface NavButtonsProps extends Omit<StackProps, 'children' | 'onSelect'> {
+  onSelect: (section: WorkspaceSection) => void;
+}
+
+export function NavButtons({ onSelect, ...stackProps }: NavButtonsProps) {
+  return <Stack {...stackProps}>{/* ... */}</Stack>;
+}
+
+// ❌ Wrong — caller cannot control margin, padding, width, etc.
+interface NavButtonsProps {
+  onSelect: (section: WorkspaceSection) => void;
+}
+
+export function NavButtons({ onSelect }: NavButtonsProps) {
+  return <Stack>{/* ... */}</Stack>;
+}
+```
+
+- Extend the **root element's** props type (e.g., `BoxProps`, `StackProps`, `FlexProps`)
+- `Omit` only props whose names clash with DOM / Chakra names (e.g., `children`, `onChange`)
+- Collect the rest with `...rest` / `...rootProps` and spread onto the root element
+
 ### Naming Conventions
 
 - **Hooks and utilities**: camelCase (`useAuthGuard.ts`, `queryKeys.ts`)

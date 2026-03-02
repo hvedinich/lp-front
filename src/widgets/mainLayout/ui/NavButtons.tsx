@@ -1,8 +1,8 @@
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, Stack, StackProps } from '@chakra-ui/react';
 import { navSectionIcons } from '../model/navIcons';
 import { type WorkspaceSection } from '../model/navigation';
 
-interface NavButtonsProps {
+interface NavButtonsProps extends Omit<StackProps, 'children' | 'sections' | 'onSelect'> {
   sections: readonly WorkspaceSection[];
   activeSection: WorkspaceSection;
   collapsed: boolean;
@@ -16,9 +16,13 @@ export function NavButtons({
   collapsed,
   onSelect,
   getLabel,
+  ...stackProps
 }: NavButtonsProps) {
   return (
-    <Stack gap='1'>
+    <Stack
+      gap='1'
+      {...stackProps}
+    >
       {sections.map((section) => {
         const isActive = section === activeSection;
         const Icon = navSectionIcons[section];
