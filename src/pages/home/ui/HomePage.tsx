@@ -25,6 +25,9 @@ export default function HomePage() {
     typeof router.query.section === 'string' ? router.query.section : undefined,
   );
 
+  // TODO: DEMO — Remove this entire section when real workspace UI is implemented.
+  // This form exists only as a live reference for the shared form stack (RHF + Zod + Chakra).
+  // Do not copy these patterns directly into production feature slices.
   const schema = useMemo(() => createLeadSchema(t), [t]);
 
   const channelOptions = [

@@ -101,6 +101,16 @@ Translation keys live in `public/locales/{lang}/common.json`. Add the key to **a
 
 ---
 
+## Demo and scaffold code
+
+Files or sections marked `// TODO: DEMO` are scaffold/reference code — not production patterns.
+
+- Do not duplicate types, schemas, or handlers from demo sections into new feature slices.
+- When implementing a real feature, create fresh files in the appropriate FSD layer.
+- Demo sections will be deleted when the corresponding real feature is implemented.
+
+---
+
 ## Planning and scratch files
 
 Files matching `*_PLAN.md` (e.g. `REFACTORING_PLAN.md`) are local planning documents — **never stage or commit them**.
