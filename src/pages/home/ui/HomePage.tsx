@@ -1,21 +1,13 @@
 import { Box, Button, ButtonGroup, Code, Heading, Separator, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { appLanguages, setAppLanguage, type AppLanguage } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
 import { CheckboxField, Form, InputField, SelectField, TextareaField } from '@/shared/ui';
 import { getWorkspaceSection } from '@/widgets/mainLayout';
-
-type LeadFormValues = {
-  companyName: string;
-  contactEmail: string;
-  distributionChannel: 'email' | 'sms' | 'qr';
-  includeNps: boolean;
-  notes?: string;
-};
+import { createLeadSchema, type LeadFormValues } from '../model/leadSchema';
 
 const getLocale = (value: string | undefined): AppLanguage => {
   if (value && appLanguages.includes(value as AppLanguage)) {
@@ -33,13 +25,7 @@ export default function HomePage() {
     typeof router.query.section === 'string' ? router.query.section : undefined,
   );
 
-  const leadSchema = z.object({
-    companyName: z.string().trim().min(2, t('form.validation.companyNameMin')),
-    contactEmail: z.email(t('form.validation.contactEmailInvalid')),
-    distributionChannel: z.enum(['email', 'sms', 'qr']),
-    includeNps: z.boolean(),
-    notes: z.string().max(500, t('form.validation.notesMax')).optional(),
-  });
+  const schema = useMemo(() => createLeadSchema(t), [t]);
 
   const channelOptions = [
     { label: t('form.distributionChannels.email'), value: 'email' },
@@ -55,7 +41,7 @@ export default function HomePage() {
   };
 
   const methods = useZodForm<LeadFormValues>({
-    schema: leadSchema,
+    schema,
     mode: 'onBlur',
     defaultValues: {
       companyName: '',

@@ -2,13 +2,13 @@ import { Button, Center, Heading, Spinner, Stack, Text } from '@chakra-ui/react'
 import { AuthPageLayout } from '@/widgets/authLayout';
 import { FormErrorAlert } from '@/shared/ui';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { useHasActiveSession, useLoginUser, type LoginPayload } from '@/entities/auth';
 import { useZodForm } from '@/shared/lib';
 import { Form, InputField } from '@/shared/ui';
+import { createLoginSchema } from '../model/loginSchema';
 
 export default function LoginPage() {
   const { t } = useTranslation('common');
@@ -21,13 +21,10 @@ export default function LoginPage() {
     reset: resetLoginError,
   } = useLoginUser();
 
-  const loginSchema = z.object({
-    email: z.email(t('login.validation.emailInvalid')),
-    password: z.string().min(8, t('login.validation.passwordMin')),
-  });
+  const schema = useMemo(() => createLoginSchema(t), [t]);
 
   const methods = useZodForm<LoginPayload>({
-    schema: loginSchema,
+    schema,
     mode: 'onBlur',
     defaultValues: {
       email: '',

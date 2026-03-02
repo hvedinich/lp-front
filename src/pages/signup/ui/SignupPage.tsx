@@ -3,16 +3,13 @@ import { AuthPageLayout } from '@/widgets/authLayout';
 import { FormErrorAlert } from '@/shared/ui';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { useRegisterUser, type RegisterPayload, type RegisterUser } from '@/entities/auth';
 import { appLanguages, getPreferredLanguage } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
 import { Form, InputField, SelectField } from '@/shared/ui';
-
-const languageCodes = ['en', 'pl', 'ru'] as const;
-const regionCodes = ['us', 'pl', 'ru'] as const;
+import { createSignupSchema, regionCodes } from '../model/signupSchema';
 
 export default function SignupPage() {
   const { t } = useTranslation('common');
@@ -28,17 +25,7 @@ export default function SignupPage() {
 
   const localeFromApp = getPreferredLanguage();
 
-  const signupSchema = z.object({
-    email: z.email(t('signup.validation.emailInvalid')),
-    password: z.string().min(8, t('signup.validation.passwordMin')),
-    name: z.string().trim().min(2, t('signup.validation.nameMin')),
-    language: z.enum(languageCodes),
-    account: z.object({
-      name: z.string().trim().min(2, t('signup.validation.accountNameMin')),
-      region: z.enum(regionCodes),
-      contentLanguage: z.enum(languageCodes),
-    }),
-  });
+  const schema = useMemo(() => createSignupSchema(t), [t]);
 
   const languageOptions = appLanguages.map((value) => ({
     value,
@@ -51,7 +38,7 @@ export default function SignupPage() {
   }));
 
   const methods = useZodForm<RegisterPayload>({
-    schema: signupSchema,
+    schema,
     mode: 'onBlur',
     defaultValues: {
       email: '',
