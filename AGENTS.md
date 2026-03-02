@@ -98,3 +98,13 @@ Translation keys live in `public/locales/{lang}/common.json`. Add the key to **a
 
 - `useTranslation('common')` — default namespace, used everywhere
 - Brand names and product identifiers also go through i18n (`t('app.name')`) for consistency, even though the value is the same in every locale
+
+---
+
+## Planning and scratch files
+
+Files matching `*_PLAN.md` (e.g. `REFACTORING_PLAN.md`) are local planning documents — **never stage or commit them**.
+
+- They are listed in `.gitignore` and must stay there.
+- Do not reference plan files in commit messages.
+- Never create a new `*_PLAN.md` inside a `git add -A` or blanket staging command — always stage files explicitly.

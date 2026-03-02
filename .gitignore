@@ -41,3 +41,6 @@ yarn-error.log*
 
 # Generated
 chakra-config.json
+
+# Planning / scratch files — never commit
+*_PLAN.md
