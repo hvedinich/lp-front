@@ -70,11 +70,12 @@ Thank you for considering contributing to the LP project!
 
 ### Naming Conventions
 
-- **Files**: kebab-case for files (`use-auth-guard.ts`)
-- **Components**: PascalCase for components (`LoginPage.tsx`)
+- **Hooks and utilities**: camelCase (`useAuthGuard.ts`, `queryKeys.ts`)
+- **React components**: PascalCase (`LoginPage.tsx`, `MainSidebar.tsx`)
+- **Slice folders**: kebab-case (`main-layout/`, `auth/`)
 - **Functions/Variables**: camelCase
 - **Types/Interfaces**: PascalCase with descriptive names
-- **Constants**: UPPER_SNAKE_CASE for true constants
+- **Constants**: UPPER_SNAKE_CASE for true module-level constants
 
 ### Commits
 
