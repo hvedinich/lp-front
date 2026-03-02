@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { MenuIcon, SidebarIcon, ThemeSwitcher } from '@/shared/ui';
 import { useSidebar } from '../model/SidebarContext';
-import { getWorkspaceSection } from '../model/navigation';
+import { getActiveNavItem } from '../model/navigation';
 
 /**
  * AppHeader — sticky top bar inside the authenticated layout.
@@ -20,9 +20,7 @@ export function AppHeader() {
   const { t } = useTranslation('common');
   const { isCollapsed, toggleCollapsed, openMobile } = useSidebar();
 
-  const section = getWorkspaceSection(
-    typeof router.query.section === 'string' ? router.query.section : undefined,
-  );
+  const activeItem = getActiveNavItem(router.pathname);
 
   return (
     <Flex
@@ -69,7 +67,7 @@ export function AppHeader() {
           fontWeight='semibold'
           color='fg.default'
         >
-          {t(`workspace.menu.${section}`)}
+          {t(`workspace.menu.${activeItem.key}`)}
         </Heading>
       </Flex>
 

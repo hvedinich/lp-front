@@ -1,10 +1,10 @@
 import { useLogoutUser } from '@/features/auth';
 import { AppBrand, LogoutIcon, XIcon } from '@/shared/ui';
-import { Box, Button, Drawer, Flex, Separator, Text } from '@chakra-ui/react';
+import { Box, Button, Drawer, Flex, Separator } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '../model/SidebarContext';
-import { getWorkspaceSection, workspaceSections, type WorkspaceSection } from '../model/navigation';
+import { navItems, type NavItem } from '../model/navigation';
 import { NavButtons } from './NavButtons';
 
 export function MainSidebar() {
@@ -15,16 +15,12 @@ export function MainSidebar() {
     onSettled: () => void router.replace('/login'),
   });
 
-  const activeSection = getWorkspaceSection(
-    typeof router.query.section === 'string' ? router.query.section : undefined,
-  );
-
-  const handleSelectSection = (section: WorkspaceSection) => {
-    void router.push({ pathname: '/', query: { section } });
+  const handleSelectItem = (item: NavItem) => {
+    void router.push(item.path);
     closeMobile();
   };
 
-  const getSectionLabel = (section: WorkspaceSection) => t(`workspace.menu.${section}`);
+  const getItemLabel = (item: NavItem) => t(`workspace.menu.${item.key}`);
 
   return (
     <>
@@ -52,27 +48,13 @@ export function MainSidebar() {
           px='1'
         />
 
-        {/* Section heading — visible only when expanded */}
-        {/* {!isCollapsed && (
-          <Text
-            color='fg.muted'
-            textTransform='uppercase'
-            fontWeight='semibold'
-            letterSpacing='widest'
-            fontSize='xs'
-            px='1'
-          >
-            {t('workspace.menuTitle')}
-          </Text>
-        )} */}
-
         {/* Navigation */}
         <NavButtons
-          sections={workspaceSections}
-          activeSection={activeSection}
+          items={navItems}
+          activePath={router.pathname}
           collapsed={isCollapsed}
-          onSelect={handleSelectSection}
-          getLabel={getSectionLabel}
+          onSelect={handleSelectItem}
+          getLabel={getItemLabel}
           mt='3'
         />
 
@@ -127,11 +109,11 @@ export function MainSidebar() {
 
             <Drawer.Body>
               <NavButtons
-                sections={workspaceSections}
-                activeSection={activeSection}
+                items={navItems}
+                activePath={router.pathname}
                 collapsed={false}
-                onSelect={handleSelectSection}
-                getLabel={getSectionLabel}
+                onSelect={handleSelectItem}
+                getLabel={getItemLabel}
               />
             </Drawer.Body>
 

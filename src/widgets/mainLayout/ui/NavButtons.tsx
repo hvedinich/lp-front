@@ -1,18 +1,17 @@
 import { Button, Stack, StackProps } from '@chakra-ui/react';
-import { navSectionIcons } from '../model/navIcons';
-import { type WorkspaceSection } from '../model/navigation';
+import { type NavItem } from '../model/navigation';
 
-interface NavButtonsProps extends Omit<StackProps, 'children' | 'sections' | 'onSelect'> {
-  sections: readonly WorkspaceSection[];
-  activeSection: WorkspaceSection;
+interface NavButtonsProps extends Omit<StackProps, 'children' | 'onSelect'> {
+  items: readonly NavItem[];
+  activePath: string;
   collapsed: boolean;
-  onSelect: (section: WorkspaceSection) => void;
-  getLabel: (section: WorkspaceSection) => string;
+  onSelect: (item: NavItem) => void;
+  getLabel: (item: NavItem) => string;
 }
 
 export function NavButtons({
-  sections,
-  activeSection,
+  items,
+  activePath,
   collapsed,
   onSelect,
   getLabel,
@@ -23,15 +22,15 @@ export function NavButtons({
       gap='1'
       {...stackProps}
     >
-      {sections.map((section) => {
-        const isActive = section === activeSection;
-        const Icon = navSectionIcons[section];
-        const label = getLabel(section);
+      {items.map((item) => {
+        const isActive = item.path === '/' ? activePath === '/' : activePath.startsWith(item.path);
+        const Icon = item.icon;
+        const label = getLabel(item);
 
         if (collapsed) {
           return (
             <Button
-              key={section}
+              key={item.key}
               variant='ghost'
               size='sm'
               justifyContent='center'
@@ -39,7 +38,7 @@ export function NavButtons({
               p='2'
               bg={isActive ? 'bg.subtle' : undefined}
               color={isActive ? 'fg.brand' : 'fg.muted'}
-              onClick={() => onSelect(section)}
+              onClick={() => onSelect(item)}
               aria-label={label}
             >
               <Icon size={18} />
@@ -49,7 +48,7 @@ export function NavButtons({
 
         return (
           <Button
-            key={section}
+            key={item.key}
             variant='ghost'
             size='sm'
             justifyContent='flex-start'
@@ -58,7 +57,7 @@ export function NavButtons({
             bg={isActive ? 'bg.subtle' : undefined}
             color={isActive ? 'fg.brand' : 'fg.muted'}
             fontWeight={isActive ? 'semibold' : 'normal'}
-            onClick={() => onSelect(section)}
+            onClick={() => onSelect(item)}
           >
             <Icon size={18} />
             {label}
