@@ -5,6 +5,7 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import { UiStoreProvider } from '@/app/providers';
 import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
 import { useDvh } from '@/shared/hooks';
 
@@ -48,7 +49,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         disableTransitionOnChange
       >
         <QueryClientProvider client={queryClient}>
-          {getLayout(<Component {...pageProps} />)}
+          <UiStoreProvider>{getLayout(<Component {...pageProps} />)}</UiStoreProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </ChakraProvider>

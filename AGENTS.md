@@ -2,11 +2,11 @@
 
 ## Documentation references
 
-| Document                | Scope                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `ARCHITECTURE.md`       | FSD layers, import/export policy, entity modelling, React Query standard, i18n infrastructure, auth routing |
-| `FORMS_ARCHITECTURE.md` | Form stack (RHF + Zod + Chakra v3), file layout, lifecycle, do/don't                                        |
-| `CONTRIBUTING.md`       | Dev setup, code style, naming, commit conventions, PR process                                               |
+| Document                | Scope                                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `ARCHITECTURE.md`       | FSD layers, import/export policy, entity modelling, React Query + Zustand standards, i18n infrastructure, auth routing |
+| `FORMS_ARCHITECTURE.md` | Form stack (RHF + Zod + Chakra v3), file layout, lifecycle, do/don't                                                   |
+| `CONTRIBUTING.md`       | Dev setup, code style, naming, commit conventions, PR process                                                          |
 
 This file (**AGENTS.md**) contains only the rules that AI agents must keep in active context on **every** code change. For full details, consult the documents above.
 
@@ -33,6 +33,8 @@ npm run validate  # read-only: tsc + lint + format:check (must exit 0)
 - Always import from the **public barrel**, never from deep paths:
   - ✅ `import { system } from '@/shared/config'`
   - ❌ `import { system } from '@/shared/config/theme'`
+- State boundary: use `zustand` for client-only state and React Query for server state; do not duplicate server lists in store
+- Naming rules: keep a single source of truth in `ARCHITECTURE.md` (Naming Rules section)
 - See `ARCHITECTURE.md` for full details
 
 ---

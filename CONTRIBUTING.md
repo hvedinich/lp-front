@@ -106,6 +106,7 @@ export function NavButtons({ onSelect }: NavButtonsProps) {
 - **Functions/Variables**: camelCase
 - **Types/Interfaces**: PascalCase with descriptive names
 - **Constants**: UPPER_SNAKE_CASE for true module-level constants
+- Store/selectors naming rules are defined only in `ARCHITECTURE.md` (Naming Rules section).
 
 ### Commits
 

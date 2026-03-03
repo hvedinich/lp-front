@@ -7,7 +7,8 @@ This document defines architecture rules for the LP application:
 - Feature-Sliced Design (FSD) layer boundaries
 - import/export policy
 - entity modeling policy
-- React Query data-access standard
+- React Query server-state standard
+- Zustand client-state standard
 
 This file is a ruleset, not a product specification.
 
@@ -171,6 +172,34 @@ Layer usage:
 - `features`: workflow orchestration and side effects
 - `pages/widgets`: composition and UI wiring only
 
+## 8.1 Client State Standard (Zustand)
+
+All client-only state must be implemented with `zustand`.
+
+Mandatory rules:
+
+- `zustand` stores only client state (selected IDs, UI flags, hydration/meta state)
+- React Query stores only server state (lists/details returned from backend)
+- do not duplicate server collections from React Query into `zustand`
+- components must subscribe with selectors, not read the whole store object
+
+Store placement:
+
+- `shared/store/core/*`: store infrastructure only (factory, middleware wiring, persist helpers)
+- `entities/*/model/store/*`: domain slice state, selectors, and actions
+- `app/providers/*`: app-level store composition/provider wiring
+
+Hydration and persistence:
+
+- persist only stable client state needed across reloads
+- include explicit hydration readiness flags for deterministic UI bootstrap
+- persist only validated values (for example, selected IDs that exist in current domain data)
+
+Cross-module lifecycle:
+
+- account/session changes must reset account-scoped slices
+- query cache invalidation and store reset must be coordinated in one protocol
+
 ## 9. DTO and Domain Mapping
 
 Rules:
@@ -198,6 +227,9 @@ No business rules in `shared`.
 - query key factories: `<entity>QueryKeys`
 - slice folders: `kebab-case`
 - public API entry: `index.ts`
+- zustand slices: `<domain><Purpose>Slice.ts`
+- selectors: colocate in slice, or move to `<domain><Purpose>.selectors.ts` when many; avoid `*.selector.ts`
+- store/domain functions: selectors `select*`, actions `set/reset/resolve/mark*`, mappers `map<Entity>Dto`
 
 ## 12. Definition of Done (Architecture)
 
@@ -206,6 +238,7 @@ A change is architecture-compliant only if:
 - layer dependency rules are respected
 - cross-slice imports use public API only
 - entity data access uses React Query
+- client-only state uses Zustand with selector-based subscriptions
 - DTO/domain mapping is explicit
 - no business logic is added to `shared`
 
