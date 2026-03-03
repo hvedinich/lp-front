@@ -51,6 +51,38 @@
         "description": "Configure business locations and map channels to them.",
         "emptyState": "Location configuration modules will appear here."
       }
+    },
+    "locationSelector": {
+      "title": "Current location",
+      "notSelected": "Not selected",
+      "searchPlaceholder": "Search location",
+      "selected": "Selected",
+      "noMatch": "No matching locations.",
+      "empty": "No locations available.",
+      "manageLocations": "Manage locations"
+    },
+    "locationsPage": {
+      "create": "Create location",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "defaultBadge": "Default",
+      "noDetails": "No address or time zone",
+      "empty": "No locations yet."
+    },
+    "locationsForm": {
+      "nameLabel": "Name",
+      "phoneLabel": "Phone",
+      "websiteLabel": "Website",
+      "addressLabel": "Address",
+      "timeZoneLabel": "Time Zone",
+      "publicSlugLabel": "Public Slug",
+      "defaultLabel": "Set as default",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "nameMax": "Name must be at most 120 characters",
+        "publicSlugPattern": "Use only lowercase letters, numbers, and dashes"
+      }
     }
   },
   "theme": {

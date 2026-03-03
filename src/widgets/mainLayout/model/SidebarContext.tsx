@@ -1,4 +1,5 @@
-import { createContext, type ReactNode, useContext, useState } from 'react';
+import { useUiStore } from '@/shared/store';
+import { sidebarUiSelectors } from './store/sidebarUiSlice';
 
 interface SidebarContextValue {
   /** Sidebar is collapsed to icon-only mode (desktop). */
@@ -10,38 +11,19 @@ interface SidebarContextValue {
   closeMobile: () => void;
 }
 
-const SidebarContext = createContext<SidebarContextValue | null>(null);
-
-const SIDEBAR_COLLAPSED_KEY = 'lp:sidebar:collapsed';
-
-function readCollapsed(): boolean {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === 'true';
-}
-
-export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = useState(readCollapsed);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const value: SidebarContextValue = {
-    isCollapsed,
-    toggleCollapsed: () =>
-      setIsCollapsed((prev) => {
-        const next = !prev;
-        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(next));
-        return next;
-      }),
-    isMobileOpen,
-    openMobile: () => setIsMobileOpen(true),
-    closeMobile: () => setIsMobileOpen(false),
-  };
-
-  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
-}
-
-/** Consume sidebar state. Must be used inside SidebarProvider. */
+/** Sidebar state hook backed by Zustand UI store. */
 export function useSidebar(): SidebarContextValue {
-  const ctx = useContext(SidebarContext);
-  if (!ctx) throw new Error('useSidebar must be used within SidebarProvider');
-  return ctx;
+  const isCollapsed = useUiStore(sidebarUiSelectors.isCollapsed);
+  const toggleCollapsed = useUiStore(sidebarUiSelectors.toggleCollapsed);
+  const isMobileOpen = useUiStore(sidebarUiSelectors.isMobileOpen);
+  const openMobile = useUiStore(sidebarUiSelectors.openMobile);
+  const closeMobile = useUiStore(sidebarUiSelectors.closeMobile);
+
+  return {
+    isCollapsed,
+    toggleCollapsed,
+    isMobileOpen,
+    openMobile,
+    closeMobile,
+  };
 }

@@ -4,7 +4,6 @@ import type { Location } from '../types';
 export interface LocationSelectionSlice {
   isHydrated: boolean;
   markHydrated: () => void;
-  resetLocationSelection: (accountId?: string) => void;
   resolveSelectedLocationId: (
     accountId: string,
     locations: Location[],
@@ -42,41 +41,46 @@ export const createLocationSelectionSlice: StateCreator<LocationSelectionSlice, 
   markHydrated: () => {
     set({ isHydrated: true });
   },
-  resetLocationSelection: (accountId) => {
-    if (!accountId) {
-      set({ selectedLocationIdByAccountId: {} });
-      return;
-    }
-
-    set((state) => ({
-      selectedLocationIdByAccountId: {
-        ...state.selectedLocationIdByAccountId,
-        [accountId]: null,
-      },
-    }));
-  },
   resolveSelectedLocationId: (accountId, locations, preferredId) => {
     const accountSelection = get().selectedLocationIdByAccountId[accountId] ?? null;
     const nextSelectedId = resolveSelectedLocationId(locations, preferredId ?? accountSelection);
-    set((state) => ({
-      selectedLocationIdByAccountId: {
-        ...state.selectedLocationIdByAccountId,
-        [accountId]: nextSelectedId,
-      },
-    }));
+    set((state) => {
+      if (state.selectedLocationIdByAccountId[accountId] === nextSelectedId) {
+        return state;
+      }
+
+      return {
+        selectedLocationIdByAccountId: {
+          ...state.selectedLocationIdByAccountId,
+          [accountId]: nextSelectedId,
+        },
+      };
+    });
     return nextSelectedId;
   },
   selectedLocationIdByAccountId: {},
   setSelectedLocationId: (accountId, id) => {
-    set((state) => ({
-      selectedLocationIdByAccountId: {
-        ...state.selectedLocationIdByAccountId,
-        [accountId]: id,
-      },
-    }));
+    set((state) => {
+      if (state.selectedLocationIdByAccountId[accountId] === id) {
+        return state;
+      }
+
+      return {
+        selectedLocationIdByAccountId: {
+          ...state.selectedLocationIdByAccountId,
+          [accountId]: id,
+        },
+      };
+    });
   },
 });
 
-export const selectSelectedLocationId = (accountId: string) => (state: LocationSelectionSlice) =>
-  state.selectedLocationIdByAccountId[accountId] ?? null;
-export const selectIsHydrated = (state: LocationSelectionSlice): boolean => state.isHydrated;
+export const locationSelectionSelectors = {
+  selectedLocationId:
+    (accountId: string | null) =>
+    (state: LocationSelectionSlice): string | null =>
+      state.selectedLocationIdByAccountId[accountId ?? ''] ?? null,
+  isHydrated: (state: LocationSelectionSlice): boolean => state.isHydrated,
+  setSelectedLocationId: (state: LocationSelectionSlice) => state.setSelectedLocationId,
+  resolveSelectedLocationId: (state: LocationSelectionSlice) => state.resolveSelectedLocationId,
+} as const;

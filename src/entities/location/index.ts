@@ -14,8 +14,7 @@ export { invalidateLocations } from './model/invalidateLocations';
 export { locationQueryKeys } from './model/queryKeys';
 export {
   createLocationSelectionSlice,
-  selectIsHydrated,
-  selectSelectedLocationId,
+  locationSelectionSelectors,
   type LocationSelectionSlice,
 } from './model/store/locationSelectionSlice';
 export type { UpdateLocationVariables } from './model/useUpdateLocation';

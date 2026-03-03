@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { CampaignsIcon, LocationsIcon, ReviewsIcon, ScansIcon, SurveysIcon } from '@/shared/ui';
+import { Megaphone, MapPin, MessageSquare, ClipboardCheck, ScanLine } from 'lucide-react';
 
 export interface NavItem {
   key: string;
@@ -8,11 +8,11 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { key: 'reviews', path: '/', icon: ReviewsIcon },
-  { key: 'surveys', path: '/surveys', icon: SurveysIcon },
-  { key: 'scans', path: '/scans', icon: ScansIcon },
-  { key: 'campaigns', path: '/campaigns', icon: CampaignsIcon },
-  { key: 'locations', path: '/locations', icon: LocationsIcon },
+  { key: 'reviews', path: '/', icon: MessageSquare },
+  { key: 'surveys', path: '/surveys', icon: ClipboardCheck },
+  { key: 'scans', path: '/scans', icon: ScanLine },
+  { key: 'campaigns', path: '/campaigns', icon: Megaphone },
+  { key: 'locations', path: '/locations', icon: MapPin },
 ];
 
 /** Returns the nav item matching the current pathname, falling back to the first item. */

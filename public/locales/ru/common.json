@@ -51,6 +51,38 @@
         "description": "Настраивайте бизнес-локации и привязывайте к ним каналы.",
         "emptyState": "Модули конфигурации локаций появятся здесь."
       }
+    },
+    "locationSelector": {
+      "title": "Текущая локация",
+      "notSelected": "Не выбрана",
+      "searchPlaceholder": "Поиск локации",
+      "selected": "Выбрана",
+      "noMatch": "Совпадений не найдено.",
+      "empty": "Локации отсутствуют.",
+      "manageLocations": "Управлять локациями"
+    },
+    "locationsPage": {
+      "create": "Создать локацию",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "save": "Сохранить",
+      "defaultBadge": "По умолчанию",
+      "noDetails": "Нет адреса или часового пояса",
+      "empty": "Локаций пока нет."
+    },
+    "locationsForm": {
+      "nameLabel": "Название",
+      "phoneLabel": "Телефон",
+      "websiteLabel": "Сайт",
+      "addressLabel": "Адрес",
+      "timeZoneLabel": "Часовой пояс",
+      "publicSlugLabel": "Публичный slug",
+      "defaultLabel": "Сделать по умолчанию",
+      "validation": {
+        "nameMin": "Название должно содержать минимум 2 символа",
+        "nameMax": "Название должно содержать не более 120 символов",
+        "publicSlugPattern": "Используйте только строчные буквы, цифры и дефисы"
+      }
     }
   },
   "theme": {

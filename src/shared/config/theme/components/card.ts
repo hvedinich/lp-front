@@ -39,9 +39,10 @@ export const cardSlotRecipe = defineSlotRecipe({
   variants: {
     /**
      * variant — card visual style.
-     * elevated — with shadow (default)
-     * outline  — no shadow, with border
-     * ghost    — no shadow, no border
+     * elevated  — with shadow (default)
+     * outline          — static outline card
+     * outlineClickable — outline card with hover/focus interaction
+     * ghost     — no shadow, no border
      */
     variant: {
       elevated: {
@@ -57,6 +58,23 @@ export const cardSlotRecipe = defineSlotRecipe({
           shadow: 'none',
           borderWidth: 'thin',
           borderColor: 'border.default',
+        },
+      },
+      outlineClickable: {
+        root: {
+          bg: 'bg.surface',
+          shadow: 'none',
+          borderWidth: 'thin',
+          borderColor: 'border.default',
+          _hover: {
+            borderColor: 'border.accent',
+            bg: 'bg.accent.hover',
+          },
+          _focusVisible: {
+            outline: '2px solid',
+            outlineColor: 'border.focusRing',
+            outlineOffset: '2px',
+          },
         },
       },
       ghost: {

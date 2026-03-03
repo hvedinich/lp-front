@@ -29,6 +29,7 @@ import { textareaRecipe } from './components/textarea';
 import { cardSlotRecipe } from './components/card';
 import { nativeSelectSlotRecipe } from './components/nativeSelect';
 import { checkboxSlotRecipe } from './components/checkbox';
+import { comboboxSlotRecipe } from './components/combobox';
 import separatorRecipe from './components/separator';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -120,6 +121,7 @@ export const brandBaseConfig = defineConfig({
       card: cardSlotRecipe,
       nativeSelect: nativeSelectSlotRecipe,
       checkbox: checkboxSlotRecipe,
+      combobox: comboboxSlotRecipe,
     },
   },
 });

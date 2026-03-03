@@ -1,8 +1,9 @@
 import { Button, Popover, Stack } from '@chakra-ui/react';
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
-import { MoonIcon, SunIcon, SystemIcon } from './icons';
+import { AppIcon } from './icons';
 
 type ThemeMode = 'light' | 'system' | 'dark';
 
@@ -10,9 +11,26 @@ const modes: ThemeMode[] = ['light', 'system', 'dark'];
 
 /** Renders the correct icon for a given theme mode option. */
 const ModeIcon = ({ mode }: { mode: string | undefined }) => {
-  if (mode === 'dark') return <MoonIcon size={14} />;
-  if (mode === 'system') return <SystemIcon size={14} />;
-  return <SunIcon size={14} />;
+  if (mode === 'dark')
+    return (
+      <AppIcon
+        icon={Moon}
+        size={14}
+      />
+    );
+  if (mode === 'system')
+    return (
+      <AppIcon
+        icon={Monitor}
+        size={14}
+      />
+    );
+  return (
+    <AppIcon
+      icon={Sun}
+      size={14}
+    />
+  );
 };
 
 /**

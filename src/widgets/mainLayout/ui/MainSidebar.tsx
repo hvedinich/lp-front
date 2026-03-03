@@ -1,16 +1,21 @@
 import { useLogoutUser } from '@/features/auth';
-import { AppBrand, LogoutIcon, XIcon } from '@/shared/ui';
-import { Box, Button, Drawer, Flex, Separator } from '@chakra-ui/react';
+import { AppBrand } from '@/shared/ui';
+import { Box, Separator } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '../model/SidebarContext';
+import { useSidebarCompactState } from '../model/useSidebarCompactState';
 import { navItems, type NavItem } from '../model/navigation';
 import { NavButtons } from './NavButtons';
+import { SidebarLocationSection } from './SidebarLocationSection';
+import { SidebarLogoutButton } from './SidebarLogoutButton';
+import { SidebarMobileDrawer } from './SidebarMobileDrawer';
 
 export function MainSidebar() {
   const router = useRouter();
   const { t } = useTranslation('common');
   const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
+  const { isCompactUi, isCollapsingToCompact } = useSidebarCompactState(isCollapsed);
   const { mutate: logout, isPending: isLoggingOut } = useLogoutUser({
     onSettled: () => void router.replace('/login'),
   });
@@ -44,18 +49,26 @@ export function MainSidebar() {
       >
         {/* Brand slot */}
         <AppBrand
-          collapsed={isCollapsed}
+          collapsed={isCompactUi}
+          fadeLabel={isCollapsingToCompact}
           px='1'
+        />
+
+        <Box />
+
+        <SidebarLocationSection
+          isCompactUi={isCompactUi}
+          isCollapsingToCompact={isCollapsingToCompact}
         />
 
         {/* Navigation */}
         <NavButtons
           items={navItems}
           activePath={router.pathname}
-          collapsed={isCollapsed}
+          collapsed={isCompactUi}
+          fadeLabels={isCollapsingToCompact}
           onSelect={handleSelectItem}
           getLabel={getItemLabel}
-          mt='3'
         />
 
         {/* Spacer — pushes logout to bottom */}
@@ -63,82 +76,25 @@ export function MainSidebar() {
 
         {/* Logout */}
         <Separator />
-        <Button
-          variant='ghost'
-          justifyContent={isCollapsed ? 'center' : 'flex-start'}
-          width='full'
-          loading={isLoggingOut}
-          onClick={() => logout()}
-          color='fg.muted'
-          gap='3'
-          mt='1'
-        >
-          <LogoutIcon size={16} />
-          {!isCollapsed && t('workspace.logout')}
-        </Button>
+        <Box mt='1'>
+          <SidebarLogoutButton
+            isCompactUi={isCompactUi}
+            isCollapsingToCompact={isCollapsingToCompact}
+            isLoading={isLoggingOut}
+            onLogout={() => logout()}
+          />
+        </Box>
       </Box>
 
-      {/* Mobile Drawer — triggered from AppHeader */}
-      <Drawer.Root
-        open={isMobileOpen}
-        onOpenChange={({ open }) => {
-          if (!open) closeMobile();
-        }}
-        placement='start'
-      >
-        <Drawer.Backdrop />
-        <Drawer.Positioner>
-          <Drawer.Content>
-            <Drawer.Header>
-              <Flex
-                align='center'
-                justify='space-between'
-                w='full'
-              >
-                <AppBrand px='1' />
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  aria-label={t('workspace.closeMenu')}
-                  onClick={closeMobile}
-                >
-                  <XIcon size={16} />
-                </Button>
-              </Flex>
-            </Drawer.Header>
-
-            <Drawer.Body>
-              <NavButtons
-                items={navItems}
-                activePath={router.pathname}
-                collapsed={false}
-                onSelect={handleSelectItem}
-                getLabel={getItemLabel}
-              />
-            </Drawer.Body>
-
-            <Drawer.Footer
-              flexDirection='column'
-              alignItems='stretch'
-              gap='2'
-            >
-              <Separator />
-              <Button
-                variant='ghost'
-                justifyContent='flex-start'
-                width='full'
-                loading={isLoggingOut}
-                onClick={() => logout()}
-                color='fg.muted'
-                gap='3'
-              >
-                <LogoutIcon size={16} />
-                {t('workspace.logout')}
-              </Button>
-            </Drawer.Footer>
-          </Drawer.Content>
-        </Drawer.Positioner>
-      </Drawer.Root>
+      <SidebarMobileDrawer
+        isOpen={isMobileOpen}
+        closeMobile={closeMobile}
+        items={navItems}
+        onSelect={handleSelectItem}
+        getLabel={getItemLabel}
+        isLoggingOut={isLoggingOut}
+        onLogout={() => logout()}
+      />
     </>
   );
 }

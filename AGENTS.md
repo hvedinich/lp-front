@@ -34,6 +34,7 @@ npm run validate  # read-only: tsc + lint + format:check (must exit 0)
   - ✅ `import { system } from '@/shared/config'`
   - ❌ `import { system } from '@/shared/config/theme'`
 - State boundary: use `zustand` for client-only state and React Query for server state; do not duplicate server lists in store
+- `useUiStore`: do not pass explicit generics (`<TState, TSelected>`) when selector inference is enough
 - Naming rules: keep a single source of truth in `ARCHITECTURE.md` (Naming Rules section)
 - See `ARCHITECTURE.md` for full details
 

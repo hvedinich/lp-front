@@ -2,6 +2,7 @@ import { Field, Input, type InputProps } from '@chakra-ui/react';
 import { type ChangeEventHandler, type FocusEventHandler, type ReactNode } from 'react';
 import {
   useController,
+  useFormState,
   type Control,
   type FieldPath,
   type FieldValues,
@@ -51,6 +52,7 @@ const InputField = <
     control,
     rules,
   });
+  const { disabled } = useFormState({ control });
 
   const fieldId = String(name);
 
@@ -72,6 +74,7 @@ const InputField = <
       {label ? <Field.Label htmlFor={fieldId}>{label}</Field.Label> : null}
       <Input
         {...inputProps}
+        disabled={disabled || inputProps.disabled}
         id={fieldId}
         name={fieldName}
         value={value ?? ''}

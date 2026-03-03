@@ -1,7 +1,8 @@
 import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Menu, PanelLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { MenuIcon, SidebarIcon, ThemeSwitcher } from '@/shared/ui';
+import { AppIcon, ThemeSwitcher } from '@/shared/ui';
 import { useSidebar } from '../model/SidebarContext';
 import { getActiveNavItem } from '../model/navigation';
 
@@ -47,7 +48,10 @@ export function AppHeader() {
           aria-label={t('workspace.openMenu')}
           onClick={openMobile}
         >
-          <MenuIcon size={18} />
+          <AppIcon
+            icon={Menu}
+            size={18}
+          />
         </Button>
 
         {/* Desktop: panel-left icon — collapse / expand sidebar */}
@@ -58,7 +62,10 @@ export function AppHeader() {
           aria-label={isCollapsed ? t('workspace.expandSidebar') : t('workspace.collapseSidebar')}
           onClick={toggleCollapsed}
         >
-          <SidebarIcon size={18} />
+          <AppIcon
+            icon={PanelLeft}
+            size={18}
+          />
         </Button>
 
         <Heading

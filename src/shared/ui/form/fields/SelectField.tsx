@@ -2,6 +2,7 @@ import { Field, NativeSelect } from '@chakra-ui/react';
 import { type ChangeEventHandler, type ComponentProps, type ReactNode } from 'react';
 import {
   useController,
+  useFormState,
   type Control,
   type FieldPath,
   type FieldValues,
@@ -65,6 +66,7 @@ const SelectField = <
     control,
     rules,
   });
+  const { disabled } = useFormState({ control });
 
   const fieldId = String(name);
 
@@ -80,8 +82,9 @@ const SelectField = <
     >
       {label ? <Field.Label htmlFor={fieldId}>{label}</Field.Label> : null}
       <NativeSelect.Root
-        invalid={invalid}
         {...rootProps}
+        invalid={invalid}
+        disabled={disabled || rootProps?.disabled}
       >
         <NativeSelect.Field
           {...selectProps}

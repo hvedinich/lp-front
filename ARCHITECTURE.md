@@ -187,6 +187,7 @@ Store placement:
 
 - `shared/store/core/*`: store infrastructure only (factory, middleware wiring, persist helpers)
 - `entities/*/model/store/*`: domain slice state, selectors, and actions
+- `widgets/*/model/store/*`: widget-scoped UI state slices (layout/view state), when not domain entity state
 - `app/providers/*`: app-level store composition/provider wiring
 
 Hydration and persistence:
@@ -214,6 +215,7 @@ Rules:
 
 - `shared/api` - HTTP client, query client factory, transport helpers
 - `shared/ui` - base UI primitives
+  - render Lucide icons via `AppIcon` from `@/shared/ui`; icon glyphs may be imported directly from `lucide-react`
 - `shared/lib` - generic utilities
 - `shared/config` - runtime config
 - `shared/types` - common non-domain types
@@ -228,7 +230,7 @@ No business rules in `shared`.
 - slice folders: `kebab-case`
 - public API entry: `index.ts`
 - zustand slices: `<domain><Purpose>Slice.ts`
-- selectors: colocate in slice, or move to `<domain><Purpose>.selectors.ts` when many; avoid `*.selector.ts`
+- selectors: expose as a namespaced object `<domain><Purpose>Selectors` (for example `locationSelectionSelectors`)
 - store/domain functions: selectors `select*`, actions `set/reset/resolve/mark*`, mappers `map<Entity>Dto`
 
 ## 12. Definition of Done (Architecture)
