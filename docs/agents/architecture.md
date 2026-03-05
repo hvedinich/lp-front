@@ -263,7 +263,7 @@ A change is architecture-compliant only if:
 
 Form architecture (React Hook Form + Zod + Chakra v3 wrappers) is defined in:
 
-- `apps/lp/FORMS_ARCHITECTURE.md`
+- `docs/agents/forms.md`
 
 ## 14. i18n and Text Rules
 

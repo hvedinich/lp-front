@@ -42,8 +42,8 @@ npm run format
 
 ## Architecture
 
-- `ARCHITECTURE.md` - FSD rules, import/export policy, entities + React Query standards
-- `FORMS_ARCHITECTURE.md` - form stack, templates, and field/component rules
+- `docs/agents/architecture.md` - FSD rules, import/export policy, entities + React Query standards
+- `docs/agents/forms.md` - form stack, templates, and field/component rules
 
 ## Key Routes
 

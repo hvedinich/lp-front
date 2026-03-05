@@ -5,7 +5,7 @@
  *   L1 (tokens/)         — raw primitives: brand.500, gray.200, shadows.sm
  *   L2 (semanticTokens/) — named roles: fg.error, bg.surface, border.focus
  *
- * Developer rules, white-label setup and token addition guide: ARCHITECTURE.md
+ * Developer rules, white-label setup and token addition guide: docs/agents/architecture.md
  */
 
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
