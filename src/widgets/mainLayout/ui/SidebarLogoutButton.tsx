@@ -20,6 +20,7 @@ export function SidebarLogoutButton({
 
   return (
     <Button
+      data-testid='auth-logout-button'
       variant='ghost'
       justifyContent={isCompactUi ? 'center' : 'flex-start'}
       width='full'

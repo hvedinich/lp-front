@@ -1,8 +1,8 @@
-import { Stack } from '@chakra-ui/react';
+import { Stack, type StackProps } from '@chakra-ui/react';
 import type { Location } from '@/entities/location';
 import { LocationCard } from './LocationCard';
 
-interface LocationsListProps {
+interface LocationsListProps extends Omit<StackProps, 'children'> {
   canManage: boolean;
   isDeletePending: boolean;
   locations: Location[];
@@ -16,9 +16,13 @@ export function LocationsList({
   locations,
   onDelete,
   onOpen,
+  ...rest
 }: LocationsListProps) {
   return (
-    <Stack gap='3'>
+    <Stack
+      gap='3'
+      {...rest}
+    >
       {locations.map((location) => (
         <LocationCard
           key={location.id}

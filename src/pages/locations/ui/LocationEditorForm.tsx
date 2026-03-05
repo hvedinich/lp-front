@@ -78,6 +78,7 @@ export function LocationEditorForm({
         secondaryAction={
           onCancel
             ? {
+                'data-testid': 'location-form-cancel-button',
                 label: t('commonActions.cancel'),
                 onClick: onCancel,
                 type: 'button',
@@ -87,6 +88,8 @@ export function LocationEditorForm({
         primaryAction={
           shouldShowSubmit
             ? {
+                'data-testid':
+                  mode === 'create' ? 'location-form-create-submit' : 'location-form-edit-submit',
                 label:
                   mode === 'create' ? t('workspace.locationsPage.create') : t('commonActions.save'),
                 disabled: isSubmitDisabled,

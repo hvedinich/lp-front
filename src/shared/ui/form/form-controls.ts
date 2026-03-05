@@ -2,6 +2,7 @@ import type { BoxProps, ButtonProps } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
 
 export type FormAction = {
+  'data-testid'?: string;
   label: ReactNode;
 } & Omit<ButtonProps, 'children'>;
 

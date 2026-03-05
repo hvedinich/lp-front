@@ -82,7 +82,10 @@ export default function LoginPage() {
           </Text>
         </Stack>
 
-        <FormErrorAlert message={requestError} />
+        <FormErrorAlert
+          message={requestError}
+          testId='auth-login-error'
+        />
 
         <Form
           methods={methods}
@@ -90,6 +93,7 @@ export default function LoginPage() {
         >
           <InputField
             name='email'
+            data-testid='auth-login-email'
             label={t('login.fields.emailLabel')}
             placeholder={t('login.fields.emailPlaceholder')}
             type='email'
@@ -98,6 +102,7 @@ export default function LoginPage() {
 
           <InputField
             name='password'
+            data-testid='auth-login-password'
             label={t('login.fields.passwordLabel')}
             placeholder={t('login.fields.passwordPlaceholder')}
             type='password'
@@ -106,6 +111,7 @@ export default function LoginPage() {
 
           <FormControls
             primaryAction={{
+              'data-testid': 'auth-login-submit',
               label: t('login.submit'),
               loading: methods.formState.isSubmitting || isLoginPending,
             }}

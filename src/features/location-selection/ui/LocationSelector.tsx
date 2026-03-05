@@ -58,6 +58,7 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
       <Stack gap='2'>
         <Combobox.Root
           collection={collection}
+          data-testid='location-selector-root'
           value={selectedLocationId ? [selectedLocationId] : []}
           inputValue={inputValue}
           onInputValueChange={(details) => setSearchQuery(details.inputValue)}
@@ -96,6 +97,7 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
               />
             </Box>
             <Combobox.Input
+              data-testid='location-selector-input'
               placeholder={
                 selectedLocation?.name
                   ? t('workspace.locationSelector.searchPlaceholder')
@@ -105,7 +107,7 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
               ps='10'
             />
             <Combobox.IndicatorGroup>
-              <Combobox.Trigger>
+              <Combobox.Trigger data-testid='location-selector-trigger'>
                 <AppIcon
                   icon={ChevronDown}
                   size={16}
@@ -121,6 +123,7 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
                 <Combobox.Item
                   key={option.value}
                   item={option}
+                  data-testid={`location-selector-option-${option.value}`}
                 >
                   <Combobox.ItemText>{option.label}</Combobox.ItemText>
                   <Combobox.ItemIndicator>
@@ -142,6 +145,7 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
               {t('workspace.locationSelector.empty')}
             </Text>
             <Button
+              data-testid='location-selector-manage-button'
               size='sm'
               variant='subtle'
               width='full'

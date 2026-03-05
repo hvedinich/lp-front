@@ -30,6 +30,7 @@ export function LocationCard({
   return (
     <Card.Root
       variant='outlineClickable'
+      data-testid={`locations-card-${location.id}`}
       role='button'
       tabIndex={0}
       style={{ cursor: 'pointer' }}
@@ -51,7 +52,12 @@ export function LocationCard({
               <HStack>
                 <Text fontWeight='semibold'>{location.name}</Text>
                 {location.isDefault ? (
-                  <Badge colorPalette='green'>{t('workspace.locationsPage.defaultBadge')}</Badge>
+                  <Badge
+                    colorPalette='green'
+                    data-testid={`locations-card-default-badge-${location.id}`}
+                  >
+                    {t('workspace.locationsPage.defaultBadge')}
+                  </Badge>
                 ) : null}
               </HStack>
               <Text
@@ -65,6 +71,7 @@ export function LocationCard({
 
             {canManage ? (
               <IconButton
+                data-testid={`locations-delete-button-${location.id}`}
                 size='sm'
                 variant='ghost'
                 colorPalette='red'

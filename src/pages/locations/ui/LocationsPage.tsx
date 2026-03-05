@@ -55,6 +55,7 @@ export default function LocationsPage() {
 
         {canManage ? (
           <Button
+            data-testid='locations-create-button'
             onClick={() => {
               void router.push('/locations/new');
             }}
@@ -69,6 +70,7 @@ export default function LocationsPage() {
       </Flex>
 
       <LocationsList
+        data-testid='locations-list'
         locations={locations}
         canManage={canManage}
         isDeletePending={isDeletePending}

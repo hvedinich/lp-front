@@ -42,7 +42,20 @@ Thank you for considering contributing to the LP project!
 
    # Validate all (typecheck + lint + format check) — no auto-fix, read-only
    npm run validate
+
+   # Unit/integration tests (Vitest)
+   npm run test
+
+   # E2E tests (Playwright)
+   npm run test:e2e
    ```
+
+## Testing
+
+- Unit and module-level tests: `Vitest` (`npm run test`)
+- End-to-end tests: `Playwright` (`npm run test:e2e`)
+- Playwright conventions and `data-testid` rules are documented in `TESTING.md`
+- Current scope note: role/account-switch E2E scenarios are deferred until account switching is implemented
 
 ## Code Standards
 
