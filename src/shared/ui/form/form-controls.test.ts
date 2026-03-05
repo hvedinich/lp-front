@@ -12,7 +12,7 @@ describe('resolveFormControlsLayout', () => {
       hasLeftSlot: false,
       mobileFullWidth: true,
       sticky: false,
-      stickyBottom: '[0px]',
+      stickyBottom: 'zero',
     });
 
     expect(layout.actionGroupShouldFullBase).toBe(true);
@@ -26,7 +26,7 @@ describe('resolveFormControlsLayout', () => {
       hasLeftSlot: false,
       mobileFullWidth: true,
       sticky: false,
-      stickyBottom: '[0px]',
+      stickyBottom: 'zero',
     });
 
     expect(layout.actionGroupShouldFullDesktop).toBe(false);
@@ -39,7 +39,7 @@ describe('resolveFormControlsLayout', () => {
       hasLeftSlot: false,
       mobileFullWidth: false,
       sticky: false,
-      stickyBottom: '[0px]',
+      stickyBottom: 'zero',
     });
 
     expect(layout.actionGroupShouldFullBase).toBe(true);
@@ -54,7 +54,7 @@ describe('resolveFormControlsLayout', () => {
       hasLeftSlot: true,
       mobileFullWidth: false,
       sticky: false,
-      stickyBottom: '[0px]',
+      stickyBottom: 'zero',
     });
 
     expect(layout.actionGroupShouldBreakRowBase).toBe(true);

@@ -12,7 +12,7 @@
     "typegen": "chakra typegen src/shared/config/theme/index.ts",
     "dev": "node scripts/dev-with-port.mjs",
     "build": "next build",
-    "start": "next start --port ${PORT:-4000}",
+    "start": "next start --port 4000",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "tc": "tsc --noEmit",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "^3.33.0",
+    "@playwright/test": "^1.55.0",
     "@feature-sliced/steiger-plugin": "^0.5.7",
-    "@playwright/test": "^1.58.2",
     "@types/node": "25.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

@@ -38,25 +38,8 @@ export function SidebarLocationSection({
     >
       <Popover.Trigger asChild>
         <Button
-          variant='outline'
+          variant='sidebarLocation'
           size='md'
-          justifyContent='center'
-          width='full'
-          minH='10'
-          px='1'
-          borderColor='border.muted'
-          bg='bg.input'
-          borderRadius='control'
-          color='fg.muted'
-          _hover={{
-            borderColor: 'border.default',
-            bg: 'bg.input',
-          }}
-          _focusVisible={{
-            borderColor: 'border.focus',
-            bg: 'bg.input',
-            outlineColor: 'border.focusRing',
-          }}
           aria-label={t('workspace.menu.locations')}
         >
           <AppIcon

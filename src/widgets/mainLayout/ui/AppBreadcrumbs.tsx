@@ -1,11 +1,10 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppLink } from '@/shared/ui';
 import { useAppBreadcrumbs } from '../model/breadcrumbs';
 
 export function AppBreadcrumbs() {
-  const router = useRouter();
   const { t } = useTranslation('common');
   const items = useAppBreadcrumbs();
   const lastIndex = items.length - 1;
@@ -24,20 +23,19 @@ export function AppBreadcrumbs() {
         return (
           <Fragment key={`${item.href ?? 'current'}-${item.label}-${index}`}>
             {!isLast && item.href ? (
-              <Button
-                variant='ghost'
-                size='sm'
+              <AppLink
+                href={item.href}
+                fontSize='sm'
+                fontWeight='medium'
                 px='2'
                 color='fg.muted'
-                onClick={() => {
-                  void router.push(item.href!);
-                }}
               >
                 {item.label}
-              </Button>
+              </AppLink>
             ) : (
               <Heading
                 as='h1'
+                aria-current={isLast ? 'page' : undefined}
                 size='sm'
                 px='2'
                 fontWeight='semibold'
@@ -47,7 +45,14 @@ export function AppBreadcrumbs() {
               </Heading>
             )}
 
-            {!isLast ? <Text color='fg.subtle'>{t('workspace.breadcrumbs.separator')}</Text> : null}
+            {!isLast ? (
+              <Text
+                color='fg.subtle'
+                aria-hidden='true'
+              >
+                {t('workspace.breadcrumbs.separator')}
+              </Text>
+            ) : null}
           </Fragment>
         );
       })}

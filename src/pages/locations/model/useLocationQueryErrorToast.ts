@@ -18,5 +18,5 @@ export const useLocationQueryErrorToast = ({ error }: UseLocationQueryErrorToast
     }
 
     toaster.error({ description: message });
-  }, [message, error]);
+  }, [message]);
 };

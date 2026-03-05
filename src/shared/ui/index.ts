@@ -9,6 +9,7 @@ export {
   type FormAction,
   type FormControlsProps,
 } from './form';
+export { AppLink, type AppLinkProps } from './AppLink';
 export { AppBrand, type AppBrandProps } from './AppBrand';
 export { FormErrorAlert } from './FormErrorAlert';
 export { LogoIcon } from './LogoIcon';
