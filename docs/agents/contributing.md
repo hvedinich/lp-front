@@ -57,6 +57,10 @@ Thank you for considering contributing to the LP project!
 - Playwright conventions and `data-testid` rules are documented in `docs/agents/testing.md`
 - Current scope note: role/account-switch E2E scenarios are deferred until account switching is implemented
 
+## Git hooks
+
+- `pre-push` runs mandatory quality gates: `npm run validate && npm run test`
+
 ## Code Standards
 
 ### Architecture
