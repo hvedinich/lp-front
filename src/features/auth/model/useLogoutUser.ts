@@ -1,9 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AuthSession, authQueryKeys, logoutUser } from '@/entities/auth';
-import { type MutationCallbacks } from '@/shared/lib';
+import { type MutationHookOptions } from '@/shared/lib';
 
-export const useLogoutUser = (options?: MutationCallbacks) => {
+export const useLogoutUser = (
+  params: MutationHookOptions<Record<string, never>, void, void, Error> = {
+    scope: {},
+  },
+) => {
   const queryClient = useQueryClient();
+  const { options, scope } = params;
+  void scope;
 
   return useMutation<void, Error, void>({
     mutationFn: logoutUser,

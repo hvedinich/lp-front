@@ -1,15 +1,14 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { Menu, PanelLeft } from 'lucide-react';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { AppIcon, ThemeSwitcher } from '@/shared/ui';
 import { useSidebar } from '../model/SidebarContext';
-import { getActiveNavItem } from '../model/navigation';
+import { AppBreadcrumbs } from './AppBreadcrumbs';
 
 /**
  * AppHeader — sticky top bar inside the authenticated layout.
  *
- * Left slot: sidebar toggle + current section title.
+ * Left slot: sidebar toggle + route breadcrumbs.
  * Right slot: ThemeSwitcher.
  *
  * Sidebar toggle behavior:
@@ -17,11 +16,8 @@ import { getActiveNavItem } from '../model/navigation';
  * - desktop (>= md): collapses / expands the sidebar
  */
 export function AppHeader() {
-  const router = useRouter();
   const { t } = useTranslation('common');
   const { isCollapsed, toggleCollapsed, openMobile } = useSidebar();
-
-  const activeItem = getActiveNavItem(router.pathname);
 
   return (
     <Flex
@@ -68,14 +64,7 @@ export function AppHeader() {
           />
         </Button>
 
-        <Heading
-          as='h1'
-          size='md'
-          fontWeight='semibold'
-          color='fg.default'
-        >
-          {t(`workspace.menu.${activeItem.key}`)}
-        </Heading>
+        <AppBreadcrumbs />
       </Flex>
 
       <Box flexShrink={0}>

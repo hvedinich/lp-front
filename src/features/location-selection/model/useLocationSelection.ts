@@ -13,7 +13,12 @@ export const useLocationSelection = () => {
   );
   const selectedLocationId = useUiStore(locationSelectionSelectors.selectedLocationId(accountId));
 
-  const locationsQuery = useLocations(accountId, { sort: 'name' });
+  const locationsQuery = useLocations({
+    scope: {
+      accountId,
+      params: { sort: 'name' },
+    },
+  });
 
   const selectedLocation = useMemo(
     () => locationsQuery.data?.find((location) => location.id === selectedLocationId) ?? null,

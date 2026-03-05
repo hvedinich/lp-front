@@ -13,4 +13,6 @@ export const locationQueryKeys = {
   lists: (accountId: string) => ['locations', 'account', accountId, 'list'] as const,
   list: (accountId: string, params: GetLocationsParams = {}) =>
     ['locations', 'account', accountId, 'list', normalizeParams(params)] as const,
+  items: (accountId: string) => ['locations', 'account', accountId, 'item'] as const,
+  item: (accountId: string, id: string) => ['locations', 'account', accountId, 'item', id] as const,
 } as const;

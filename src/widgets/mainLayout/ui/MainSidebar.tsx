@@ -17,7 +17,10 @@ export function MainSidebar() {
   const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
   const { isCompactUi, isCollapsingToCompact } = useSidebarCompactState(isCollapsed);
   const { mutate: logout, isPending: isLoggingOut } = useLogoutUser({
-    onSettled: () => void router.replace('/login'),
+    scope: {},
+    options: {
+      onSettled: () => void router.replace('/login'),
+    },
   });
 
   const handleSelectItem = (item: NavItem) => {

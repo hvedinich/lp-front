@@ -80,7 +80,7 @@ const readEnvelope = (payload: unknown): ApiErrorEnvelope => {
   return {};
 };
 
-export const toLocationError = (error: unknown): LocationError => {
+export const mapToLocationError = (error: unknown): LocationError => {
   if (!isApiError(error)) {
     return {
       code: 'UNKNOWN',

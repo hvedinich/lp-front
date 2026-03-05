@@ -9,7 +9,7 @@ interface LocationCardProps {
   isDeletePending: boolean;
   location: Location;
   onDelete: (locationId: string) => Promise<void>;
-  onEdit: (location: Location) => void;
+  onOpen: (locationId: string) => void;
 }
 
 export function LocationCard({
@@ -17,7 +17,7 @@ export function LocationCard({
   isDeletePending,
   location,
   onDelete,
-  onEdit,
+  onOpen,
 }: LocationCardProps) {
   const { t } = useTranslation('common');
 
@@ -25,7 +25,7 @@ export function LocationCard({
     [location.address, location.timeZone].filter(Boolean).join(' • ') ||
     t('workspace.locationsPage.noDetails');
 
-  const openEdit = () => onEdit(location);
+  const openDetails = () => onOpen(location.id);
 
   return (
     <Card.Root
@@ -33,11 +33,11 @@ export function LocationCard({
       role='button'
       tabIndex={0}
       style={{ cursor: 'pointer' }}
-      onClick={openEdit}
+      onClick={openDetails}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
-          openEdit();
+          openDetails();
         }
       }}
     >

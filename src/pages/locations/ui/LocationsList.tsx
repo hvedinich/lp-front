@@ -7,7 +7,7 @@ interface LocationsListProps {
   isDeletePending: boolean;
   locations: Location[];
   onDelete: (locationId: string) => Promise<void>;
-  onEdit: (location: Location) => void;
+  onOpen: (locationId: string) => void;
 }
 
 export function LocationsList({
@@ -15,7 +15,7 @@ export function LocationsList({
   isDeletePending,
   locations,
   onDelete,
-  onEdit,
+  onOpen,
 }: LocationsListProps) {
   return (
     <Stack gap='3'>
@@ -25,7 +25,7 @@ export function LocationsList({
           location={location}
           canManage={canManage}
           isDeletePending={isDeletePending}
-          onEdit={onEdit}
+          onOpen={onOpen}
           onDelete={onDelete}
         />
       ))}

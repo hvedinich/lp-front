@@ -2,10 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { loginUser } from '../api/login';
 import type { LoginPayload, LoginResponse } from './types';
 import { authQueryKeys } from './queryKeys';
-import type { MutationCallbacks } from '@/shared/lib';
+import type { MutationHookOptions } from '@/shared/lib';
 
-export const useLoginUser = (options?: MutationCallbacks<LoginResponse, LoginPayload>) => {
+export const useLoginUser = (
+  params: MutationHookOptions<Record<string, never>, LoginResponse, LoginPayload> = {
+    scope: {},
+  },
+) => {
   const queryClient = useQueryClient();
+  const { options, scope } = params;
+  void scope;
 
   return useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: loginUser,

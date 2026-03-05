@@ -1,4 +1,4 @@
-import { Button, Heading, Stack, Text } from '@chakra-ui/react';
+import { Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,13 +6,15 @@ import { type SubmitHandler } from 'react-hook-form';
 import { useHasActiveSession, useLoginUser, type LoginPayload } from '@/entities/auth';
 import { useZodForm } from '@/shared/lib';
 import { AuthPageLayout } from '@/widgets/authLayout';
-import { Form, FormErrorAlert, InputField, PageSpinner } from '@/shared/ui';
+import { Form, FormControls, FormErrorAlert, InputField, PageSpinner } from '@/shared/ui';
 import { createLoginSchema } from '../model/loginSchema';
 
 export default function LoginPage() {
   const { t } = useTranslation('common');
   const router = useRouter();
-  const sessionQuery = useHasActiveSession({ enabled: router.isReady });
+  const sessionQuery = useHasActiveSession({
+    options: { enabled: router.isReady },
+  });
   const {
     mutateAsync: loginUser,
     isPending: isLoginPending,
@@ -102,14 +104,14 @@ export default function LoginPage() {
             isRequired
           />
 
-          <Button
-            type='submit'
-            loading={methods.formState.isSubmitting || isLoginPending}
-            width='full'
-            marginTop='8'
-          >
-            {t('login.submit')}
-          </Button>
+          <FormControls
+            primaryAction={{
+              label: t('login.submit'),
+              loading: methods.formState.isSubmitting || isLoginPending,
+            }}
+            forceFullWidth
+            mt='8'
+          />
         </Form>
       </Stack>
     </AuthPageLayout>

@@ -30,6 +30,7 @@ import { cardSlotRecipe } from './components/card';
 import { nativeSelectSlotRecipe } from './components/nativeSelect';
 import { checkboxSlotRecipe } from './components/checkbox';
 import { comboboxSlotRecipe } from './components/combobox';
+import { toastSlotRecipe } from './components/toast';
 import separatorRecipe from './components/separator';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -51,6 +52,17 @@ export const brandBaseConfig = defineConfig({
       ...radiiTokens,
       ...shadowTokens,
       ...borderWidthTokens,
+      /**
+       * Spacing tokens.
+       */
+      spacing: {
+        /**
+         * zero — explicit 0 spacing; used for positional props (bottom, top, left, right)
+         * and gap/padding resets.
+         * Usage: bottom='zero', top='zero', etc. instead of the escape-hatch '[0]' syntax.
+         */
+        zero: { value: '0px' },
+      },
       /**
        * Size tokens.
        */
@@ -122,6 +134,7 @@ export const brandBaseConfig = defineConfig({
       nativeSelect: nativeSelectSlotRecipe,
       checkbox: checkboxSlotRecipe,
       combobox: comboboxSlotRecipe,
+      toast: toastSlotRecipe,
     },
   },
 });

@@ -2,16 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import { getLocations } from '../api/getLocations';
 import type { GetLocationsParams } from '../api/location.dto';
 import { mapLocationDto } from '../lib/location.mapper';
-import { toLocationError, type LocationError } from './errors';
+import { mapToLocationError, type LocationError } from './errors';
 import { locationQueryKeys } from './queryKeys';
 import type { Location } from './types';
-import type { QueryOptions } from '@/shared/lib';
+import type { QueryHookOptions } from '@/shared/lib';
 
-export const useLocations = (
-  accountId: string | null | undefined,
-  params: GetLocationsParams = {},
-  options?: QueryOptions<Location[], LocationError, Location[]>,
-) => {
+type UseLocationsScope = {
+  accountId: string | null | undefined;
+  params?: GetLocationsParams;
+};
+
+export const useLocations = ({
+  scope,
+  options,
+}: QueryHookOptions<UseLocationsScope, Location[], LocationError, Location[]>) => {
+  const { accountId, params } = scope;
+
   const isEnabledByAccount = Boolean(accountId);
   const isEnabled = options?.enabled ?? true;
 
@@ -22,7 +28,7 @@ export const useLocations = (
         const response = await getLocations(params);
         return response.map(mapLocationDto);
       } catch (error) {
-        throw toLocationError(error);
+        throw mapToLocationError(error);
       }
     },
     queryKey: locationQueryKeys.list(accountId ?? '__unknown-account__', params),

@@ -18,6 +18,11 @@ The project follows a page-first FSD approach:
 
 - keep page-specific logic in `pages` slices first
 - extract code to lower layers only when it is reused or truly generic
+- keep page components composition-first and minimal:
+  - render structure only (header, actions, list/table, modal, empty state)
+  - avoid heavy orchestration logic inline
+  - move orchestration to `pages/*/model` controller hooks
+  - move presentational blocks to `pages/*/ui/*`
 
 Layers:
 
@@ -165,6 +170,16 @@ Mandatory rules:
 - define query keys per entity
 - keep `queryFn`/`mutationFn` close to entity API
 - use invalidate/update patterns via entity query keys
+- mutation-driven UI side effects (toasts, redirects, tracking) must use mutation callbacks (`onError`/`onSuccess`), not `useEffect` over mutation error state
+- query UI side effects must use component-level `useEffect` (React Query v5 query callbacks are removed)
+- entity query hooks (`entities/*/model/use*.ts`) must stay UI-pure (no toast/dialog/navigation side effects)
+- QueryClient global query handlers are infrastructure-only (telemetry/logging) unless explicitly overridden by feature policy
+- mutation hooks must use single object options API:
+  - `useMutationHook({ scope, options })`
+  - `scope` carries mutation infrastructure context (for example `accountId`)
+  - hooks without domain scope must still pass `scope: {}` to keep the contract uniform
+  - `options` uses `MutationOptions<...>` for lifecycle handlers and UI side effects
+  - new code must not use positional signatures like `(accountId, options?)`
 
 Layer usage:
 

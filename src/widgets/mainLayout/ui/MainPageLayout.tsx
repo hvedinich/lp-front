@@ -1,7 +1,7 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { type ReactNode } from 'react';
 import { useAuthGuard } from '@/features/auth';
 import { PageSpinner } from '@/shared/ui';
+import { Flex } from '@chakra-ui/react';
+import { type ReactNode } from 'react';
 import { AppHeader } from './AppHeader';
 import { MainSidebar } from './MainSidebar';
 
@@ -31,7 +31,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
         overflow='hidden'
       >
         <AppHeader />
-        <Box
+        <Flex
           as='main'
           flex='1'
           minH='zero'
@@ -39,7 +39,7 @@ export function MainPageLayout({ children }: MainPageLayoutProps) {
           p={{ base: '4', md: '8' }}
         >
           {children}
-        </Box>
+        </Flex>
       </Flex>
     </Flex>
   );

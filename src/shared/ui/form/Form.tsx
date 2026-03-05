@@ -23,19 +23,20 @@ const Form = <TFormValues extends FieldValues>({
 }: FormProps<TFormValues>) => {
   return (
     <FormProvider {...methods}>
-      <chakra.form
-        id={formId}
-        noValidate
-        onSubmit={methods.handleSubmit(onSubmit)}
+      <Stack
+        asChild
+        width='full'
+        gap='4'
+        {...layoutProps}
       >
-        <Stack
-          width='full'
-          gap='4'
-          {...layoutProps}
+        <chakra.form
+          id={formId}
+          noValidate
+          onSubmit={methods.handleSubmit(onSubmit)}
         >
           {children}
-        </Stack>
-      </chakra.form>
+        </chakra.form>
+      </Stack>
     </FormProvider>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Heading, Stack, Text } from '@chakra-ui/react';
 import { AuthPageLayout } from '@/widgets/authLayout';
 import { FormErrorAlert } from '@/shared/ui';
 import { useRouter } from 'next/router';
@@ -8,7 +8,7 @@ import { type SubmitHandler } from 'react-hook-form';
 import { useRegisterUser, type RegisterPayload, type RegisterUser } from '@/entities/auth';
 import { appLanguages, getPreferredLanguage } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
-import { Form, InputField, SelectField } from '@/shared/ui';
+import { Form, FormControls, InputField, SelectField } from '@/shared/ui';
 import { createSignupSchema, regionCodes } from '../model/signupSchema';
 
 export default function SignupPage() {
@@ -164,14 +164,14 @@ export default function SignupPage() {
             isRequired
           />
 
-          <Button
-            type='submit'
-            loading={methods.formState.isSubmitting || isRegisterPending}
-            width='full'
-            marginTop='8'
-          >
-            {t('signup.submit')}
-          </Button>
+          <FormControls
+            primaryAction={{
+              label: t('signup.submit'),
+              loading: methods.formState.isSubmitting || isRegisterPending,
+            }}
+            forceFullWidth
+            mt='8'
+          />
         </Form>
       </Stack>
     </AuthPageLayout>

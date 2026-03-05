@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChakraProvider } from '@chakra-ui/react';
 import { ThemeProvider } from 'next-themes';
 import type { NextPage } from 'next';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { UiStoreProvider } from '@/application/providers';
 import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
 import { useDvh } from '@/shared/hooks';
+import { AppToaster } from '@/shared/ui';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,6 +24,18 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        mutationCache: new MutationCache({
+          onError: (error) => {
+            // Infrastructure-level hook for observability only (no UI side-effects here).
+            void error;
+          },
+        }),
+        queryCache: new QueryCache({
+          onError: (error) => {
+            // Infrastructure-level hook for observability only (no UI side-effects here).
+            void error;
+          },
+        }),
         defaultOptions: {
           queries: {
             retry: false,
@@ -49,7 +62,10 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         disableTransitionOnChange
       >
         <QueryClientProvider client={queryClient}>
-          <UiStoreProvider>{getLayout(<Component {...pageProps} />)}</UiStoreProvider>
+          <UiStoreProvider>
+            {getLayout(<Component {...pageProps} />)}
+            <AppToaster />
+          </UiStoreProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </ChakraProvider>

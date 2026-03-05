@@ -1,29 +1,37 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteLocation } from '../api/deleteLocation';
-import { toLocationError, type LocationError } from './errors';
+import { mapToLocationError, type LocationError } from './errors';
 import { invalidateLocations } from './invalidateLocations';
-import type { MutationCallbacks } from '@/shared/lib';
+import { locationQueryKeys } from './queryKeys';
+import type { MutationHookOptions } from '@/shared/lib';
+
+interface DeleteLocationScope {
+  accountId: string;
+}
 
 export const useDeleteLocation = (
-  accountId: string,
-  options?: MutationCallbacks<void, string, LocationError>,
+  options: MutationHookOptions<DeleteLocationScope, void, string, LocationError>,
 ) => {
   const queryClient = useQueryClient();
+  const { options: mutationOptions, scope } = options;
 
   return useMutation<void, LocationError, string>({
     mutationFn: async (locationId) => {
       try {
         await deleteLocation(locationId);
       } catch (error) {
-        throw toLocationError(error);
+        throw mapToLocationError(error);
       }
     },
-    onError: options?.onError,
-    onMutate: options?.onMutate,
-    onSettled: options?.onSettled,
+    onError: mutationOptions?.onError,
+    onMutate: mutationOptions?.onMutate,
+    onSettled: mutationOptions?.onSettled,
     onSuccess: (data, variables, context, mutation) => {
-      void invalidateLocations(queryClient, accountId);
-      options?.onSuccess?.(data, variables, context, mutation);
+      queryClient.removeQueries({
+        queryKey: locationQueryKeys.item(scope.accountId, variables),
+      });
+      void invalidateLocations(queryClient, scope.accountId);
+      mutationOptions?.onSuccess?.(data, variables, context, mutation);
     },
   });
 };

@@ -18,6 +18,10 @@
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
     "logout": "Logout",
+    "breadcrumbs": {
+      "ariaLabel": "Breadcrumbs",
+      "separator": "/"
+    },
     "menu": {
       "reviews": "Reviews",
       "surveys": "Surveys",
@@ -64,10 +68,26 @@
     "locationsPage": {
       "create": "Create location",
       "edit": "Edit",
+      "createTitle": "Create location",
+      "createDescription": "Add a new location to your account.",
+      "editTitle": "Edit location",
+      "viewTitle": "View location",
       "delete": "Delete",
       "save": "Save",
       "defaultBadge": "Default",
       "noDetails": "No address or time zone",
+      "readonlyDescription": "You can view this location, but you do not have permission to edit it.",
+      "notFoundTitle": "Location was not found",
+      "notFoundDescription": "This location does not exist or is not available in your account.",
+      "breadcrumbFallback": "Location",
+      "locationNotFound": "Location from URL was not found.",
+      "errors": {
+        "generic": "Something went wrong. Please try again.",
+        "network": "Network error. Check your connection and try again.",
+        "forbidden": "You do not have access to this action.",
+        "validation": "Please check the form fields and try again.",
+        "conflict": "This location conflicts with existing data."
+      },
       "empty": "No locations yet."
     },
     "locationsForm": {
@@ -163,5 +183,16 @@
       "emailInvalid": "Enter a valid email",
       "passwordMin": "Password must be at least 8 characters"
     }
+  },
+  "commonActions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "delete": "Delete",
+    "continue": "Continue"
+  },
+  "commonFeedback": {
+    "saved": "Changes saved successfully.",
+    "created": "Created successfully."
   }
 }

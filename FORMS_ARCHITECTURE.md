@@ -62,6 +62,7 @@ src/
 4. Submission handlers call feature/entity React Query mutations only.
 5. All cross-slice imports must go through `index.ts` public APIs.
 6. DTO-to-domain mapping stays in `entities/*/lib/*mapper.ts`.
+7. After successful create/update mutation, show a success toast in form UI using i18n message keys.
 
 ## 6. Form Lifecycle Standard
 

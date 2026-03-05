@@ -1,11 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { CheckboxField, InputField, TextareaField } from '@/shared/ui';
+import { InputField, TextareaField } from '@/shared/ui';
 
-interface LocationFormFieldsProps {
-  includeDefaultField?: boolean;
-}
-
-export function LocationFormFields({ includeDefaultField = false }: LocationFormFieldsProps) {
+export function LocationFormFields() {
   const { t } = useTranslation('common');
 
   return (
@@ -35,12 +31,6 @@ export function LocationFormFields({ includeDefaultField = false }: LocationForm
         name='publicSlug'
         label={t('workspace.locationsForm.publicSlugLabel')}
       />
-      {includeDefaultField ? (
-        <CheckboxField
-          name='isDefault'
-          label={t('workspace.locationsForm.defaultLabel')}
-        />
-      ) : null}
     </>
   );
 }

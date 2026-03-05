@@ -50,7 +50,9 @@ export const useAuthGuard = (): AuthGuardState => {
 
   const isPublic = isPublicRoute(router.pathname);
   const sessionQuery = useHasActiveSession({
-    enabled: router.isReady && !isPublic,
+    options: {
+      enabled: router.isReady && !isPublic,
+    },
   });
   const sessionState = sessionQuery.data?.state;
   const guardState = resolveAuthGuardState({
