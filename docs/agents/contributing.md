@@ -59,7 +59,7 @@ Thank you for considering contributing to the LP project!
 
 ## Git hooks
 
-- `pre-push` runs mandatory quality gates: `npm run validate && npm run test`
+- `pre-push` runs mandatory quality gates: `npm run validate && npm run test && npm run test:e2e`
 
 ## Code Standards
 
