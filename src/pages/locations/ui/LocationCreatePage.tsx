@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import { toaster } from '@/shared/ui';
+import { canManageLocationsRole } from '../model/locationPermissions';
 import { useLocationActions } from '../model/useLocationActions';
 import type { LocationFormValues } from '../model/locationSchema';
 import { LocationEditorForm } from './LocationEditorForm';
@@ -14,7 +15,7 @@ export default function LocationCreatePage() {
   const sessionQuery = useHasActiveSession();
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const role = sessionQuery.data?.payload?.account.role;
-  const canManage = role === 'owner' || role === 'admin';
+  const canManage = canManageLocationsRole(role);
 
   const { createLocation } = useLocationActions({ accountId });
 

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import { useLocations } from '@/entities/location';
 import { AppIcon } from '@/shared/ui';
+import { canManageLocationsRole } from '../model/locationPermissions';
 import { useLocationActions } from '../model/useLocationActions';
 import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
 import { LocationsList } from './LocationsList';
@@ -15,7 +16,7 @@ export default function LocationsPage() {
   const sessionQuery = useHasActiveSession();
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const role = sessionQuery.data?.payload?.account.role;
-  const canManage = role === 'owner' || role === 'admin';
+  const canManage = canManageLocationsRole(role);
 
   const locationsQuery = useLocations({
     scope: {

@@ -15,3 +15,4 @@ export {
   type NavItem,
   type WorkspaceSection,
 } from './model/navigation';
+export { resolveAppBreadcrumbs, type AppBreadcrumbItem } from './model/breadcrumbs';

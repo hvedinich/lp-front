@@ -3,30 +3,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
-import { type Location, locationQueryKeys, useLocationById } from '@/entities/location';
+import { useLocationById } from '@/entities/location';
+import { getLocationFromListCache } from '../model/locationCacheBridge';
+import { canManageLocationsRole } from '../model/locationPermissions';
 import { useLocationActions } from '../model/useLocationActions';
 import { resolveLocationEditorState } from '../model/locationEditorState';
 import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
 import { LocationEditorForm } from './LocationEditorForm';
-
-const getLocationFromListCache = (
-  queryClient: ReturnType<typeof useQueryClient>,
-  accountId: string,
-  locationId: string,
-): Location | undefined => {
-  const cachedLists = queryClient.getQueriesData<Location[]>({
-    queryKey: locationQueryKeys.lists(accountId),
-  });
-
-  for (const [, list] of cachedLists) {
-    const fromList = list?.find((item) => item.id === locationId);
-    if (fromList) {
-      return fromList;
-    }
-  }
-
-  return undefined;
-};
 
 export default function LocationEditPage() {
   const router = useRouter();
@@ -37,7 +20,7 @@ export default function LocationEditPage() {
   const sessionQuery = useHasActiveSession();
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const role = sessionQuery.data?.payload?.account.role;
-  const canManage = role === 'owner' || role === 'admin';
+  const canManage = canManageLocationsRole(role);
 
   const locationQuery = useLocationById({
     scope: {

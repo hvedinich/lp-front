@@ -10,6 +10,7 @@
 
 - `Vitest` (`npm run test`): co-located unit/module tests in `src/**` (`*.test.ts`).
 - `Playwright` (`npm run test:e2e`): cross-slice E2E scenarios in `e2e/**`.
+- Page-level integration tests live in `src/pages/<slice>/integration/**` and cover orchestration that is expensive to duplicate in E2E.
 
 ## E2E directory contract
 
