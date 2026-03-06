@@ -13,19 +13,21 @@ describe('getLocations', () => {
     apiRequestMock.mockReset();
   });
 
-  it('calls apiRequest with GET and serialized flat query params', async () => {
+  it('calls apiRequest with GET and serialized list query params', async () => {
     apiRequestMock.mockResolvedValue([]);
 
     await getLocations({
+      filters: {
+        name: 'Roof',
+      },
       limit: 50,
-      name: 'Roof',
       offset: 10,
       sort: '-updatedAt',
     });
 
     expect(apiRequestMock).toHaveBeenCalledWith({
       method: 'GET',
-      path: '/locations?name=Roof&sort=-updatedAt&limit=50&offset=10',
+      path: '/locations?filter%5Bname%5D=Roof&sort=-updatedAt&limit=50&offset=10',
     });
   });
 

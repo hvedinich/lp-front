@@ -1,11 +1,7 @@
 import type { GetLocationsParams } from '../api/location.dto';
+import { normalizeListQueryParams } from '@/shared/lib';
 
-const normalizeParams = (params: GetLocationsParams = {}) => ({
-  limit: params.limit,
-  name: params.name,
-  offset: params.offset,
-  sort: params.sort,
-});
+const normalizeParams = (params: GetLocationsParams = {}) => normalizeListQueryParams(params);
 
 export const locationQueryKeys = {
   all: () => ['locations'] as const,

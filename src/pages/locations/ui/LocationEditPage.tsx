@@ -1,10 +1,8 @@
 import { Alert, Heading, Stack, Text } from '@chakra-ui/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import { useLocationById } from '@/entities/location';
-import { getLocationFromListCache } from '../model/locationCacheBridge';
 import { canManageLocationsRole } from '../model/locationPermissions';
 import { useLocationActions } from '../model/useLocationActions';
 import { resolveLocationEditorState } from '../model/locationEditorState';
@@ -13,7 +11,6 @@ import { LocationEditorForm } from './LocationEditorForm';
 
 export default function LocationEditPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { t } = useTranslation('common');
   const locationId = typeof router.query.id === 'string' ? router.query.id : null;
 
@@ -29,13 +26,6 @@ export default function LocationEditPage() {
     },
     options: {
       enabled: router.isReady && Boolean(locationId),
-      initialData: () => {
-        if (!accountId || !locationId) {
-          return undefined;
-        }
-
-        return getLocationFromListCache(queryClient, accountId, locationId);
-      },
     },
   });
 

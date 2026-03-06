@@ -1,3 +1,5 @@
+import type { ListQueryParams } from '@/shared/lib';
+
 export interface LocationDto {
   id: string;
   accountId: string;
@@ -30,9 +32,10 @@ export interface UpdateLocationDtoRequest {
   isDefault?: boolean;
 }
 
-export interface GetLocationsParams {
+export type LocationListFilters = {
   name?: string;
-  sort?: 'name' | 'createdAt' | 'updatedAt' | '-name' | '-createdAt' | '-updatedAt';
-  limit?: number;
-  offset?: number;
-}
+};
+
+export type LocationSortField = 'name' | 'createdAt' | 'updatedAt';
+
+export type GetLocationsParams = ListQueryParams<LocationListFilters, LocationSortField>;
