@@ -49,10 +49,14 @@
   - same-origin relative paths when app and API share origin
   - absolute `NEXT_PUBLIC_API_URL` when API origin is separate
 - Auth bootstrap:
-  - try login with E2E credentials
-  - if user is missing, register and retry login
+  - ensure user exists (register/409 path) without extra login calls
+  - authenticate only where session is required (worker fixture/session bootstrap)
+  - transient 5xx auth bootstrap failures use bounded retry with backoff+jitter
+  - `/auth/login` handles `RATE_LIMITED` with retry-after wait and serialized login attempts
+  - negative auth UI test uses isolated invalid credentials and does not call user bootstrap
 - Feature specs (`locations`) use worker-level `storageState` to avoid repeating full auth bootstrap in each test.
-- Worker `storageState` files are created in system `tmp` and removed automatically after worker teardown.
+- Worker `storageState` files are reused from `e2e/storage/*.json` across runs when still valid (`/auth/me` check).
+- If cached storage state is invalid, fixture re-authenticates and refreshes the file.
 
 ## Playwright app lifecycle
 
@@ -69,7 +73,8 @@
 ## Parallelism policy
 
 - `fullyParallel=true`.
-- Local run: `workers=6`.
+- Local run: `workers=2` by default.
+- Optional local override: set `PLAYWRIGHT_WORKERS` (for example `PLAYWRIGHT_WORKERS=4 npm run test:e2e`) when backend capacity allows.
 - CI run: `workers=4`, retries enabled.
 - Use per-test data isolation (`testId` prefixes) and worker-scoped auth state to keep runs parallel-safe.
 
@@ -94,3 +99,4 @@ npm run test:e2e:ui
 - `NEXT_PUBLIC_VERCEL_URL` / `VERCEL_URL` (optional outside CI)
 - `PLAYWRIGHT_E2E_EMAIL`
 - `PLAYWRIGHT_E2E_PASSWORD`
+- `PLAYWRIGHT_WORKERS` (optional local override)

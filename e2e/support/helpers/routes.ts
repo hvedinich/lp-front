@@ -1,4 +1,5 @@
 import { env } from '../../../src/shared/config/env';
+import { createHash } from 'node:crypto';
 
 const normalizeBaseUrl = (value: string): string => value.replace(/\/$/, '');
 
@@ -19,7 +20,4 @@ export const buildApiRequestPath = (path: string): string =>
   useSameOriginApi ? path : `${apiBaseUrl}${path}`;
 
 export const toTestPrefix = (testId: string): string =>
-  testId
-    .replace(/[^a-z0-9]/gi, '-')
-    .slice(-40)
-    .toLowerCase();
+  createHash('sha1').update(testId).digest('hex').slice(0, 16);

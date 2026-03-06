@@ -13,6 +13,9 @@ const isLocalUrl = (value: string): boolean => {
 
 const baseURL = env.app.url;
 const runningInCi = env.playwright.isCi;
+const localWorkersDefault = 2;
+const ciWorkersDefault = 4;
+const localWorkers = env.playwright.workers ?? localWorkersDefault;
 
 if (runningInCi && isLocalUrl(baseURL)) {
   throw new Error(
@@ -40,7 +43,7 @@ const webServer =
 export default defineConfig({
   testDir: './e2e/specs',
   fullyParallel: true,
-  workers: runningInCi ? 4 : 6,
+  workers: runningInCi ? ciWorkersDefault : localWorkers,
   retries: runningInCi ? 1 : 0,
   reporter: runningInCi ? [['html', { open: 'never' }], ['list']] : 'list',
   use: {

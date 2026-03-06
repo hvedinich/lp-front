@@ -20,7 +20,6 @@ test('creates location and shows it in list and selector', async ({
 }, testInfo) => {
   const prefix = testPrefixes.get(testInfo.testId)!;
   await locations.createSeed(prefix);
-  const locationsBefore = await locations.getAll();
 
   await page.goto('/locations');
   await page.getByTestId('locations-create-button').click();
@@ -31,21 +30,21 @@ test('creates location and shows it in list and selector', async ({
   await page.getByTestId('location-form-phone-input').focus();
   await expect(visibleByTestId(page, 'location-form-create-submit')).toBeEnabled();
   await visibleByTestId(page, 'location-form-create-submit').click();
+  await expect(page).toHaveURL(/\/locations\/(?!new$)[^/?#]+$/);
 
-  const locationsAfter = await locations.getAll();
-  const createdLocation = locationsAfter.find(
-    (location) => !locationsBefore.some((item) => item.id === location.id),
-  );
-  expect(createdLocation).toBeDefined();
+  const locationUrl = page.url();
+  const createdLocationId = locationUrl.match(/\/locations\/([^/?#]+)$/)?.[1];
+  expect(createdLocationId).toBeDefined();
+  expect(createdLocationId).not.toBe('new');
 
-  await expect(page).toHaveURL(new RegExp(`/locations/${createdLocation!.id}$`));
+  await expect(page).toHaveURL(new RegExp(`/locations/${createdLocationId}$`));
   await visibleByTestId(page, 'location-form-cancel-button').click();
 
   await expect(page).toHaveURL(/\/locations$/);
-  await expect(page.getByTestId(`locations-card-${createdLocation!.id}`)).toBeVisible();
+  await expect(page.getByTestId(`locations-card-${createdLocationId}`)).toBeVisible();
 
   await openSelector(page);
-  await expect(page.getByTestId(`location-selector-option-${createdLocation!.id}`)).toBeVisible();
+  await expect(page.getByTestId(`location-selector-option-${createdLocationId}`)).toBeVisible();
 });
 
 test('edits location name', async ({ locations, page }, testInfo) => {
@@ -73,7 +72,11 @@ test('deletes selected location and falls back to default', async ({
   const seed = await locations.createSeed(testPrefixes.get(testInfo.testId)!);
 
   await page.goto('/locations');
+  await expect(page.getByTestId(`locations-card-${seed.secondaryLocation.id}`)).toBeVisible();
   await openSelector(page);
+  await expect(
+    page.getByTestId(`location-selector-option-${seed.secondaryLocation.id}`),
+  ).toBeVisible();
   await page.getByTestId(`location-selector-option-${seed.secondaryLocation.id}`).click();
   await expect(page.getByTestId('location-selector-input')).toHaveValue(
     seed.secondaryLocation.name,

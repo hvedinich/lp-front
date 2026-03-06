@@ -4,12 +4,26 @@ import { buildLocationSeedNames, toLocationSlug } from '../builders/location.bui
 import { apiRequest, ensureOk } from './client.api';
 
 export const getLocations = async (request: APIRequestContext): Promise<ApiLocation[]> => {
-  const response = await apiRequest<ApiLocation[]>(request, {
-    method: 'GET',
-    path: '/locations?sort=name',
-  });
-  ensureOk(response, 'Unable to fetch locations');
-  return response.payload ?? [];
+  const limit = 100;
+  const maxPages = 50;
+  const locations: ApiLocation[] = [];
+
+  for (let page = 0; page < maxPages; page += 1) {
+    const offset = page * limit;
+    const response = await apiRequest<ApiLocation[]>(request, {
+      method: 'GET',
+      path: `/locations?sort=name&limit=${limit}&offset=${offset}`,
+    });
+    ensureOk(response, 'Unable to fetch locations');
+    const chunk = response.payload ?? [];
+    locations.push(...chunk);
+
+    if (chunk.length < limit) {
+      break;
+    }
+  }
+
+  return locations;
 };
 
 export const createLocation = async (

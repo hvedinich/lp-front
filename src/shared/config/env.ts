@@ -37,6 +37,10 @@ const runtimeEnvSchema = z.object({
     emptyStringToUndefined,
     z.string().min(1).default('PW-E2E'),
   ),
+  PLAYWRIGHT_WORKERS: z.preprocess(
+    emptyStringToUndefined,
+    z.coerce.number().int().positive().max(16).optional(),
+  ),
   VERCEL_URL: z.preprocess(emptyStringToUndefined, z.string().min(1).optional()),
 });
 
@@ -130,6 +134,7 @@ export const env = {
     e2eEmail: runtime.PLAYWRIGHT_E2E_EMAIL,
     e2ePassword: runtime.PLAYWRIGHT_E2E_PASSWORD,
     locationPrefix: runtime.PLAYWRIGHT_LOCATION_PREFIX,
+    workers: runtime.PLAYWRIGHT_WORKERS,
     isCi: ci,
   },
 } as const;
