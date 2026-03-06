@@ -59,6 +59,10 @@ Copy `.env.local` and configure:
 - `NEXT_PUBLIC_DEFAULT_LOCALE` - default locale (default: en)
 - `NEXT_PUBLIC_LOCALES` - available locales
 - `NEXT_PUBLIC_API_URL` - API base URL
-- `NEXT_PUBLIC_AUTH_LOGIN_PATH` - login endpoint
-- `NEXT_PUBLIC_AUTH_REGISTER_PATH` - registration endpoint
-- `NEXT_PUBLIC_AUTH_SESSION_PATH` - session endpoint
+- `NEXT_PUBLIC_SITE_URL` - explicit public app URL
+- `NEXT_PUBLIC_VERCEL_URL` - Vercel-provided app URL without protocol
+- `VERCEL_URL` - runtime Vercel URL fallback without protocol
+- `PLAYWRIGHT_E2E_EMAIL` - E2E user email
+- `PLAYWRIGHT_E2E_PASSWORD` - E2E user password
+- `PLAYWRIGHT_LOCATION_PREFIX` - prefix for E2E-created locations
+- `PLAYWRIGHT_WORKERS` - optional local Playwright workers override

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { env } from './src/shared/config/env';
+import { env, resolveDeploymentAppUrl } from './src/shared/config/env';
 
 const isLocalUrl = (value: string): boolean => {
   try {
@@ -11,8 +11,8 @@ const isLocalUrl = (value: string): boolean => {
   }
 };
 
-const baseURL = env.app.url;
 const runningInCi = env.playwright.isCi;
+const baseURL = runningInCi ? resolveDeploymentAppUrl() : env.app.url;
 const localWorkersDefault = 2;
 const ciWorkersDefault = 4;
 const localWorkers = env.playwright.workers ?? localWorkersDefault;

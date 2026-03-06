@@ -75,7 +75,6 @@ const normalizeVercelUrl = (value: string): string =>
   value.startsWith('http://') || value.startsWith('https://') ? value : `https://${value}`;
 
 const deriveAppUrl = (
-  ci: boolean,
   explicitSiteUrl: string | undefined,
   publicVercelUrl: string | undefined,
   vercelUrl: string | undefined,
@@ -88,12 +87,6 @@ const deriveAppUrl = (
   const resolvedVercelUrl = publicVercelUrl ?? vercelUrl;
   if (resolvedVercelUrl) {
     return normalizeVercelUrl(resolvedVercelUrl);
-  }
-
-  if (ci) {
-    throw new Error(
-      '[config] CI mode requires NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_VERCEL_URL/VERCEL_URL to target a deployed app.',
-    );
   }
 
   return deriveLocalUrl(port);
@@ -115,6 +108,11 @@ const runtime = parseOrThrow(
 
 const port = runtime.PORT;
 const ci = isCi(runtime.CI);
+const deploymentUrlCandidates = [
+  ['NEXT_PUBLIC_SITE_URL', pub.NEXT_PUBLIC_SITE_URL],
+  ['NEXT_PUBLIC_VERCEL_URL', pub.NEXT_PUBLIC_VERCEL_URL],
+  ['VERCEL_URL', runtime.VERCEL_URL],
+] as const;
 
 export const env = {
   app: {
@@ -123,7 +121,6 @@ export const env = {
     locales: pub.NEXT_PUBLIC_LOCALES,
     port,
     url: deriveAppUrl(
-      ci,
       pub.NEXT_PUBLIC_SITE_URL,
       pub.NEXT_PUBLIC_VERCEL_URL,
       runtime.VERCEL_URL,
@@ -138,3 +135,22 @@ export const env = {
     isCi: ci,
   },
 } as const;
+
+export const resolveAppUrl = (): string => {
+  return deriveAppUrl(
+    pub.NEXT_PUBLIC_SITE_URL,
+    pub.NEXT_PUBLIC_VERCEL_URL,
+    runtime.VERCEL_URL,
+    port,
+  );
+};
+
+export const resolveDeploymentAppUrl = (): string => {
+  if (!deploymentUrlCandidates.some(([, value]) => value)) {
+    const names = deploymentUrlCandidates.map(([name]) => name).join(' or ');
+
+    throw new Error(`[config] A deployed app URL is required. Required one of: ${names}.`);
+  }
+
+  return resolveAppUrl();
+};
