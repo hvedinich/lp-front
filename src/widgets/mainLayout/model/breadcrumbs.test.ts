@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { resolveAppBreadcrumbs } from './breadcrumbs';
 
 const baseInput = {
+  deviceListLabel: 'Devices',
   fallbackLabel: 'Location',
   locationCreateLabel: 'Create location',
   locationDynamicLabel: 'Main office',
@@ -10,6 +11,15 @@ const baseInput = {
 };
 
 describe('resolveAppBreadcrumbs', () => {
+  it('returns static devices list breadcrumb', () => {
+    expect(
+      resolveAppBreadcrumbs({
+        ...baseInput,
+        pathname: '/devices',
+      }),
+    ).toEqual([{ label: 'Devices' }]);
+  });
+
   it('returns static location list breadcrumb', () => {
     expect(
       resolveAppBreadcrumbs({

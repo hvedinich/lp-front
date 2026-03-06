@@ -13,8 +13,7 @@ export default function DevicesPage() {
   const router = useRouter();
   const { t } = useTranslation('common');
 
-  const { accountId, isHydrated, isSessionPending, locationsQuery, selectedLocationId } =
-    useLocationSelection();
+  const { accountId, isHydrated, isSessionPending, selectedLocationId } = useLocationSelection();
 
   const devicesQuery = useDevices({
     scope: {
@@ -34,8 +33,7 @@ export default function DevicesPage() {
     selectedLocationId,
   });
 
-  const isSelectionPending =
-    isSessionPending || !isHydrated || (locationsQuery.isPending && !selectedLocationId);
+  const isSelectionPending = isSessionPending || !isHydrated;
 
   if (isSelectionPending) {
     return (
