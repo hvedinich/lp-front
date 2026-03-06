@@ -11,6 +11,12 @@ export {
 } from './form';
 export { AppLink, type AppLinkProps } from './AppLink';
 export { AppBrand, type AppBrandProps } from './AppBrand';
+export {
+  EmptyState,
+  type EmptyStateAction,
+  type EmptyStateCta,
+  type EmptyStateProps,
+} from './EmptyState';
 export { FormErrorAlert } from './FormErrorAlert';
 export { LogoIcon } from './LogoIcon';
 export { Modal } from './Modal';

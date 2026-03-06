@@ -1,5 +1,12 @@
 import type { LucideIcon } from 'lucide-react';
-import { Megaphone, MapPin, MessageSquare, ClipboardCheck, ScanLine } from 'lucide-react';
+import {
+  Megaphone,
+  MapPin,
+  MessageSquare,
+  MonitorSmartphone,
+  ClipboardCheck,
+  ScanLine,
+} from 'lucide-react';
 
 export interface NavItem {
   key: string;
@@ -12,6 +19,7 @@ export const navItems: NavItem[] = [
   { key: 'surveys', path: '/surveys', icon: ClipboardCheck },
   { key: 'scans', path: '/scans', icon: ScanLine },
   { key: 'campaigns', path: '/campaigns', icon: Megaphone },
+  { key: 'devices', path: '/devices', icon: MonitorSmartphone },
   { key: 'locations', path: '/locations', icon: MapPin },
 ];
 
@@ -26,7 +34,14 @@ export const getActiveNavItem = (pathname: string): NavItem => {
 
 // ── Legacy — used by demo HomePage; remove when real section pages are implemented ────────────
 
-export const workspaceSections = ['reviews', 'surveys', 'scans', 'campaigns', 'locations'] as const;
+export const workspaceSections = [
+  'reviews',
+  'surveys',
+  'scans',
+  'campaigns',
+  'devices',
+  'locations',
+] as const;
 
 export type WorkspaceSection = (typeof workspaceSections)[number];
 

@@ -1,7 +1,6 @@
 import type { Device } from '@/entities/device';
 
 interface UseDevicesListStateOptions {
-  canManage: boolean;
   devices: Device[] | null | undefined;
   isDevicesPending?: boolean;
   selectedLocationId: string | null | undefined;
@@ -12,11 +11,9 @@ interface UseDevicesListStateResult {
   isEmpty: boolean;
   isLoading: boolean;
   isLocationNotSelected: boolean;
-  isReadonly: boolean;
 }
 
 export const useDevicesListState = ({
-  canManage,
   devices,
   isDevicesPending = false,
   selectedLocationId,
@@ -31,6 +28,5 @@ export const useDevicesListState = ({
     isEmpty,
     isLoading,
     isLocationNotSelected,
-    isReadonly: !canManage,
   };
 };

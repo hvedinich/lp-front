@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import { useLocations } from '@/entities/location';
-import { AppIcon } from '@/shared/ui';
+import { AppIcon, EmptyState } from '@/shared/ui';
 import { canManageLocationsRole } from '../model/locationPermissions';
 import { useLocationActions } from '../model/useLocationActions';
 import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
@@ -81,7 +81,25 @@ export default function LocationsPage() {
         onDelete={deleteLocation}
       />
 
-      {isEmpty ? <Text color='fg.subtle'>{t('workspace.locationsPage.empty')}</Text> : null}
+      {isEmpty ? (
+        <EmptyState
+          data-testid='locations-empty-state'
+          title={t('workspace.locationsPage.empty')}
+          description={t('workspace.sections.locations.emptyState')}
+          actionsTitle={t('workspace.locationsPage.emptyActionsTitle')}
+          cta={
+            canManage
+              ? {
+                  label: t('workspace.locationsPage.create'),
+                  icon: PlusIcon,
+                  onClick: () => {
+                    void router.push('/locations/new');
+                  },
+                }
+              : undefined
+          }
+        />
+      ) : null}
     </Stack>
   );
 }
