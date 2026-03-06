@@ -99,9 +99,14 @@
       "publicSlugLabel": "Public Slug",
       "defaultLabel": "Set as default",
       "validation": {
+        "addressMax": "Address must be at most 300 characters",
         "nameMin": "Name must be at least 2 characters",
         "nameMax": "Name must be at most 120 characters",
-        "publicSlugPattern": "Use only lowercase letters, numbers, and dashes"
+        "phoneMax": "Phone must be at most 40 characters",
+        "publicSlugMax": "Public slug must be at most 120 characters",
+        "publicSlugPattern": "Use only lowercase letters, numbers, and dashes",
+        "timeZoneMax": "Time zone must be at most 100 characters",
+        "websiteMax": "Website must be at most 200 characters"
       }
     }
   },

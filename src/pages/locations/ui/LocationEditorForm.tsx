@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Location, UpdateLocationDtoRequest } from '@/entities/location';
 import { useZodForm } from '@/shared/lib';
-import { Form, FormControls } from '@/shared/ui';
+import { Form, FormControls, toaster } from '@/shared/ui';
 import {
   locationFormDefaultValues,
   mapLocationToFormValues,
@@ -47,6 +47,7 @@ export function LocationEditorForm({
     if (mode === 'create') {
       if (onCreate) {
         await onCreate(values);
+        toaster.success({ description: t('commonFeedback.created') });
       }
       return;
     }
@@ -56,6 +57,7 @@ export function LocationEditorForm({
     }
 
     await onUpdate(location.id, mapUpdateLocationFormValues(values));
+    toaster.success({ description: t('commonFeedback.saved') });
   };
 
   const shouldShowSubmit = mode === 'create' || canManage;

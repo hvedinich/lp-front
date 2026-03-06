@@ -99,9 +99,14 @@
       "publicSlugLabel": "Publiczny slug",
       "defaultLabel": "Ustaw jako domyślną",
       "validation": {
+        "addressMax": "Adres może mieć maksymalnie 300 znaków",
         "nameMin": "Nazwa musi mieć co najmniej 2 znaki",
         "nameMax": "Nazwa może mieć maksymalnie 120 znaków",
-        "publicSlugPattern": "Używaj tylko małych liter, cyfr i myślników"
+        "phoneMax": "Telefon może mieć maksymalnie 40 znaków",
+        "publicSlugMax": "Publiczny slug może mieć maksymalnie 120 znaków",
+        "publicSlugPattern": "Używaj tylko małych liter, cyfr i myślników",
+        "timeZoneMax": "Strefa czasowa może mieć maksymalnie 100 znaków",
+        "websiteMax": "Strona internetowa może mieć maksymalnie 200 znaków"
       }
     }
   },

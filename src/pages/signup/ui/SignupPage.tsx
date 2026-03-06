@@ -61,8 +61,9 @@ export default function SignupPage() {
       setRegisteredUser(result.user);
       methods.reset(values);
       await router.replace('/');
-    } catch {
+    } catch (error) {
       setRegisteredUser(null);
+      throw error;
     }
   };
 

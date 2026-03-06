@@ -36,14 +36,10 @@ export default function LoginPage() {
   const handleSubmit: SubmitHandler<LoginPayload> = async (values) => {
     resetLoginError();
 
-    try {
-      await loginUser(values);
+    await loginUser(values);
 
-      const target = typeof router.query.next === 'string' ? router.query.next : '/';
-      await router.replace(target);
-    } catch {
-      // Error state is handled by React Query mutation result.
-    }
+    const target = typeof router.query.next === 'string' ? router.query.next : '/';
+    await router.replace(target);
   };
 
   const requestError = loginError ? loginError.message || t('login.errorFallback') : null;

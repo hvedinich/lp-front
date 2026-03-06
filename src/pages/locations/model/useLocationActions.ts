@@ -39,16 +39,12 @@ const useLocationErrorToaster = () => {
 export const useLocationActions = ({
   accountId,
 }: UseLocationActionsOptions): UseLocationActionsResult => {
-  const { t } = useTranslation('common');
   const handleError = useLocationErrorToaster();
 
   const createMutation = useCreateLocation({
     scope: { accountId },
     options: {
       onError: handleError,
-      onSuccess: () => {
-        toaster.success({ description: t('commonFeedback.created') });
-      },
     },
   });
 
@@ -56,9 +52,6 @@ export const useLocationActions = ({
     scope: { accountId },
     options: {
       onError: handleError,
-      onSuccess: () => {
-        toaster.success({ description: t('commonFeedback.saved') });
-      },
     },
   });
 
@@ -79,6 +72,12 @@ export const useLocationActions = ({
         id: locationId,
         input,
       }),
-    deleteLocation: (locationId) => deleteMutation.mutateAsync(locationId),
+    deleteLocation: async (locationId) => {
+      try {
+        await deleteMutation.mutateAsync(locationId);
+      } catch {
+        // Error UI is handled by the mutation onError callback.
+      }
+    },
   };
 };

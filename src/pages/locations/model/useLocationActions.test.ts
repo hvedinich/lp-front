@@ -71,4 +71,13 @@ describe('useLocationActions', () => {
     expect(deleteMutateAsync).toHaveBeenCalledWith('loc-1');
     expect(actions.isUpdatePending).toBe(true);
   });
+
+  it('swallows delete promise rejections after mutation error handling', async () => {
+    deleteMutateAsync.mockRejectedValue(new Error('Delete failed'));
+
+    const actions = useLocationActions({ accountId: 'acc-1' });
+
+    await expect(actions.deleteLocation('loc-1')).resolves.toBeUndefined();
+    expect(deleteMutateAsync).toHaveBeenCalledWith('loc-1');
+  });
 });

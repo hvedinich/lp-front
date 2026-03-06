@@ -63,6 +63,7 @@ src/
 5. All cross-slice imports must go through `index.ts` public APIs.
 6. DTO-to-domain mapping stays in `entities/*/lib/*mapper.ts`.
 7. After successful create/update mutation, show a success toast in form UI using i18n message keys.
+8. If submit logic catches a mutation/navigation error for local cleanup, it must rethrow the error so `react-hook-form` preserves failed-submit state (`isSubmitSuccessful`, submit count, etc.).
 
 ## 6. Form Lifecycle Standard
 
@@ -71,6 +72,7 @@ src/
 3. Render fields from `@/shared/ui/form`.
 4. Submit in `feature` UI and call mutation hook.
 5. Map server errors to form errors with `setError` when needed.
+6. Do not swallow rejected submit promises; rethrow after any local cleanup.
 
 ## 7. Example Usage
 
@@ -111,9 +113,11 @@ Do:
 - keep fields in `shared/ui/form` generic and typed
 - keep domain behavior in `features`/`entities`
 - keep query keys and mutations in domain slices
+- rethrow submit errors after local cleanup so RHF can treat the submission as failed
 
 Do not:
 
 - import feature/entity modules inside shared form fields
 - call `fetch`/`axios` inside page UI for form submission
 - bypass schema validation with ad-hoc inline checks
+- swallow mutation errors inside form submit handlers
