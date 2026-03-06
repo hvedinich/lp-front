@@ -108,6 +108,27 @@
         "timeZoneMax": "Strefa czasowa może mieć maksymalnie 100 znaków",
         "websiteMax": "Strona internetowa może mieć maksymalnie 200 znaków"
       }
+    },
+    "devicesPage": {
+      "errors": {
+        "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+        "invalidDeviceId": "Ten link do urządzenia jest nieprawidłowy.",
+        "conflict": "To urządzenie powoduje konflikt z istniejącymi danymi.",
+        "forbidden": "Nie masz uprawnień do tej akcji.",
+        "network": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie.",
+        "notFound": "To urządzenie nie istnieje lub nie jest dostępne na Twoim koncie.",
+        "validation": "Sprawdź ustawienia urządzenia i spróbuj ponownie."
+      }
+    },
+    "devicesForm": {
+      "validation": {
+        "localeMax": "Locale może mieć maksymalnie 20 znaków",
+        "modeRequired": "Wybierz tryb urządzenia",
+        "nameMax": "Nazwa może mieć maksymalnie 120 znaków",
+        "singleLinkUrlMax": "Single link URL może mieć maksymalnie 2000 znaków",
+        "typeMax": "Typ może mieć maksymalnie 80 znaków",
+        "singleLinkUrlRequired": "Dla trybu statycznego wymagany jest Single link URL"
+      }
     }
   },
   "theme": {

@@ -108,6 +108,27 @@
         "timeZoneMax": "Time zone must be at most 100 characters",
         "websiteMax": "Website must be at most 200 characters"
       }
+    },
+    "devicesPage": {
+      "errors": {
+        "generic": "Something went wrong. Please try again.",
+        "invalidDeviceId": "This device link is invalid.",
+        "conflict": "This device conflicts with existing data.",
+        "forbidden": "You do not have access to this action.",
+        "network": "Network error. Check your connection and try again.",
+        "notFound": "This device does not exist or is not available in your account.",
+        "validation": "Please check the device settings and try again."
+      }
+    },
+    "devicesForm": {
+      "validation": {
+        "localeMax": "Locale must be at most 20 characters",
+        "modeRequired": "Select a device mode",
+        "nameMax": "Name must be at most 120 characters",
+        "singleLinkUrlMax": "Single link URL must be at most 2000 characters",
+        "typeMax": "Type must be at most 80 characters",
+        "singleLinkUrlRequired": "Single link URL is required for static mode"
+      }
     }
   },
   "theme": {
