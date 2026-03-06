@@ -61,9 +61,9 @@ test.beforeEach(async ({ auth }) => {
 test.describe('auth happy path', () => {
   test.describe.configure({ retries: 2 });
 
-  test('logs in and logs out via UI', async ({ auth, page }) => {
+  test('logs in and logs out via UI', async ({ auth, page }, testInfo) => {
     test.setTimeout(90_000);
-    const credentials = auth.workerCredentials(0, 'locations');
+    const credentials = await auth.ensureUser(testInfo.workerIndex, 'auth-ui');
 
     await loginByUi(page, credentials, {
       expectSuccess: true,
