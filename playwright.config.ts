@@ -1,21 +1,17 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { env, resolveDeploymentAppUrl } from './src/shared/config/env';
-
-const isLocalUrl = (value: string): boolean => {
-  try {
-    const { hostname } = new URL(value);
-    return hostname === 'localhost' || hostname === '127.0.0.1';
-  } catch {
-    return false;
-  }
-};
+import { env } from './src/shared/config/env';
+import { isLocalUrl, resolveE2EBaseUrl } from './e2e/support/helpers/base-url';
 
 const runningInCi = env.playwright.isCi;
-const baseURL = runningInCi ? resolveDeploymentAppUrl() : env.app.url;
+const baseURL = resolveE2EBaseUrl();
 const localWorkersDefault = 2;
 const ciWorkersDefault = 4;
 const localWorkers = env.playwright.workers ?? localWorkersDefault;
+
+if (runningInCi && !process.env.PLAYWRIGHT_BASE_URL) {
+  throw new Error('[config] CI mode requires PLAYWRIGHT_BASE_URL to target a deployed app.');
+}
 
 if (runningInCi && isLocalUrl(baseURL)) {
   throw new Error(
@@ -45,7 +41,7 @@ export default defineConfig({
   fullyParallel: true,
   workers: runningInCi ? ciWorkersDefault : localWorkers,
   retries: runningInCi ? 1 : 0,
-  reporter: runningInCi ? [['html', { open: 'never' }], ['list']] : 'list',
+  reporter: runningInCi ? [['github'], ['html', { open: 'never' }], ['list']] : 'list',
   use: {
     baseURL,
     trace: 'on-first-retry',

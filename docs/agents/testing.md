@@ -67,7 +67,7 @@
   - process started by Playwright is stopped after run
 - CI mode (`CI=true`):
   - `webServer` is disabled
-  - target deployed URL from `NEXT_PUBLIC_SITE_URL` or `NEXT_PUBLIC_VERCEL_URL` / `VERCEL_URL`
+  - target deployed URL comes from `PLAYWRIGHT_BASE_URL`
   - local URLs are rejected in CI
 
 ## Parallelism policy
@@ -95,6 +95,7 @@ npm run test:e2e:ui
 
 - `PORT`
 - `NEXT_PUBLIC_API_URL`
+- `PLAYWRIGHT_BASE_URL` (required in CI)
 - `NEXT_PUBLIC_SITE_URL` (optional)
 - `NEXT_PUBLIC_VERCEL_URL` / `VERCEL_URL` (optional outside CI)
 - `PLAYWRIGHT_E2E_EMAIL`

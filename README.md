@@ -66,3 +66,12 @@ Copy `.env.local` and configure:
 - `PLAYWRIGHT_E2E_PASSWORD` - E2E user password
 - `PLAYWRIGHT_LOCATION_PREFIX` - prefix for E2E-created locations
 - `PLAYWRIGHT_WORKERS` - optional local Playwright workers override
+
+## GitHub Actions E2E
+
+- `npm run test` already covers unit tests and page-level integration tests in `src/**`.
+- Playwright E2E runs in `.github/workflows/e2e-deployment.yml` after a successful non-production deployment status.
+- The workflow takes the deployed preview URL from the deployment status payload and exports it to `PLAYWRIGHT_BASE_URL`.
+- In CI, Playwright requires a real deployment URL and does not start a local app server.
+- Required GitHub Actions secrets: `NEXT_PUBLIC_API_URL`, `PLAYWRIGHT_E2E_EMAIL`, `PLAYWRIGHT_E2E_PASSWORD`.
+- This setup depends on Vercel Git integration publishing preview deployments back to GitHub as `deployment_status` events.

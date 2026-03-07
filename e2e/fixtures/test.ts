@@ -1,10 +1,10 @@
 import { expect, test as base } from '@playwright/test';
 import { access, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import { env } from '../../src/shared/config/env';
 import { ensureAuthenticatedE2EUser } from '../support/api/auth.api';
 import type { SessionPayload } from '../support/contracts/backend.types';
 import { apiRequest, toApiError } from '../support/api/client.api';
+import { resolveE2EBaseUrl } from '../support/helpers/base-url';
 import { createAuthFixture, type AuthFixture } from './auth.fixture';
 import { createLocationFixture, type LocationFixture } from './location.fixture';
 
@@ -20,6 +20,7 @@ interface E2EWorkerFixtures {
 export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
   locationsStorageStatePath: [
     async ({ browser }, applyFixture, workerInfo) => {
+      const baseURL = resolveE2EBaseUrl();
       const authDir = join(process.cwd(), 'e2e', 'storage');
       await mkdir(authDir, { recursive: true });
       const statePath = join(authDir, `locations-worker-${workerInfo.workerIndex}.json`);
@@ -30,7 +31,7 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
 
       if (hasExistingState) {
         const cachedContext = await browser.newContext({
-          baseURL: env.app.url,
+          baseURL,
           storageState: statePath,
         });
         try {
@@ -48,7 +49,7 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
         }
       }
 
-      const context = await browser.newContext({ baseURL: env.app.url });
+      const context = await browser.newContext({ baseURL });
 
       try {
         await ensureAuthenticatedE2EUser(context.request, workerInfo.workerIndex, 'locations');
