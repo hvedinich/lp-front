@@ -68,6 +68,7 @@
 - CI mode (`CI=true`):
   - `webServer` is disabled
   - target deployed URL comes from `PLAYWRIGHT_BASE_URL`
+  - missing `PLAYWRIGHT_BASE_URL` is treated as a configuration error
   - local URLs are rejected in CI
 
 ## Parallelism policy

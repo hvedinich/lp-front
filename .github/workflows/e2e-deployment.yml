@@ -30,6 +30,16 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Print deployment payload
+        env:
+          DEPLOYMENT_ENVIRONMENT: ${{ github.event.deployment.environment }}
+          DEPLOYMENT_STATE: ${{ github.event.deployment_status.state }}
+          DEPLOYMENT_TARGET_URL: ${{ github.event.deployment_status.target_url }}
+        run: |
+          echo "deployment.environment=${DEPLOYMENT_ENVIRONMENT}"
+          echo "deployment_status.state=${DEPLOYMENT_STATE}"
+          echo "deployment_status.target_url=${DEPLOYMENT_TARGET_URL}"
+
       - name: Export deployment URL
         env:
           DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
