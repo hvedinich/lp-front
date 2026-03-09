@@ -1,132 +1,138 @@
+import type { Browser, TestInfo } from '@playwright/test';
 import { expect, test as base } from '@playwright/test';
-import { access, mkdir } from 'node:fs/promises';
+import { access, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { ensureAuthenticatedE2EUser } from '../support/api/auth.api';
 import type { SessionPayload } from '../support/contracts/backend.types';
 import { apiRequest, toApiError } from '../support/api/client.api';
 import { resolveE2EBaseUrl } from '../support/helpers/base-url';
+import { toTestPrefix } from '../support/helpers/routes';
 import { createAuthFixture, type AuthFixture } from './auth.fixture';
 import { createLocationFixture, type LocationFixture } from './location.fixture';
 import { env } from '@/shared/config';
 
 interface E2EFixtures {
   auth: AuthFixture;
-  locations: LocationFixture;
-}
-
-interface E2EWorkerFixtures {
   devicesStorageStatePath: string;
+  locations: LocationFixture;
   locationsStorageStatePath: string;
 }
 
-export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
-  devicesStorageStatePath: [
-    async ({ browser }, applyFixture, workerInfo) => {
-      const authDir = join(process.cwd(), 'e2e', 'storage');
-      await mkdir(authDir, { recursive: true });
-      const statePath = join(authDir, `devices-worker-${workerInfo.workerIndex}.json`);
+interface E2EInternalFixtures {
+  locationStateLock: void;
+}
 
-      const hasExistingState = await access(statePath)
-        .then(() => true)
-        .catch(() => false);
+interface SerializedLocationStateFixture {
+  serializedLocationState: void;
+}
 
-      if (hasExistingState) {
-        const cachedContext = await browser.newContext({
-          baseURL: env.app.url,
-          storageState: statePath,
-        });
-        try {
-          const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
-            method: 'GET',
-            path: '/auth/me',
-          });
-          const cachedRole = cachedSession.payload?.account?.role;
-          if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
-            await applyFixture(statePath);
-            return;
-          }
-        } finally {
-          await cachedContext.close();
-        }
+const LOCATION_STATE_LOCK_PATH = join(tmpdir(), 'lp-front-e2e-location-state-lock');
+const LOCATION_STATE_LOCK_TIMEOUT_MS = 60_000;
+const LOCATION_STATE_LOCK_RETRY_MS = 200;
+
+const sleep = async (ms: number): Promise<void> => {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
+
+const acquireLocationStateLock = async (): Promise<void> => {
+  const startedAt = Date.now();
+
+  while (true) {
+    try {
+      await mkdir(LOCATION_STATE_LOCK_PATH);
+      return;
+    } catch (error) {
+      const code = error instanceof Error && 'code' in error ? error.code : undefined;
+      if (code !== 'EEXIST') {
+        throw error;
       }
 
-      const context = await browser.newContext({ baseURL: env.app.url });
+      if (Date.now() - startedAt >= LOCATION_STATE_LOCK_TIMEOUT_MS) {
+        throw new Error('Timed out waiting for the shared E2E location-state lock.');
+      }
 
+      await sleep(LOCATION_STATE_LOCK_RETRY_MS);
+    }
+  }
+};
+
+const releaseLocationStateLock = async (): Promise<void> => {
+  await rm(LOCATION_STATE_LOCK_PATH, { recursive: true, force: true });
+};
+
+const createScopedStorageStateFixture = (target: 'devices' | 'locations') => {
+  return async (
+    { browser }: { browser: Browser },
+    applyFixture: (value: string) => Promise<void>,
+    testInfo: TestInfo,
+  ) => {
+    const baseURL = target === 'devices' ? env.app.url : resolveE2EBaseUrl();
+    const authDir = join(process.cwd(), 'e2e', 'storage');
+    await mkdir(authDir, { recursive: true });
+    const statePath = join(authDir, `${target}-${toTestPrefix(testInfo.testId)}.json`);
+
+    const hasExistingState = await access(statePath)
+      .then(() => true)
+      .catch(() => false);
+
+    if (hasExistingState) {
+      const cachedContext = await browser.newContext({
+        baseURL,
+        storageState: statePath,
+      });
       try {
-        await ensureAuthenticatedE2EUser(context.request, workerInfo.workerIndex, 'devices');
-        const sessionResponse = await apiRequest<SessionPayload>(context.request, {
+        const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
           method: 'GET',
           path: '/auth/me',
         });
-        const role = sessionResponse.payload?.account?.role;
-        if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
-          throw new Error(
-            `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
-          );
+        const cachedRole = cachedSession.payload?.account?.role;
+        if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
+          await applyFixture(statePath);
+          return;
         }
-        await context.storageState({ path: statePath });
       } finally {
-        await context.close();
+        await cachedContext.close();
       }
+    }
 
-      await applyFixture(statePath);
-    },
-    { scope: 'worker' },
-  ],
-  locationsStorageStatePath: [
-    async ({ browser }, applyFixture, workerInfo) => {
-      const baseURL = resolveE2EBaseUrl();
-      const authDir = join(process.cwd(), 'e2e', 'storage');
-      await mkdir(authDir, { recursive: true });
-      const statePath = join(authDir, `locations-worker-${workerInfo.workerIndex}.json`);
+    const context = await browser.newContext({ baseURL });
 
-      const hasExistingState = await access(statePath)
-        .then(() => true)
-        .catch(() => false);
-
-      if (hasExistingState) {
-        const cachedContext = await browser.newContext({
-          baseURL,
-          storageState: statePath,
-        });
-        try {
-          const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
-            method: 'GET',
-            path: '/auth/me',
-          });
-          const cachedRole = cachedSession.payload?.account?.role;
-          if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
-            await applyFixture(statePath);
-            return;
-          }
-        } finally {
-          await cachedContext.close();
-        }
+    try {
+      await ensureAuthenticatedE2EUser(context.request, testInfo.workerIndex, testInfo.testId);
+      const sessionResponse = await apiRequest<SessionPayload>(context.request, {
+        method: 'GET',
+        path: '/auth/me',
+      });
+      const role = sessionResponse.payload?.account?.role;
+      if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
+        throw new Error(
+          `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
+        );
       }
+      await context.storageState({ path: statePath });
+    } finally {
+      await context.close();
+    }
 
-      const context = await browser.newContext({ baseURL });
+    await applyFixture(statePath);
+  };
+};
 
-      try {
-        await ensureAuthenticatedE2EUser(context.request, workerInfo.workerIndex, 'locations');
-        const sessionResponse = await apiRequest<SessionPayload>(context.request, {
-          method: 'GET',
-          path: '/auth/me',
-        });
-        const role = sessionResponse.payload?.account?.role;
-        if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
-          throw new Error(
-            `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
-          );
-        }
-        await context.storageState({ path: statePath });
-      } finally {
-        await context.close();
-      }
+export const test = base.extend<E2EFixtures & E2EInternalFixtures>({
+  devicesStorageStatePath: createScopedStorageStateFixture('devices'),
+  locationsStorageStatePath: createScopedStorageStateFixture('locations'),
+  locationStateLock: async ({}, applyFixture) => {
+    await acquireLocationStateLock();
 
-      await applyFixture(statePath);
-    },
-    { scope: 'worker' },
-  ],
+    try {
+      await applyFixture();
+    } finally {
+      await releaseLocationStateLock();
+    }
+  },
   auth: async ({ page, request }, applyFixture) => {
     await applyFixture(createAuthFixture(page, request));
   },
@@ -135,13 +141,33 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
   },
 });
 
-export const locationsTest = test.extend({
+export const locationsTest = test.extend<SerializedLocationStateFixture>({
+  serializedLocationState: [
+    async (
+      { locationStateLock }: { locationStateLock: void },
+      applyFixture: () => Promise<void>,
+    ) => {
+      void locationStateLock;
+      await applyFixture();
+    },
+    { auto: true },
+  ],
   storageState: async ({ locationsStorageStatePath }, applyFixture) => {
     await applyFixture(locationsStorageStatePath);
   },
 });
 
-export const devicesTest = test.extend({
+export const devicesTest = test.extend<SerializedLocationStateFixture>({
+  serializedLocationState: [
+    async (
+      { locationStateLock }: { locationStateLock: void },
+      applyFixture: () => Promise<void>,
+    ) => {
+      void locationStateLock;
+      await applyFixture();
+    },
+    { auto: true },
+  ],
   storageState: async ({ devicesStorageStatePath }, applyFixture) => {
     await applyFixture(devicesStorageStatePath);
   },

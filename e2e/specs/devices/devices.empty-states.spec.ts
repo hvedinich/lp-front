@@ -1,10 +1,10 @@
-import type { Page } from '@playwright/test';
 import { devicesTest as test, expect } from '../../fixtures/test';
-
-const openSelector = async (page: Page) => {
-  await expect(page.getByTestId('location-selector-input')).toBeVisible();
-  await page.getByTestId('location-selector-trigger').click();
-};
+import {
+  expectDevicesEmptyState,
+  expectDevicesRequireLocation,
+  openDevicesPage,
+  selectDevicesLocation,
+} from '../../support/helpers/devices-screen';
 
 const testPrefixes = new Map<string, string>();
 
@@ -14,12 +14,8 @@ test.beforeEach(async ({ locations }, testInfo) => {
 });
 
 test('shows prompt state when no location is available', async ({ page }) => {
-  await page.goto('/devices');
-
-  await expect(page.getByTestId('devices-location-required')).toBeVisible();
-  await expect(page.getByTestId('devices-empty-state')).toHaveCount(0);
-  await expect(page.getByTestId('devices-list')).toHaveCount(0);
-  await expect(page.getByTestId('location-selector-manage-button')).toBeVisible();
+  await openDevicesPage(page);
+  await expectDevicesRequireLocation(page);
 });
 
 test('shows empty state for selected location without devices', async ({
@@ -28,18 +24,12 @@ test('shows empty state for selected location without devices', async ({
 }, testInfo) => {
   const seed = await locations.createSeed(testPrefixes.get(testInfo.testId)!);
 
-  await page.goto('/devices');
-
+  await openDevicesPage(page);
   await expect(page.getByTestId('location-selector-input')).toHaveValue(seed.defaultLocation.name);
-  await expect(page.getByTestId('devices-empty-state')).toBeVisible();
-  await expect(page.getByTestId('devices-location-required')).toHaveCount(0);
+  await expectDevicesEmptyState(page);
 
-  await openSelector(page);
-  await page.getByTestId(`location-selector-option-${seed.secondaryLocation.id}`).click();
-  await expect(page.getByTestId('location-selector-input')).toHaveValue(
-    seed.secondaryLocation.name,
-  );
-  await expect(page.getByTestId('devices-empty-state')).toBeVisible();
+  await selectDevicesLocation(page, seed.secondaryLocation);
+  await expectDevicesEmptyState(page);
   await expect(page.getByTestId('devices-list')).toHaveCount(0);
 });
 

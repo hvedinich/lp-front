@@ -37,9 +37,10 @@
 
 ## Selector policy
 
-- Default: `data-testid` for stable business-critical elements.
-- Keep IDs semantic and stable.
-- Avoid text-based selectors for localized UI when a `data-testid` is available.
+- Default priority: `getByRole` -> `getByLabel` -> `getByText` / `getByPlaceholder` -> `getByTestId`.
+- Prefer locators that match what the user sees and interacts with.
+- Use `data-testid` only as a fallback when UI meaning is not safely expressible through accessible text/roles, or when localization would make semantic locators brittle.
+- Keep any remaining test IDs semantic and stable.
 
 ## Real backend mode
 
@@ -49,14 +50,15 @@
   - same-origin relative paths when app and API share origin
   - absolute `NEXT_PUBLIC_API_URL` when API origin is separate
 - Auth bootstrap:
-  - ensure user exists (register/409 path) without extra login calls
+  - ensure one deterministic E2E user per deployment scope and Playwright worker (`PLAYWRIGHT_E2E_SCOPE` + worker index)
+  - treat `/auth/register` `409` as "user already exists" only if login with current credentials still succeeds
   - authenticate only where session is required (worker fixture/session bootstrap)
   - transient 5xx auth bootstrap failures use bounded retry with backoff+jitter
   - `/auth/login` handles `RATE_LIMITED` with retry-after wait and serialized login attempts
   - negative auth UI test uses isolated invalid credentials and does not call user bootstrap
-- Feature specs (`locations`) use worker-level `storageState` to avoid repeating full auth bootstrap in each test.
-- Worker `storageState` files are reused from `e2e/storage/*.json` across runs when still valid (`/auth/me` check).
-- If cached storage state is invalid, fixture re-authenticates and refreshes the file.
+- Feature specs use fixture-managed auth state and test-scoped data cleanup to avoid repeating full auth bootstrap in each scenario.
+- Cached `storageState` files in `e2e/storage/*.json` are reused only while they still pass `/auth/me`.
+- If cached storage state is invalid, the fixture re-authenticates and refreshes the file before the scenario continues.
 
 ## Playwright app lifecycle
 
@@ -77,7 +79,16 @@
 - Local run: `workers=2` by default.
 - Optional local override: set `PLAYWRIGHT_WORKERS` (for example `PLAYWRIGHT_WORKERS=4 npm run test:e2e`) when backend capacity allows.
 - CI run: `workers=4`, retries enabled.
-- Use per-test data isolation (`testId` prefixes) and worker-scoped auth state to keep runs parallel-safe.
+- Use per-test data isolation (`testId` prefixes) and fixture-managed auth state to keep runs parallel-safe.
+- `auth` scenarios are expected to run in parallel.
+- Stateful `locations` / `devices` scenarios may keep narrow serialization while product state is still not fully parallel-safe. Treat this as a temporary infrastructure compromise, not a testing ideal.
+
+## Spec structure
+
+- Specs should read as user scenarios: action -> visible result.
+- Keep repeated setup and screen interactions in small screen/domain actions, not in monolithic page objects.
+- Specs own the business narrative and assertions; fixtures own auth/session/bootstrap; API helpers own backend setup/cleanup.
+- Do not use `page.waitForTimeout()` in specs. If transient infrastructure handling is required, keep it in a focused helper with a documented reason.
 
 ## Commands
 
@@ -97,6 +108,7 @@ npm run test:e2e:ui
 - `PORT`
 - `NEXT_PUBLIC_API_URL`
 - `PLAYWRIGHT_BASE_URL` (required in CI)
+- `PLAYWRIGHT_E2E_SCOPE` (optional locally, set in CI from deployment ref)
 - `NEXT_PUBLIC_SITE_URL` (optional)
 - `NEXT_PUBLIC_VERCEL_URL` / `VERCEL_URL` (optional outside CI)
 - `PLAYWRIGHT_E2E_EMAIL`

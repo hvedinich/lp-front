@@ -1,11 +1,12 @@
 import type { APIRequestContext, Page } from '@playwright/test';
+import { createHash } from 'node:crypto';
 import { env } from '../../../src/shared/config/env';
 import type { AuthCredentials, BrowserResponse, SessionPayload } from '../contracts/backend.types';
-import { loginSelectors } from '../helpers/selectors';
+import { fillLoginForm, openLoginPage } from '../helpers/auth-screen';
 import { apiRequest, ensureOk, sleep, toApiError } from './client.api';
 
 const ensuredUserCache = new Map<string, AuthCredentials>();
-const AUTH_RETRY_DELAYS_MS = [200, 500, 1000, 2000] as const;
+const AUTH_RETRY_DELAYS_MS = [300, 700, 1500, 3000, 5000, 8000] as const;
 const MIN_LOGIN_GAP_MS = 400;
 let loginQueue: Promise<void> = Promise.resolve();
 let lastLoginAt = 0;
@@ -87,31 +88,52 @@ export const getE2ECredentials = (): AuthCredentials => ({
   password: env.playwright.e2ePassword,
 });
 
-const withWorkerSuffix = (email: string, workerIndex: number): string => {
-  const [localPart, domain = 'localprof.dev'] = email.split('@');
-  return `${localPart}+e2e-w${workerIndex}@${domain}`;
-};
-
-const withWorkerScopeSuffix = (email: string, workerIndex: number, scope: string): string => {
-  if (!scope) {
-    return withWorkerSuffix(email, workerIndex);
-  }
-
-  const normalizedScope = scope
+const resolveE2EUserScope = (): string => {
+  return (process.env.PLAYWRIGHT_E2E_SCOPE ?? '')
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 16);
+    .slice(0, 32);
+};
 
+const normalizeScopePart = (value: string): string => {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 32);
+};
+
+const toCredentialKey = (scope: string, workerIndex: number): string => {
+  const basis = scope || `worker-${workerIndex}`;
+  return createHash('sha1').update(basis).digest('hex').slice(0, 12);
+};
+
+const withScopedSuffix = (email: string, scope: string, workerIndex: number): string => {
   const [localPart, domain = 'localprof.dev'] = email.split('@');
-  return `${localPart}+e2e-${normalizedScope}-w${workerIndex}@${domain}`;
+  const credentialKey = toCredentialKey(scope, workerIndex);
+  if (!scope) {
+    return `${localPart}+e2e-${credentialKey}@${domain}`;
+  }
+
+  return `${localPart}+e2e-${scope}-${credentialKey}@${domain}`;
+};
+
+const buildE2EAccountName = (credentials: AuthCredentials): string => {
+  const accountKey = createHash('sha1').update(credentials.email).digest('hex').slice(0, 12);
+  return `Playwright E2E ${accountKey}`;
 };
 
 export const getWorkerCredentials = (workerIndex: number, scope = ''): AuthCredentials => {
   const base = getE2ECredentials();
+  const deploymentScope = resolveE2EUserScope();
+  const localScope = normalizeScopePart(scope);
+  const scopedSuffix = [deploymentScope, localScope].filter(Boolean).join('-');
+
   return {
-    email: withWorkerScopeSuffix(base.email, workerIndex, scope),
+    email: withScopedSuffix(base.email, scopedSuffix, workerIndex),
     password: base.password,
   };
 };
@@ -136,9 +158,9 @@ const registerUser = async (
       email: credentials.email,
       password: credentials.password,
       language: 'en',
-      name: 'Playwright E2E User',
+      name: `Playwright ${credentials.email.split('@')[0]}`,
       account: {
-        name: 'Playwright E2E Account',
+        name: buildE2EAccountName(credentials),
         region: 'PL',
         contentLanguage: 'en',
       },
@@ -216,8 +238,19 @@ const ensureRegisteredUser = async (
   let attempt = 0;
   while (true) {
     const registerResponse = await registerUser(request, credentials);
-    if (registerResponse.ok || registerResponse.status === 409) {
+    if (registerResponse.ok) {
       return credentials;
+    }
+
+    if (registerResponse.status === 409) {
+      const loginResponse = await loginViaApiWithRetry(request, credentials, context);
+      if (loginResponse.ok) {
+        return credentials;
+      }
+
+      throw new Error(
+        `E2E user already exists but login failed with configured credentials. ${toApiError(loginResponse)}`,
+      );
     }
 
     if (!isTransientStatus(registerResponse.status) || !shouldRetry(attempt)) {
@@ -314,19 +347,18 @@ export const ensureAuthenticatedE2EUser = async (
 };
 
 export const loginViaUi = async (page: Page, credentials: AuthCredentials): Promise<boolean> => {
-  await page.goto('/login');
+  await openLoginPage(page);
 
   if (!new URL(page.url()).pathname.startsWith('/login')) {
     return hasManageSession(page);
   }
 
-  const { email, password, submit } = loginSelectors(page);
+  const submit = page.getByRole('button', { name: 'Log In' });
   if ((await submit.count()) === 0) {
     return hasManageSession(page);
   }
 
-  await email.fill(credentials.email);
-  await password.fill(credentials.password);
+  await fillLoginForm(page, credentials);
   await submit.click();
   await page.waitForLoadState('networkidle');
 
