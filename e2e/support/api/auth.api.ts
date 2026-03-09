@@ -83,6 +83,14 @@ const hasManageSession = async (page: Page): Promise<boolean> => {
   return session.ok && isManageRole(session.payload?.account?.role);
 };
 
+const forgetCachedCredentials = (email: string): void => {
+  for (const [cacheKey, credentials] of ensuredUserCache.entries()) {
+    if (credentials.email === email) {
+      ensuredUserCache.delete(cacheKey);
+    }
+  }
+};
+
 export const getE2ECredentials = (): AuthCredentials => ({
   email: env.playwright.e2eEmail,
   password: env.playwright.e2ePassword,
@@ -180,6 +188,102 @@ export const loginViaApi = async (
       password: credentials.password,
     },
   });
+};
+
+const getCurrentSession = async (
+  request: APIRequestContext,
+): Promise<BrowserResponse<SessionPayload>> => {
+  return apiRequest<SessionPayload>(request, {
+    method: 'GET',
+    path: '/auth/me',
+  });
+};
+
+const deleteAccountById = async (request: APIRequestContext, accountId: string): Promise<void> => {
+  const deleteResponse = await apiRequest(request, {
+    method: 'DELETE',
+    path: `/accounts/${accountId}`,
+  });
+
+  if (!deleteResponse.ok && deleteResponse.status !== 404) {
+    throw new Error(`Unable to delete E2E account. ${toApiError(deleteResponse)}`);
+  }
+};
+
+const deleteUserById = async (request: APIRequestContext, userId: string): Promise<void> => {
+  const deleteResponse = await apiRequest(request, {
+    method: 'DELETE',
+    path: `/users/${userId}`,
+  });
+
+  if (!deleteResponse.ok && deleteResponse.status !== 404) {
+    throw new Error(`Unable to delete E2E user. ${toApiError(deleteResponse)}`);
+  }
+};
+
+const deleteCurrentUser = async (
+  request: APIRequestContext,
+  credentials: AuthCredentials,
+): Promise<void> => {
+  const sessionResponse = await getCurrentSession(request);
+
+  if (!sessionResponse.ok) {
+    throw new Error(
+      `Unable to load current E2E user before cleanup. ${toApiError(sessionResponse)}`,
+    );
+  }
+
+  const userId = sessionResponse.payload?.user?.id;
+  const accountId = sessionResponse.payload?.account?.id;
+  if (!userId) {
+    throw new Error('Unable to resolve current E2E user id before cleanup.');
+  }
+  if (!accountId) {
+    throw new Error('Unable to resolve current E2E account id before cleanup.');
+  }
+
+  await deleteAccountById(request, accountId);
+
+  const deleteUserResponse = await apiRequest(request, {
+    method: 'DELETE',
+    path: `/users/${userId}`,
+  });
+
+  if (deleteUserResponse.ok || deleteUserResponse.status === 404) {
+    return;
+  }
+
+  if (deleteUserResponse.status !== 401) {
+    throw new Error(`Unable to delete E2E user. ${toApiError(deleteUserResponse)}`);
+  }
+
+  const reloginResponse = await loginViaApi(request, credentials);
+  if (reloginResponse.status === 401 || reloginResponse.status === 404) {
+    return;
+  }
+
+  ensureOk(reloginResponse, 'Unable to re-authenticate E2E user after account cleanup');
+  await deleteUserById(request, userId);
+};
+
+export const cleanupE2EUser = async (
+  request: APIRequestContext,
+  credentials: AuthCredentials,
+): Promise<void> => {
+  const loginResponse = await loginViaApi(request, credentials);
+
+  if (loginResponse.status === 401 || loginResponse.status === 404) {
+    forgetCachedCredentials(credentials.email);
+    return;
+  }
+
+  ensureOk(loginResponse, 'Unable to authenticate E2E user for cleanup');
+
+  try {
+    await deleteCurrentUser(request, credentials);
+  } finally {
+    forgetCachedCredentials(credentials.email);
+  }
 };
 
 const loginViaApiWithRetry = async (

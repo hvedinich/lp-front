@@ -11,6 +11,7 @@
 - `Vitest` (`npm run test`): co-located unit/module tests in `src/**` (`*.test.ts`).
 - `Playwright` (`npm run test:e2e`): cross-slice E2E scenarios in `e2e/**`.
 - Page-level integration tests live in `src/pages/<slice>/integration/**` and cover orchestration that is expensive to duplicate in E2E.
+- Auth/session guard rules belong in small Vitest tests around pure state resolvers; cover both redirect-safe transitions and background `/auth/me` refresh without a full-page loader.
 
 ## E2E directory contract
 
@@ -59,6 +60,7 @@
 - Feature specs use fixture-managed auth state and test-scoped data cleanup to avoid repeating full auth bootstrap in each scenario.
 - Cached `storageState` files in `e2e/storage/*.json` are reused only while they still pass `/auth/me`.
 - If cached storage state is invalid, the fixture re-authenticates and refreshes the file before the scenario continues.
+- Any E2E user created for a scenario must be deleted in fixture teardown regardless of test outcome; rely on backend cascade cleanup instead of manual per-entity cleanup for that user.
 
 ## Playwright app lifecycle
 

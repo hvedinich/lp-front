@@ -3,7 +3,11 @@ import { expect, test as base } from '@playwright/test';
 import { access, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { ensureAuthenticatedE2EUser } from '../support/api/auth.api';
+import {
+  cleanupE2EUser,
+  ensureAuthenticatedE2EUser,
+  getWorkerCredentials,
+} from '../support/api/auth.api';
 import type { SessionPayload } from '../support/contracts/backend.types';
 import { apiRequest, toApiError } from '../support/api/client.api';
 import { resolveE2EBaseUrl } from '../support/helpers/base-url';
@@ -73,51 +77,71 @@ const createScopedStorageStateFixture = (target: 'devices' | 'locations') => {
     const authDir = join(process.cwd(), 'e2e', 'storage');
     await mkdir(authDir, { recursive: true });
     const statePath = join(authDir, `${target}-${toTestPrefix(testInfo.testId)}.json`);
+    const credentials = getWorkerCredentials(testInfo.workerIndex, testInfo.testId);
+    let shouldCleanupUser = false;
 
-    const hasExistingState = await access(statePath)
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const hasExistingState = await access(statePath)
+        .then(() => true)
+        .catch(() => false);
 
-    if (hasExistingState) {
-      const cachedContext = await browser.newContext({
-        baseURL,
-        storageState: statePath,
-      });
+      if (hasExistingState) {
+        const cachedContext = await browser.newContext({
+          baseURL,
+          storageState: statePath,
+        });
+        try {
+          const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
+            method: 'GET',
+            path: '/auth/me',
+          });
+          const cachedRole = cachedSession.payload?.account?.role;
+          if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
+            shouldCleanupUser = true;
+            await applyFixture(statePath);
+            return;
+          }
+        } finally {
+          await cachedContext.close();
+        }
+      }
+
+      const context = await browser.newContext({ baseURL });
+
       try {
-        const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
+        await ensureAuthenticatedE2EUser(context.request, testInfo.workerIndex, testInfo.testId);
+        shouldCleanupUser = true;
+        const sessionResponse = await apiRequest<SessionPayload>(context.request, {
           method: 'GET',
           path: '/auth/me',
         });
-        const cachedRole = cachedSession.payload?.account?.role;
-        if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
-          await applyFixture(statePath);
-          return;
+        const role = sessionResponse.payload?.account?.role;
+        if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
+          throw new Error(
+            `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
+          );
+        }
+        await context.storageState({ path: statePath });
+      } finally {
+        await context.close();
+      }
+
+      await applyFixture(statePath);
+    } finally {
+      try {
+        if (shouldCleanupUser) {
+          const cleanupContext = await browser.newContext({ baseURL });
+
+          try {
+            await cleanupE2EUser(cleanupContext.request, credentials);
+          } finally {
+            await cleanupContext.close();
+          }
         }
       } finally {
-        await cachedContext.close();
+        await rm(statePath, { force: true });
       }
     }
-
-    const context = await browser.newContext({ baseURL });
-
-    try {
-      await ensureAuthenticatedE2EUser(context.request, testInfo.workerIndex, testInfo.testId);
-      const sessionResponse = await apiRequest<SessionPayload>(context.request, {
-        method: 'GET',
-        path: '/auth/me',
-      });
-      const role = sessionResponse.payload?.account?.role;
-      if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
-        throw new Error(
-          `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
-        );
-      }
-      await context.storageState({ path: statePath });
-    } finally {
-      await context.close();
-    }
-
-    await applyFixture(statePath);
   };
 };
 
@@ -134,7 +158,23 @@ export const test = base.extend<E2EFixtures & E2EInternalFixtures>({
     }
   },
   auth: async ({ page, request }, applyFixture) => {
-    await applyFixture(createAuthFixture(page, request));
+    const trackedCredentials = new Map<string, { email: string; password: string }>();
+    const authFixture = createAuthFixture(page, request);
+
+    try {
+      await applyFixture({
+        ...authFixture,
+        ensureUser: async (workerIndex, scope = '') => {
+          const credentials = await authFixture.ensureUser(workerIndex, scope);
+          trackedCredentials.set(credentials.email, credentials);
+          return credentials;
+        },
+      });
+    } finally {
+      for (const credentials of trackedCredentials.values()) {
+        await authFixture.cleanupUser(credentials);
+      }
+    }
   },
   locations: async ({ page }, applyFixture) => {
     await applyFixture(createLocationFixture(page.request));
