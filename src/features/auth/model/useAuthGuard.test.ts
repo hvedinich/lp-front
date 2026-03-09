@@ -78,6 +78,21 @@ describe('resolveAuthGuardState', () => {
     });
   });
 
+  it('does not show auth loader during background refresh for authenticated session', () => {
+    expect(
+      resolveAuthGuardState({
+        isPublic: false,
+        isRouterReady: true,
+        isSessionPending: false,
+        isSessionFetching: true,
+        sessionState: 'authenticated',
+      }),
+    ).toEqual({
+      isCheckingAuth: false,
+      shouldRedirectToLogin: false,
+    });
+  });
+
   it('does not redirect authenticated user on a protected route', () => {
     expect(
       resolveAuthGuardState({

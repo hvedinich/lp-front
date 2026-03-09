@@ -31,6 +31,16 @@ export const resolveAuthGuardState = (
   }
 
   if (!input.isRouterReady || input.isSessionPending || input.isSessionFetching) {
+    const isBackgroundSessionRefresh =
+      input.isSessionFetching && input.sessionState === 'authenticated';
+
+    if (isBackgroundSessionRefresh) {
+      return {
+        isCheckingAuth: false,
+        shouldRedirectToLogin: false,
+      };
+    }
+
     return {
       isCheckingAuth: true,
       shouldRedirectToLogin: false,
