@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next';
-import {
-  useActivateDevice,
-  useConfigureDevice,
-  useDeactivateDevice,
-  type Device,
-  type DeviceError,
-} from '@/entities/device';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useUiStore } from '@/shared/store';
 import { toaster } from '@/shared/ui';
-import { mapActivateDeviceFormValues, mapConfigureDeviceFormValues } from './deviceForm';
 import { resolveDeviceToastMessage } from './deviceErrorUi';
-import type { DeviceFormValues } from './devices.schema';
+import {
+  ActivateMultiDevicePayload,
+  ActivateSingleDevicePayload,
+  Device,
+  DeviceFormValues,
+} from './types';
+import { mapConfigureDeviceFormValues } from '../lib/device.mapper';
+import { DeviceError } from './errors';
+import { useActivateDevice } from './useActivateDevice';
+import { useConfigureDevice } from './useConfigureDevice';
+import { useDeactivateDevice } from './useDeactivateDevice';
 
 interface UseDeviceActionsOptions {
   accountId: string;
@@ -27,7 +29,10 @@ interface UseDeviceActionsResult {
   isConfigurePending: boolean;
   isDeactivatePending: boolean;
   syncSelectedLocationId: (locationId: string | null | undefined) => string | null;
-  activateDevice: (target: DeviceActionTarget, values: DeviceFormValues) => Promise<Device>;
+  activateDevice: (
+    target: DeviceActionTarget,
+    values: ActivateSingleDevicePayload | ActivateMultiDevicePayload,
+  ) => Promise<Device>;
   configureDevice: (target: DeviceActionTarget, values: DeviceFormValues) => Promise<Device>;
   deactivateDevice: (target: DeviceActionTarget) => Promise<Device>;
 }
@@ -94,7 +99,10 @@ export const useDeviceActions = ({
     isDeactivatePending: deactivateMutation.isPending,
     syncSelectedLocationId,
     activateDevice: async ({ deviceId, locationId }, values) => {
-      const nextLocationId = resolveActionLocationId(locationId, selectedLocationId);
+      const nextLocationId = resolveActionLocationId(
+        locationId || values.locationId,
+        selectedLocationId,
+      );
       if (!nextLocationId) {
         throw new Error('Device location is required');
       }
@@ -103,7 +111,7 @@ export const useDeviceActions = ({
 
       return activateMutation.mutateAsync({
         id: deviceId,
-        input: mapActivateDeviceFormValues(values, nextLocationId),
+        input: values,
         previousLocationId: selectedLocationId,
       });
     },

@@ -34,6 +34,6 @@ export const useLocations = ({
     queryKey: locationQueryKeys.list(accountId ?? '__unknown-account__', params),
     staleTime: 300_000,
     ...options,
-    // enabled: isEnabledByAccount && isEnabled,
+    enabled: isEnabledByAccount && isEnabled,
   });
 };

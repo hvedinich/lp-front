@@ -10,7 +10,7 @@
     "preinstall": "npx only-allow npm",
     "postinstall": "chakra typegen src/shared/config/theme/index.ts",
     "typegen": "chakra typegen src/shared/config/theme/index.ts",
-    "dev": "node scripts/dev-with-port.mjs",
+    "dev": "next dev --port 4000",
     "build": "next build",
     "start": "next start --port 4000",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

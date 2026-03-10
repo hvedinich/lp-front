@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDeviceActions } from './useDeviceActions';
+import { DeviceModeEnum } from '@/shared/lib';
 
 const {
   activateMutateAsync,
@@ -40,15 +41,21 @@ vi.mock('@/shared/store', () => ({
     }),
 }));
 
-vi.mock('@/entities/device', () => ({
+vi.mock('./useActivateDevice', () => ({
   useActivateDevice: vi.fn(() => ({
     isPending: false,
     mutateAsync: activateMutateAsync,
   })),
+}));
+
+vi.mock('./useConfigureDevice', () => ({
   useConfigureDevice: vi.fn(() => ({
     isPending: true,
     mutateAsync: configureMutateAsync,
   })),
+}));
+
+vi.mock('./useDeactivateDevice', () => ({
   useDeactivateDevice: vi.fn(() => ({
     isPending: false,
     mutateAsync: deactivateMutateAsync,
@@ -65,7 +72,7 @@ describe('useDeviceActions', () => {
     selectedLocationId = 'loc-1';
   });
 
-  it('maps activate/configure form values and syncs selected location before submit', async () => {
+  it('syncs selected location and forwards payloads to mutations', async () => {
     activateMutateAsync.mockResolvedValue({ id: 'dev-1' });
     configureMutateAsync.mockResolvedValue({ id: 'dev-1' });
 
@@ -77,11 +84,9 @@ describe('useDeviceActions', () => {
         locationId: 'loc-2',
       },
       {
-        locale: ' en ',
-        mode: 'static',
-        name: ' Lobby ',
-        singleLinkUrl: ' https://example.com ',
-        type: ' tablet ',
+        locationId: 'loc-2',
+        targetMode: DeviceModeEnum.SINGLE,
+        singleLinkUrl: 'https://example.com',
       },
     );
 
@@ -92,7 +97,7 @@ describe('useDeviceActions', () => {
       },
       {
         locale: '',
-        mode: 'multilink',
+        mode: DeviceModeEnum.MULTI,
         name: '',
         singleLinkUrl: '',
         type: '',
@@ -103,12 +108,9 @@ describe('useDeviceActions', () => {
     expect(activateMutateAsync).toHaveBeenCalledWith({
       id: 'dev-1',
       input: {
-        locale: 'en',
         locationId: 'loc-2',
-        mode: 'static',
-        name: 'Lobby',
+        targetMode: DeviceModeEnum.SINGLE,
         singleLinkUrl: 'https://example.com',
-        type: 'tablet',
       },
       previousLocationId: 'loc-1',
     });
@@ -117,7 +119,7 @@ describe('useDeviceActions', () => {
       input: {
         locale: null,
         locationId: 'loc-2',
-        mode: 'multilink',
+        mode: DeviceModeEnum.MULTI,
         name: null,
         singleLinkUrl: null,
         type: null,
@@ -151,11 +153,8 @@ describe('useDeviceActions', () => {
           deviceId: 'dev-1',
         },
         {
-          locale: '',
-          mode: 'multilink',
-          name: '',
-          singleLinkUrl: '',
-          type: '',
+          locationId: '',
+          targetMode: DeviceModeEnum.MULTI,
         },
       ),
     ).rejects.toThrow('Device location is required');

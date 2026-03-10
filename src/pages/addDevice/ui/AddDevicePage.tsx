@@ -17,7 +17,7 @@ export default function AddDevicePage() {
   const deviceQuery = usePublicDevice(shortCode);
   const sessionQuery = useHasActiveSession({ options: { enabled: router.isReady } });
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
-  const locationsQuery = useLocations({ scope: { accountId } });
+  const locationsQuery = useLocations({ scope: { accountId }, options: { enabled: true } });
 
   const isAuth = sessionQuery?.data?.state === 'authenticated';
 
@@ -25,7 +25,7 @@ export default function AddDevicePage() {
     !router.isReady ||
     (!!shortCode && deviceQuery.isPending) ||
     sessionQuery.isPending ||
-    locationsQuery.isPending;
+    locationsQuery.isLoading;
 
   if (isLoading) {
     return <PageSpinner />;

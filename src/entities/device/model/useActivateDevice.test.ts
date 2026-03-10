@@ -91,7 +91,7 @@ describe('useActivateDevice', () => {
     };
     const data = await mutation.mutationFn(payload);
 
-    expect(activateDeviceMock).toHaveBeenCalledWith('dev-1', payload.input);
+    expect(activateDeviceMock).toHaveBeenCalledWith({ id: 'dev-1', input: payload.input });
 
     mutation.onSuccess?.(data, payload, undefined, undefined);
     expect(setQueryData).toHaveBeenCalledWith(

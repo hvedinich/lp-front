@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { getDeviceName, useActivateDevice } from '@/entities/device';
-import type { ActivateSingleDevicePayload, ActivateMultiDevicePayload } from '@/entities/device';
+import {
+  type ActivateSingleDevicePayload,
+  type ActivateMultiDevicePayload,
+  useDeviceActions,
+} from '@/entities/device';
 import { parseErrorMessage } from '@/shared/api';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
@@ -19,6 +22,7 @@ import {
   type CreateLocationDtoRequest,
 } from '@/entities/location';
 import { useUiStore } from '@/shared/store';
+import { getDeviceName } from './helpers';
 
 export const useSubmitOnboarding = ({
   methods,
@@ -36,17 +40,14 @@ export const useSubmitOnboarding = ({
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const currentLocationId = useUiStore(locationSelectionSelectors.selectedLocationId(accountId));
 
-  const shortCode = typeof router.query.id === 'string' ? router.query.id : undefined;
-
   const [isEmailConflict, setIsEmailConflict] = useState(false);
 
   const { mutateAsync: onboardDevice, isPending: isOnboarding } = useOnboardDevice();
   const createLocationMutation = useCreateLocation({ scope: { accountId } });
-  const { mutateAsync: activateDevice, isPending: isActivating } = useActivateDevice(
-    shortCode ?? '',
-  );
 
-  const isSubmitting = isActivating || isOnboarding || createLocationMutation.isPending;
+  const { activateDevice, isActivatePending } = useDeviceActions({ accountId });
+
+  const isSubmitting = isActivatePending || isOnboarding || createLocationMutation.isPending;
 
   const onSubmit = async () => {
     const formData = methods.getValues();
@@ -82,10 +83,7 @@ export const useSubmitOnboarding = ({
               } as ActivateSingleDevicePayload)
             : ({ locationId, targetMode: mode } as ActivateMultiDevicePayload);
 
-        await activateDevice({
-          id: device.id,
-          payload: activateDevicePayload,
-        });
+        await activateDevice({ deviceId: device.id }, activateDevicePayload);
       } else {
         const deviceName = getDeviceName(links[0]!.type, mode);
         const onboardingDevicePayload =

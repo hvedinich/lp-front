@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
-import type { DeviceError } from '@/entities/device';
 import { createErrorKeyResolver } from '@/shared/lib';
+import { DeviceError } from './errors';
 
 interface ResolveDeviceToastMessageOptions {
   error: DeviceError | null | undefined;

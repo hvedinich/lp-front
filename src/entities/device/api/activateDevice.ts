@@ -1,17 +1,15 @@
 import { apiRequest } from '@/shared/api';
-import {
-  ActivateDevicePayload,
-  ActivateMultiDevicePayload,
-  ActivateSingleDevicePayload,
-  Device,
-} from '../model/types';
-import { devicePaths } from './constants';
+import { ActivateMultiDevicePayload, ActivateSingleDevicePayload } from '../model/types';
+import { DeviceDto } from './device.dto';
+import { ActivateDeviceVariables } from '../model/useActivateDevice';
 
-export const activateDevice = async ({ id, payload }: ActivateDevicePayload): Promise<Device> => {
-  return apiRequest<Device, ActivateMultiDevicePayload | ActivateSingleDevicePayload>({
-    body: payload,
+export const activateDevice = async ({
+  id,
+  input,
+}: ActivateDeviceVariables): Promise<DeviceDto> => {
+  return apiRequest<DeviceDto, ActivateMultiDevicePayload | ActivateSingleDevicePayload>({
+    body: input,
     method: 'PATCH',
-    path: devicePaths.activate(id),
-    skipAuthRefresh: true,
+    path: `/devices/${id}/activate`,
   });
 };

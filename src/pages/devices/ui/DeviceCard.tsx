@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 import { Badge, Box, Card, HStack, Stack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { Device } from '@/entities/device';
+import { DeviceModeEnum } from '@/shared/lib';
 
 interface DeviceCardProps extends Omit<
   ComponentProps<typeof Card.Root>,
@@ -20,9 +21,9 @@ export function DeviceCard({ device, onOpen, ...rest }: DeviceCardProps) {
 
   const openDetails = () => onOpen(device.id);
   const modeLabel =
-    device.mode === 'static'
+    device.mode === DeviceModeEnum.SINGLE
       ? t('workspace.devicesPage.modeStatic')
-      : device.mode === 'multilink'
+      : device.mode === DeviceModeEnum.MULTI
         ? t('workspace.devicesPage.modeMultilink')
         : null;
   const secondaryText = hasName(device)

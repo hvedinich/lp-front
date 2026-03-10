@@ -5,7 +5,7 @@ import { useHasActiveSession } from '@/entities/auth';
 import { useLocationActions, useLocationById } from '@/entities/location';
 import { canManageLocationsRole } from '../lib/locationPermissions';
 import { resolveLocationEditorState } from '../lib/locationEditorState';
-import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
+import { useLocationQueryErrorToast } from '../lib/useLocationQueryErrorToast';
 import { LocationEditorForm } from './LocationEditorForm';
 
 export default function LocationEditPage() {

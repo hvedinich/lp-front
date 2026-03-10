@@ -8,7 +8,6 @@ import {
   type ComboboxRootProps,
   type ComboboxControlProps,
   type ComboboxInputProps,
-  type StackProps,
 } from '@chakra-ui/react';
 import { ChevronDown, MapPin } from 'lucide-react';
 import { useRouter } from 'next/router';

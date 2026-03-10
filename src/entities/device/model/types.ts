@@ -1,7 +1,6 @@
-import type { DeviceMode } from '../api/device.dto';
 import { DeviceModeEnum } from '@/shared/lib';
 
-type DeviceStatus = 'active' | 'disabled' | 'unconfigured';
+export type DeviceStatus = 'active' | 'disabled' | 'unconfigured';
 export interface PublicDevice {
   id: string;
   locale: string;
@@ -13,7 +12,7 @@ export interface Device extends PublicDevice {
   shortCode: string;
   type: string | null;
   connectedAt: Date | null;
-  mode: DeviceMode | null;
+  mode: DeviceModeEnum | null;
   targetUrl: string | null;
   accountId: string;
   locationId: string;
@@ -44,7 +43,10 @@ export interface ActivateSingleDevicePayload {
   singleLinkUrl: string;
 }
 
-export interface ActivateDevicePayload {
-  id: string;
-  payload: ActivateMultiDevicePayload | ActivateSingleDevicePayload;
+export interface DeviceFormValues {
+  locale: string;
+  mode: DeviceModeEnum;
+  name: string;
+  singleLinkUrl: string;
+  type: string;
 }

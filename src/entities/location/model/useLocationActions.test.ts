@@ -20,18 +20,24 @@ vi.mock('@/shared/ui', () => ({
   },
 }));
 
-vi.mock('@/entities/location', () => ({
+vi.mock('./useCreateLocation', () => ({
   useCreateLocation: vi.fn(() => ({
     isPending: false,
     mutateAsync: createMutateAsync,
   })),
-  useDeleteLocation: vi.fn(() => ({
-    isPending: false,
-    mutateAsync: deleteMutateAsync,
-  })),
+}));
+
+vi.mock('./useUpdateLocation', () => ({
   useUpdateLocation: vi.fn(() => ({
     isPending: true,
     mutateAsync: updateMutateAsync,
+  })),
+}));
+
+vi.mock('./useDeleteLocation', () => ({
+  useDeleteLocation: vi.fn(() => ({
+    isPending: false,
+    mutateAsync: deleteMutateAsync,
   })),
 }));
 
