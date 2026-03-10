@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const locationSelectorInput = (page: Page) => page.getByTestId('location-selector-input');
 const locationSelectorTrigger = (page: Page) => page.getByTestId('location-selector-trigger');
@@ -8,10 +8,12 @@ const manageLocationsButton = (page: Page) =>
   page.getByRole('button', { name: 'Manage locations' });
 
 export const openDevicesPage = async (page: Page): Promise<void> => {
-  await page.goto('/devices');
-  await expect(
-    page.getByRole('main').getByRole('heading', { name: 'Devices', exact: true }),
-  ).toBeVisible();
+  await test.step('Open devices page', async () => {
+    await page.goto('/devices');
+    await expect(
+      page.getByRole('main').getByRole('heading', { name: 'Devices', exact: true }),
+    ).toBeVisible();
+  });
 };
 
 export const expectDevicesRequireLocation = async (page: Page): Promise<void> => {
@@ -40,8 +42,10 @@ export const selectDevicesLocation = async (
   page: Page,
   location: { id: string; name: string },
 ): Promise<void> => {
-  await locationSelectorTrigger(page).click();
-  await expect(locationSelectorOption(page, location.id)).toBeVisible();
-  await locationSelectorOption(page, location.id).click();
-  await expect(locationSelectorInput(page)).toHaveValue(location.name);
+  await test.step(`Select devices location ${location.name}`, async () => {
+    await locationSelectorTrigger(page).click();
+    await expect(locationSelectorOption(page, location.id)).toBeVisible();
+    await locationSelectorOption(page, location.id).click();
+    await expect(locationSelectorInput(page)).toHaveValue(location.name);
+  });
 };

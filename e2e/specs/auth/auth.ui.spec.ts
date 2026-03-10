@@ -5,14 +5,17 @@ import {
   logoutFromWorkspace,
   openLoginPage,
   fillLoginForm,
+  submitLoginForm,
 } from '../../support/helpers/auth-screen';
+
+const authHappyPathRetries = process.env.PLAYWRIGHT_DEBUG_ARTIFACTS ? 0 : 2;
 
 test.beforeEach(async ({ auth }) => {
   await auth.clearState();
 });
 
 test.describe('auth happy path', () => {
-  test.describe.configure({ retries: 2 });
+  test.describe.configure({ retries: authHappyPathRetries });
 
   test('logs in and logs out via UI', async ({ auth, page }, testInfo) => {
     test.setTimeout(90_000);
@@ -30,7 +33,7 @@ test('shows error for invalid password', async ({ page }, testInfo) => {
     email: `playwright-invalid-${testInfo.workerIndex}@localprof.dev`,
     password: 'invalid-password',
   });
-  await page.getByRole('button', { name: 'Log In' }).click();
+  await submitLoginForm(page);
 
   await expect(page).toHaveURL(/\/login$/);
   await expectLoginError(page, 'Invalid email or password');

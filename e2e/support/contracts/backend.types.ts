@@ -20,12 +20,18 @@ export interface ApiErrorPayload {
 }
 
 export interface SessionPayload {
+  user?: {
+    id?: string;
+    email?: string;
+  };
   account?: {
+    id?: string;
     role?: string;
   };
 }
 
 export interface BrowserResponse<T = unknown> {
+  headers?: Record<string, string>;
   ok: boolean;
   status: number;
   payload: T | null;

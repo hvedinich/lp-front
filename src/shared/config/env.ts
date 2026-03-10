@@ -25,6 +25,7 @@ const runtimeEnvSchema = z.object({
     emptyStringToUndefined,
     z.coerce.number().int().positive().max(65535).default(4000),
   ),
+  PLAYWRIGHT_DEBUG_ARTIFACTS: z.preprocess(emptyStringToUndefined, z.string().optional()),
   PLAYWRIGHT_E2E_EMAIL: z.preprocess(
     emptyStringToUndefined,
     z.email().default('playwright-e2e@localprof.dev'),
@@ -128,6 +129,7 @@ export const env = {
     ),
   },
   playwright: {
+    debugArtifacts: isCi(runtime.PLAYWRIGHT_DEBUG_ARTIFACTS),
     e2eEmail: runtime.PLAYWRIGHT_E2E_EMAIL,
     e2ePassword: runtime.PLAYWRIGHT_E2E_PASSWORD,
     locationPrefix: runtime.PLAYWRIGHT_LOCATION_PREFIX,

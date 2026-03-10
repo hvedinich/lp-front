@@ -64,8 +64,18 @@ Copy `.env.local` and configure:
 - `VERCEL_URL` - runtime Vercel URL fallback without protocol
 - `PLAYWRIGHT_E2E_EMAIL` - E2E user email
 - `PLAYWRIGHT_E2E_PASSWORD` - E2E user password
+- `PLAYWRIGHT_DEBUG_ARTIFACTS` - enables rich Playwright failure artifacts for debug runs
 - `PLAYWRIGHT_LOCATION_PREFIX` - prefix for E2E-created locations
 - `PLAYWRIGHT_WORKERS` - optional local Playwright workers override
+
+## Playwright E2E
+
+- Regular run: `npm run test:e2e`
+- Debug run with trace, screenshot, video, and JSON failure context on failure: `npm run test:e2e:debug`
+- Open the last HTML report: `npm run test:e2e:report`
+- Re-run one spec in debug mode: `npm run test:e2e:debug -- e2e/specs/locations/locations.crud.spec.ts`
+- Re-run one test in debug mode: `npm run test:e2e:debug -- -g "edits location name"`
+- Playwright artifacts must stay in `test-results/` and `playwright-report/`; these directories are ignored by Git.
 
 ## GitHub Actions E2E
 

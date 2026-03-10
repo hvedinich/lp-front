@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { AuthCredentials } from '../contracts/backend.types';
 import { sleep } from '../api/client.api';
 
@@ -26,15 +26,25 @@ const isRetryableAuthError = (errorText: string): boolean =>
   RETRYABLE_ERROR_PATTERNS.some((pattern) => pattern.test(errorText));
 
 export const openLoginPage = async (page: Page): Promise<void> => {
-  await page.goto('/login');
-  if (new URL(page.url()).pathname.startsWith('/login')) {
-    await expect(loginHeading(page)).toBeVisible();
-  }
+  await test.step('Open login page', async () => {
+    await page.goto('/login');
+    if (new URL(page.url()).pathname.startsWith('/login')) {
+      await expect(loginHeading(page)).toBeVisible();
+    }
+  });
 };
 
 export const fillLoginForm = async (page: Page, credentials: AuthCredentials): Promise<void> => {
-  await emailInput(page).fill(credentials.email);
-  await passwordInput(page).fill(credentials.password);
+  await test.step('Fill login form', async () => {
+    await emailInput(page).fill(credentials.email);
+    await passwordInput(page).fill(credentials.password);
+  });
+};
+
+export const submitLoginForm = async (page: Page): Promise<void> => {
+  await test.step('Submit login form', async () => {
+    await loginButton(page).click();
+  });
 };
 
 const expectAuthenticatedWorkspace = async (page: Page): Promise<void> => {
@@ -47,7 +57,9 @@ export const loginThroughUi = async (page: Page, credentials: AuthCredentials): 
   await fillLoginForm(page, credentials);
 
   for (let attempt = 0; attempt < AUTH_UI_RETRY_DELAYS_MS.length; attempt += 1) {
-    await loginButton(page).click();
+    await test.step(`Submit login form (attempt ${attempt + 1})`, async () => {
+      await submitLoginForm(page);
+    });
 
     try {
       await expectAuthenticatedWorkspace(page);
@@ -75,7 +87,9 @@ export const expectLoginError = async (page: Page, message: string): Promise<voi
 };
 
 export const logoutFromWorkspace = async (page: Page): Promise<void> => {
-  await logoutButton(page).click();
-  await expect(page).toHaveURL(/\/login(?:\?.*)?$/);
-  await expect(loginButton(page)).toBeVisible();
+  await test.step('Log out from workspace', async () => {
+    await logoutButton(page).click();
+    await expect(page).toHaveURL(/\/login(?:\?.*)?$/);
+    await expect(loginButton(page)).toBeVisible();
+  });
 };

@@ -1,8 +1,7 @@
-import type { Browser, TestInfo } from '@playwright/test';
+import type { Browser, WorkerInfo } from '@playwright/test';
 import { expect, test as base } from '@playwright/test';
-import { access, mkdir, rm } from 'node:fs/promises';
+import { access, mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { tmpdir } from 'node:os';
 import {
   cleanupE2EUser,
   ensureAuthenticatedE2EUser,
@@ -11,152 +10,195 @@ import {
 import type { SessionPayload } from '../support/contracts/backend.types';
 import { apiRequest, toApiError } from '../support/api/client.api';
 import { resolveE2EBaseUrl } from '../support/helpers/base-url';
-import { toTestPrefix } from '../support/helpers/routes';
 import { createAuthFixture, type AuthFixture } from './auth.fixture';
 import { createLocationFixture, type LocationFixture } from './location.fixture';
-import { env } from '@/shared/config';
 
 interface E2EFixtures {
   auth: AuthFixture;
-  devicesStorageStatePath: string;
   locations: LocationFixture;
-  locationsStorageStatePath: string;
 }
 
 interface E2EInternalFixtures {
-  locationStateLock: void;
+  failureMetadata: FailureMetadata;
+}
+
+interface E2EWorkerFixtures {
+  appStorageStatePath: string;
 }
 
 interface SerializedLocationStateFixture {
-  serializedLocationState: void;
+  locationTestPrefix: string;
 }
 
-const LOCATION_STATE_LOCK_PATH = join(tmpdir(), 'lp-front-e2e-location-state-lock');
-const LOCATION_STATE_LOCK_TIMEOUT_MS = 60_000;
-const LOCATION_STATE_LOCK_RETRY_MS = 200;
+interface FailureMetadata {
+  consoleErrors: string[];
+  failedRequests: Array<{ errorText: string | null; method: string; url: string }>;
+  locationSeedIds?: string[];
+  onConsole?: (message: { text: () => string; type: () => string }) => void;
+  onPageError?: (error: Error) => void;
+  onRequestFailed?: (request: {
+    failure: () => { errorText?: string } | null;
+    method: () => string;
+    url: () => string;
+  }) => void;
+  pageErrors: string[];
+  testPrefix?: string;
+}
 
-const sleep = async (ms: number): Promise<void> => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+interface FailureAttachmentPayload {
+  consoleErrors: string[];
+  failedRequests: Array<{ errorText: string | null; method: string; url: string }>;
+  metadata: FailureMetadata;
+  pageErrors: string[];
+  testId: string;
+  testTitle: string;
+  url: string | null;
+  workerIndex: number;
+}
+
+const DEBUG_E2E_AUTH = process.env.PLAYWRIGHT_DEBUG_ARTIFACTS === '1';
+
+const logStorageBootstrap = (event: string, details: Record<string, unknown> = {}): void => {
+  if (!DEBUG_E2E_AUTH) {
+    return;
+  }
+
+  console.error(
+    `[e2e] ${JSON.stringify({
+      component: 'e2e-storage-bootstrap',
+      event,
+      ...details,
+    })}`,
+  );
 };
 
-const acquireLocationStateLock = async (): Promise<void> => {
-  const startedAt = Date.now();
+const logCleanupFailure = (
+  target: 'auth-fixture' | 'storage-state',
+  credentials: { email: string },
+  error: unknown,
+): void => {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(
+    `[e2e] ${JSON.stringify({
+      component: 'e2e-user-cleanup',
+      email: credentials.email,
+      error: message,
+      target,
+    })}`,
+  );
+};
 
-  while (true) {
+const createAppStorageStateFixture = async (
+  { browser }: { browser: Browser },
+  applyFixture: (value: string) => Promise<void>,
+  workerInfo: WorkerInfo,
+) => {
+  const baseURL = resolveE2EBaseUrl();
+  const authDir = join(process.cwd(), 'e2e', 'storage');
+  await mkdir(authDir, { recursive: true });
+  const authScope = `app-worker-${workerInfo.workerIndex}`;
+  const statePath = join(authDir, `app-worker-${workerInfo.workerIndex}.json`);
+  const credentials = getWorkerCredentials(workerInfo.workerIndex, authScope);
+  let shouldCleanupUser = false;
+
+  try {
+    logStorageBootstrap('setup-start', { authScope, statePath, target: 'app' });
+    const hasExistingState = await access(statePath)
+      .then(() => true)
+      .catch(() => false);
+    logStorageBootstrap('cached-state-check-finished', {
+      authScope,
+      hasExistingState,
+      target: 'app',
+    });
+
+    if (hasExistingState) {
+      const cachedContext = await browser.newContext({
+        baseURL,
+        storageState: statePath,
+      });
+      try {
+        const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
+          method: 'GET',
+          path: '/auth/me',
+        });
+        const cachedRole = cachedSession.payload?.account?.role;
+        if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
+          shouldCleanupUser = true;
+          await applyFixture(statePath);
+          return;
+        }
+      } finally {
+        await cachedContext.close();
+      }
+    }
+
+    const context = await browser.newContext({ baseURL });
+
     try {
-      await mkdir(LOCATION_STATE_LOCK_PATH);
-      return;
-    } catch (error) {
-      const code = error instanceof Error && 'code' in error ? error.code : undefined;
-      if (code !== 'EEXIST') {
-        throw error;
+      logStorageBootstrap('ensure-auth-start', { authScope, target: 'app' });
+      await ensureAuthenticatedE2EUser(context.request, workerInfo.workerIndex, authScope);
+      logStorageBootstrap('ensure-auth-finished', { authScope, target: 'app' });
+      shouldCleanupUser = true;
+      logStorageBootstrap('session-verify-start', { authScope, target: 'app' });
+      const sessionResponse = await apiRequest<SessionPayload>(context.request, {
+        method: 'GET',
+        path: '/auth/me',
+      });
+      logStorageBootstrap('session-verify-finished', {
+        authScope,
+        status: sessionResponse.status,
+        target: 'app',
+      });
+      const role = sessionResponse.payload?.account?.role;
+      if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
+        throw new Error(
+          `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
+        );
       }
+      await context.storageState({ path: statePath });
+      logStorageBootstrap('storage-state-written', { authScope, target: 'app' });
+    } finally {
+      await context.close();
+    }
 
-      if (Date.now() - startedAt >= LOCATION_STATE_LOCK_TIMEOUT_MS) {
-        throw new Error('Timed out waiting for the shared E2E location-state lock.');
+    await applyFixture(statePath);
+  } finally {
+    try {
+      if (shouldCleanupUser) {
+        logStorageBootstrap('cleanup-start', { authScope, target: 'app' });
+        const cleanupContext = await browser.newContext({
+          baseURL,
+          storageState: statePath,
+        });
+
+        try {
+          try {
+            await cleanupE2EUser(cleanupContext.request, credentials);
+          } catch (error) {
+            logCleanupFailure('storage-state', credentials, error);
+          }
+        } finally {
+          await cleanupContext.close();
+        }
+        logStorageBootstrap('cleanup-finished', { authScope, target: 'app' });
       }
-
-      await sleep(LOCATION_STATE_LOCK_RETRY_MS);
+    } finally {
+      await rm(statePath, { force: true });
+      logStorageBootstrap('setup-finished', { authScope, target: 'app' });
     }
   }
 };
 
-const releaseLocationStateLock = async (): Promise<void> => {
-  await rm(LOCATION_STATE_LOCK_PATH, { recursive: true, force: true });
-};
-
-const createScopedStorageStateFixture = (target: 'devices' | 'locations') => {
-  return async (
-    { browser }: { browser: Browser },
-    applyFixture: (value: string) => Promise<void>,
-    testInfo: TestInfo,
-  ) => {
-    const baseURL = target === 'devices' ? env.app.url : resolveE2EBaseUrl();
-    const authDir = join(process.cwd(), 'e2e', 'storage');
-    await mkdir(authDir, { recursive: true });
-    const statePath = join(authDir, `${target}-${toTestPrefix(testInfo.testId)}.json`);
-    const credentials = getWorkerCredentials(testInfo.workerIndex, testInfo.testId);
-    let shouldCleanupUser = false;
-
-    try {
-      const hasExistingState = await access(statePath)
-        .then(() => true)
-        .catch(() => false);
-
-      if (hasExistingState) {
-        const cachedContext = await browser.newContext({
-          baseURL,
-          storageState: statePath,
-        });
-        try {
-          const cachedSession = await apiRequest<SessionPayload>(cachedContext.request, {
-            method: 'GET',
-            path: '/auth/me',
-          });
-          const cachedRole = cachedSession.payload?.account?.role;
-          if (cachedSession.ok && (cachedRole === 'owner' || cachedRole === 'admin')) {
-            shouldCleanupUser = true;
-            await applyFixture(statePath);
-            return;
-          }
-        } finally {
-          await cachedContext.close();
-        }
-      }
-
-      const context = await browser.newContext({ baseURL });
-
-      try {
-        await ensureAuthenticatedE2EUser(context.request, testInfo.workerIndex, testInfo.testId);
-        shouldCleanupUser = true;
-        const sessionResponse = await apiRequest<SessionPayload>(context.request, {
-          method: 'GET',
-          path: '/auth/me',
-        });
-        const role = sessionResponse.payload?.account?.role;
-        if (!sessionResponse.ok || (role !== 'owner' && role !== 'admin')) {
-          throw new Error(
-            `Unable to verify authenticated manage session before storageState. ${toApiError(sessionResponse)}`,
-          );
-        }
-        await context.storageState({ path: statePath });
-      } finally {
-        await context.close();
-      }
-
-      await applyFixture(statePath);
-    } finally {
-      try {
-        if (shouldCleanupUser) {
-          const cleanupContext = await browser.newContext({ baseURL });
-
-          try {
-            await cleanupE2EUser(cleanupContext.request, credentials);
-          } finally {
-            await cleanupContext.close();
-          }
-        }
-      } finally {
-        await rm(statePath, { force: true });
-      }
-    }
-  };
-};
-
-export const test = base.extend<E2EFixtures & E2EInternalFixtures>({
-  devicesStorageStatePath: createScopedStorageStateFixture('devices'),
-  locationsStorageStatePath: createScopedStorageStateFixture('locations'),
-  locationStateLock: async ({}, applyFixture) => {
-    await acquireLocationStateLock();
-
-    try {
-      await applyFixture();
-    } finally {
-      await releaseLocationStateLock();
-    }
+export const test = base.extend<E2EFixtures & E2EInternalFixtures, E2EWorkerFixtures>({
+  failureMetadata: async ({}, applyFixture) => {
+    await applyFixture({
+      consoleErrors: [],
+      failedRequests: [],
+      pageErrors: [],
+    });
   },
+  appStorageStatePath: [createAppStorageStateFixture, { scope: 'worker' }],
   auth: async ({ page, request }, applyFixture) => {
     const trackedCredentials = new Map<string, { email: string; password: string }>();
     const authFixture = createAuthFixture(page, request);
@@ -172,44 +214,104 @@ export const test = base.extend<E2EFixtures & E2EInternalFixtures>({
       });
     } finally {
       for (const credentials of trackedCredentials.values()) {
-        await authFixture.cleanupUser(credentials);
+        try {
+          await authFixture.cleanupUser(credentials);
+        } catch (error) {
+          logCleanupFailure('auth-fixture', credentials, error);
+        }
       }
     }
   },
-  locations: async ({ page }, applyFixture) => {
-    await applyFixture(createLocationFixture(page.request));
+  locations: async ({ failureMetadata, page }, applyFixture) => {
+    await applyFixture(createLocationFixture(page.request, failureMetadata));
   },
 });
 
+test.beforeEach(async ({ failureMetadata, page }) => {
+  failureMetadata.onConsole = (message) => {
+    if (message.type() === 'error') {
+      failureMetadata.consoleErrors.push(message.text());
+    }
+  };
+  failureMetadata.onPageError = (error) => {
+    failureMetadata.pageErrors.push(error.message);
+  };
+  failureMetadata.onRequestFailed = (request) => {
+    failureMetadata.failedRequests.push({
+      errorText: request.failure()?.errorText ?? null,
+      method: request.method(),
+      url: request.url(),
+    });
+  };
+
+  page.on('console', failureMetadata.onConsole);
+  page.on('pageerror', failureMetadata.onPageError);
+  page.on('requestfailed', failureMetadata.onRequestFailed);
+});
+
+test.afterEach(async ({ failureMetadata, page }, testInfo) => {
+  if (failureMetadata.onConsole) {
+    page.off('console', failureMetadata.onConsole);
+  }
+  if (failureMetadata.onPageError) {
+    page.off('pageerror', failureMetadata.onPageError);
+  }
+  if (failureMetadata.onRequestFailed) {
+    page.off('requestfailed', failureMetadata.onRequestFailed);
+  }
+
+  if (testInfo.status === testInfo.expectedStatus) {
+    return;
+  }
+
+  const payload: FailureAttachmentPayload = {
+    consoleErrors: failureMetadata.consoleErrors.slice(-10),
+    failedRequests: failureMetadata.failedRequests.slice(-10),
+    metadata: failureMetadata,
+    pageErrors: failureMetadata.pageErrors.slice(-10),
+    testId: testInfo.testId,
+    testTitle: testInfo.title,
+    url: page.isClosed() ? null : page.url(),
+    workerIndex: testInfo.workerIndex,
+  };
+
+  const failureContextBody = JSON.stringify(payload, null, 2);
+  const failureContextPath = testInfo.outputPath('failure-context.json');
+  await writeFile(failureContextPath, failureContextBody);
+
+  await testInfo.attach('failure-context', {
+    body: Buffer.from(failureContextBody),
+    contentType: 'application/json',
+  });
+});
+
 export const locationsTest = test.extend<SerializedLocationStateFixture>({
-  serializedLocationState: [
-    async (
-      { locationStateLock }: { locationStateLock: void },
-      applyFixture: () => Promise<void>,
-    ) => {
-      void locationStateLock;
-      await applyFixture();
-    },
-    { auto: true },
-  ],
-  storageState: async ({ locationsStorageStatePath }, applyFixture) => {
-    await applyFixture(locationsStorageStatePath);
+  locationTestPrefix: async ({ locations }, applyFixture, testInfo) => {
+    const prefix = await locations.cleanupForTest(testInfo.testId);
+
+    try {
+      await applyFixture(prefix);
+    } finally {
+      await locations.cleanupAfterTest(testInfo, prefix);
+    }
+  },
+  storageState: async ({ appStorageStatePath }, applyFixture) => {
+    await applyFixture(appStorageStatePath);
   },
 });
 
 export const devicesTest = test.extend<SerializedLocationStateFixture>({
-  serializedLocationState: [
-    async (
-      { locationStateLock }: { locationStateLock: void },
-      applyFixture: () => Promise<void>,
-    ) => {
-      void locationStateLock;
-      await applyFixture();
-    },
-    { auto: true },
-  ],
-  storageState: async ({ devicesStorageStatePath }, applyFixture) => {
-    await applyFixture(devicesStorageStatePath);
+  locationTestPrefix: async ({ locations }, applyFixture, testInfo) => {
+    const prefix = await locations.cleanupForTest(testInfo.testId);
+
+    try {
+      await applyFixture(prefix);
+    } finally {
+      await locations.cleanupAfterTest(testInfo, prefix);
+    }
+  },
+  storageState: async ({ appStorageStatePath }, applyFixture) => {
+    await applyFixture(appStorageStatePath);
   },
 });
 

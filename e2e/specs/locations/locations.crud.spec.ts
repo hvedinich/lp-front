@@ -15,24 +15,19 @@ import {
   submitLocationEditForm,
 } from '../../support/helpers/locations-screen';
 
-const testPrefixes = new Map<string, string>();
-
-test.beforeEach(async ({ locations }, testInfo) => {
-  const prefix = await locations.cleanupForTest(testInfo.testId);
-  testPrefixes.set(testInfo.testId, prefix);
-});
+test.describe.configure({ mode: 'serial' });
 
 test('creates location and shows it in list and selector', async ({
+  locationTestPrefix,
   locations,
   page,
-}, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId)!;
-  await locations.createSeed(prefix);
+}) => {
+  await locations.createSeed(locationTestPrefix);
 
   await openLocationsPage(page);
   await openCreateLocationForm(page);
 
-  const createdName = `PW-E2E-${prefix}-Create`;
+  const createdName = `PW-E2E-${locationTestPrefix}-Create`;
   const createdLocationId = await submitLocationCreateForm(page, { name: createdName });
   await expect(page).toHaveURL(new RegExp(`/locations/${createdLocationId}$`));
   await returnToLocationsList(page);
@@ -41,22 +36,22 @@ test('creates location and shows it in list and selector', async ({
   await expectLocationVisibleInSelector(page, createdLocationId);
 });
 
-test('edits location name', async ({ locations, page }, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId)!;
-  const seed = await locations.createSeed(prefix);
+test('edits location name', async ({ locationTestPrefix, locations, page }) => {
+  const seed = await locations.createSeed(locationTestPrefix);
 
   await page.goto(`/locations/${seed.defaultLocation.id}`);
-  const editedName = `PW-E2E-${prefix}-Edited`;
+  const editedName = `PW-E2E-${locationTestPrefix}-Edited`;
   await submitLocationEditForm(page, { name: editedName });
   await returnToLocationsList(page);
   await expectLocationCardName(page, seed.defaultLocation.id, editedName);
 });
 
 test('deletes selected location and falls back to default', async ({
+  locationTestPrefix,
   locations,
   page,
-}, testInfo) => {
-  const seed = await locations.createSeed(testPrefixes.get(testInfo.testId)!);
+}) => {
+  const seed = await locations.createSeed(locationTestPrefix);
 
   await openLocationsPage(page);
   await expectLocationVisibleInList(page, seed.secondaryLocation.id);
@@ -68,18 +63,12 @@ test('deletes selected location and falls back to default', async ({
   await expectSelectedLocation(page, seed.defaultLocation.name);
 });
 
-test('blocks submit for invalid create form', async ({ locations, page }, testInfo) => {
-  await locations.createSeed(testPrefixes.get(testInfo.testId)!);
+test('blocks submit for invalid create form', async ({ locationTestPrefix, locations, page }) => {
+  await locations.createSeed(locationTestPrefix);
 
   await page.goto('/locations/new');
   await page.getByLabel('Name').fill('A');
   await page.getByLabel('Phone').focus();
 
   await expectCreateLocationDisabled(page);
-});
-
-test.afterEach(async ({ locations }, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId);
-  await locations.cleanupAfterTest(testInfo, prefix);
-  testPrefixes.delete(testInfo.testId);
 });

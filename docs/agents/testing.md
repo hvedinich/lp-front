@@ -24,7 +24,14 @@
 | `e2e/support/helpers/**`   | Shared small utilities (selectors, routes, session helpers)                      |
 | `e2e/support/contracts/**` | Shared E2E types/contracts                                                       |
 | `e2e/storage/**`           | Reserved for optional/manual artifacts (`.gitkeep` only by default)              |
-| `e2e/artifacts/**`         | Optional manually collected E2E artifacts                                        |
+
+## Artifact policy
+
+- Standard Playwright runtime artifacts must live only in `test-results/` and `playwright-report/`.
+- Both directories are ignored by Git and must remain untracked.
+- `testInfo.attach(...)` attachments, traces, screenshots, and videos must use Playwright's built-in output flow instead of writing files into tracked `e2e/**` paths.
+- Do not save debug dumps next to specs, fixtures, or helpers.
+- Keep `e2e/artifacts/.gitkeep` only; specs and fixtures must not write runtime files into `e2e/artifacts/**`.
 
 ## Naming and import rules
 
@@ -51,16 +58,19 @@
   - same-origin relative paths when app and API share origin
   - absolute `NEXT_PUBLIC_API_URL` when API origin is separate
 - Auth bootstrap:
-  - ensure one deterministic E2E user per deployment scope and Playwright worker (`PLAYWRIGHT_E2E_SCOPE` + worker index)
+  - run `auth` specs in a dedicated narrow lane; keep product E2E on a separate app lane
+  - ensure one deterministic app E2E user per deployment scope and Playwright worker (`PLAYWRIGHT_E2E_SCOPE` + worker index)
+  - local runs without `PLAYWRIGHT_E2E_SCOPE` fall back to an ephemeral run scope to avoid reusing broken users from older staging sessions
   - treat `/auth/register` `409` as "user already exists" only if login with current credentials still succeeds
-  - authenticate only where session is required (worker fixture/session bootstrap)
+  - authenticate only in shared bootstrap/fixture layers; specs must not call raw login helpers directly
   - transient 5xx auth bootstrap failures use bounded retry with backoff+jitter
-  - `/auth/login` handles `RATE_LIMITED` with retry-after wait and serialized login attempts
+  - `/auth/login` is serialized and treated as a scarce resource; long retry-after responses fail fast instead of blocking fixture setup
   - negative auth UI test uses isolated invalid credentials and does not call user bootstrap
-- Feature specs use fixture-managed auth state and test-scoped data cleanup to avoid repeating full auth bootstrap in each scenario.
+- Feature specs use one worker-scoped app session and test-scoped data cleanup to avoid repeating full auth bootstrap in each scenario.
 - Cached `storageState` files in `e2e/storage/*.json` are reused only while they still pass `/auth/me`.
 - If cached storage state is invalid, the fixture re-authenticates and refreshes the file before the scenario continues.
 - Any E2E user created for a scenario must be deleted in fixture teardown regardless of test outcome; rely on backend cascade cleanup instead of manual per-entity cleanup for that user.
+- Final E2E user cleanup also runs in Playwright `globalSetup` / `globalTeardown` as a best-effort sweep for leftovers from interrupted runs.
 
 ## Playwright app lifecycle
 
@@ -80,9 +90,9 @@
 - `fullyParallel=true`.
 - Local run: `workers=2` by default.
 - Optional local override: set `PLAYWRIGHT_WORKERS` (for example `PLAYWRIGHT_WORKERS=4 npm run test:e2e`) when backend capacity allows.
-- CI run: `workers=4`, retries enabled.
+- CI run: app lane uses `workers=4`, retries enabled; auth lane stays narrow.
 - Use per-test data isolation (`testId` prefixes) and fixture-managed auth state to keep runs parallel-safe.
-- `auth` scenarios are expected to run in parallel.
+- `auth` scenarios run in a dedicated narrow lane and should stay few and expensive.
 - Stateful `locations` / `devices` scenarios may keep narrow serialization while product state is still not fully parallel-safe. Treat this as a temporary infrastructure compromise, not a testing ideal.
 
 ## Spec structure
@@ -101,14 +111,28 @@ npm run test
 # E2E tests
 npm run test:e2e
 
+# E2E debug run with rich failure artifacts
+npm run test:e2e:debug
+
 # Interactive E2E runner
 npm run test:e2e:ui
+
+# Open the latest Playwright HTML report
+npm run test:e2e:report
 ```
+
+## Debug workflow
+
+- Use `npm run test:e2e` for the regular fast run.
+- If a test fails, rerun only the relevant scope with `npm run test:e2e:debug -- <spec-or-filter>`.
+- Debug mode stores traces, screenshots, videos, and JSON attachments in `test-results/` and renders HTML reports in `playwright-report/` lane folders.
+- The first place to inspect is the `failure-context` JSON attachment in the HTML report; use trace viewer only after the attachment summary is not enough.
 
 ## Required env for E2E
 
 - `PORT`
 - `NEXT_PUBLIC_API_URL`
+- `PLAYWRIGHT_DEBUG_ARTIFACTS` (optional debug mode flag used by `npm run test:e2e:debug`)
 - `PLAYWRIGHT_BASE_URL` (required in CI)
 - `PLAYWRIGHT_E2E_SCOPE` (optional locally, set in CI from deployment ref)
 - `NEXT_PUBLIC_SITE_URL` (optional)
