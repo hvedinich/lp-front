@@ -4,12 +4,7 @@ import type {
   ConfigureDeviceDtoRequest,
   DeviceDto,
 } from '../api/device.dto';
-import type {
-  ActivateMultiDevicePayload,
-  ActivateSingleDevicePayload,
-  Device,
-  DeviceFormValues,
-} from '../model/types';
+import type { Device, DeviceFormValues } from '../model/types';
 
 export const mapDeviceDto = (dto: DeviceDto): Device => ({
   ...dto,

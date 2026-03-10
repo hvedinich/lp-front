@@ -1,5 +1,6 @@
 import { ApiError } from '@/shared/api';
 import { getAuthSessionState } from './session';
+import { vi, beforeEach } from 'vitest';
 
 const { apiRequestMock } = vi.hoisted(() => ({
   apiRequestMock: vi.fn(),
