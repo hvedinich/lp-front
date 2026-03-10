@@ -27,6 +27,7 @@
       "surveys": "Ankiety",
       "scans": "Skany",
       "campaigns": "Kampanie",
+      "devices": "Urządzenia",
       "locations": "Lokalizacje"
     },
     "sections": {
@@ -50,6 +51,11 @@
         "description": "Buduj kampanie i monitoruj jakość dostarczania.",
         "emptyState": "Narzędzia kampanii są planowane dla tej sekcji."
       },
+      "devices": {
+        "title": "Urządzenia",
+        "description": "Zarządzaj podłączonymi urządzeniami dla aktualnie wybranej lokalizacji.",
+        "emptyState": "Narzędzia do zarządzania urządzeniami pojawią się w tej sekcji."
+      },
       "locations": {
         "title": "Lokalizacje",
         "description": "Konfiguruj lokalizacje firmy i mapuj do nich kanały.",
@@ -67,6 +73,7 @@
     },
     "locationsPage": {
       "create": "Utwórz lokalizację",
+      "emptyActionsTitle": "Na początek",
       "edit": "Edytuj",
       "createTitle": "Utwórz lokalizację",
       "createDescription": "Dodaj nową lokalizację do swojego konta.",
@@ -107,6 +114,43 @@
         "publicSlugPattern": "Używaj tylko małych liter, cyfr i myślników",
         "timeZoneMax": "Strefa czasowa może mieć maksymalnie 100 znaków",
         "websiteMax": "Strona internetowa może mieć maksymalnie 200 znaków"
+      }
+    },
+    "devicesPage": {
+      "selectedLocationDescription": "Wyświetlane są urządzenia dla aktualnie wybranej lokalizacji.",
+      "locationRequiredTitle": "Wybierz lokalizację, aby zobaczyć urządzenia",
+      "locationRequiredDescription": "Wybierz lokalizację na pasku bocznym przed otwarciem listy urządzeń.",
+      "locationRequiredActionsTitle": "Może Ci się przydać",
+      "locationRequiredCardTitle": "Zarządzaj lokalizacjami",
+      "locationRequiredCardDescription": "Najpierw utwórz lokalizację albo wybierz ją z paska bocznego, gdy będzie dostępna.",
+      "emptyTitle": "W tej lokalizacji nie ma jeszcze urządzeń",
+      "emptyDescription": "Podłączone urządzenia dla wybranej lokalizacji pojawią się tutaj.",
+      "emptyActionsTitle": "Może Ci się przydać",
+      "emptyLocationCardTitle": "Sprawdź konfigurację lokalizacji",
+      "emptyLocationCardDescription": "Zweryfikuj tę lokalizację przed podłączeniem pierwszego urządzenia.",
+      "shortCodeLabel": "Kod",
+      "noName": "Urządzenie bez własnej nazwy",
+      "noTargetUrl": "Docelowy URL nie jest skonfigurowany",
+      "modeStatic": "Statyczny",
+      "modeMultilink": "Wielolinkowy",
+      "errors": {
+        "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+        "invalidDeviceId": "Ten link do urządzenia jest nieprawidłowy.",
+        "conflict": "To urządzenie powoduje konflikt z istniejącymi danymi.",
+        "forbidden": "Nie masz uprawnień do tej akcji.",
+        "network": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie.",
+        "notFound": "To urządzenie nie istnieje lub nie jest dostępne na Twoim koncie.",
+        "validation": "Sprawdź ustawienia urządzenia i spróbuj ponownie."
+      }
+    },
+    "devicesForm": {
+      "validation": {
+        "localeMax": "Locale może mieć maksymalnie 20 znaków",
+        "modeRequired": "Wybierz tryb urządzenia",
+        "nameMax": "Nazwa może mieć maksymalnie 120 znaków",
+        "singleLinkUrlMax": "Single link URL może mieć maksymalnie 2000 znaków",
+        "typeMax": "Typ może mieć maksymalnie 80 znaków",
+        "singleLinkUrlRequired": "Dla trybu statycznego wymagany jest Single link URL"
       }
     }
   },

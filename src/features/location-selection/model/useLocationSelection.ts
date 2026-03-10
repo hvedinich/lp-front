@@ -50,6 +50,7 @@ export const useLocationSelection = () => {
   return {
     accountId,
     isHydrated,
+    isSessionPending: sessionQuery.isPending,
     locations: locationsQuery.data ?? [],
     locationsQuery,
     onSelectLocation,

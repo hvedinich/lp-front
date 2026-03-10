@@ -104,5 +104,13 @@ export default defineConfig([
     },
   },
 
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'playwright-report/**',
+    'test-results/**',
+    'e2e/artifacts/**',
+  ]),
 ]);

@@ -7,6 +7,11 @@ import {
 import type { ApiLocation, LocationSeed } from '../support/contracts/backend.types';
 import { toTestPrefix } from '../support/helpers/routes';
 
+interface FailureMetadata {
+  locationSeedIds?: string[];
+  testPrefix?: string;
+}
+
 export interface LocationFixture {
   testPrefix: (testId: string) => string;
   cleanup: (prefix: string) => Promise<void>;
@@ -16,12 +21,16 @@ export interface LocationFixture {
   getAll: () => Promise<ApiLocation[]>;
 }
 
-export const createLocationFixture = (request: APIRequestContext): LocationFixture => {
+export const createLocationFixture = (
+  request: APIRequestContext,
+  failureMetadata: FailureMetadata,
+): LocationFixture => {
   return {
     testPrefix: (testId: string) => toTestPrefix(testId),
     cleanup: (prefix: string) => cleanupLocationsByPrefix(request, `PW-E2E-${prefix}`),
     cleanupForTest: async (testId: string) => {
       const prefix = toTestPrefix(testId);
+      failureMetadata.testPrefix = prefix;
       await cleanupLocationsByPrefix(request, `PW-E2E-${prefix}`);
       return prefix;
     },
@@ -30,7 +39,11 @@ export const createLocationFixture = (request: APIRequestContext): LocationFixtu
         await cleanupLocationsByPrefix(request, `PW-E2E-${prefix}`);
       }
     },
-    createSeed: (prefix: string) => createLocationSeed(request, prefix),
+    createSeed: async (prefix: string) => {
+      const seed = await createLocationSeed(request, prefix);
+      failureMetadata.locationSeedIds = [seed.defaultLocation.id, seed.secondaryLocation.id];
+      return seed;
+    },
     getAll: () => getLocations(request),
   };
 };

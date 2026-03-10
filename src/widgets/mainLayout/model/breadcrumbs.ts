@@ -10,10 +10,12 @@ export interface AppBreadcrumbItem {
 }
 
 const isLocationsCreateRoute = (pathname: string): boolean => pathname === '/locations/new';
+const isDevicesListRoute = (pathname: string): boolean => pathname === '/devices';
 const isLocationsEditRoute = (pathname: string): boolean => pathname === '/locations/[id]';
 const isLocationsListRoute = (pathname: string): boolean => pathname === '/locations';
 
 interface ResolveAppBreadcrumbsInput {
+  deviceListLabel: string;
   fallbackLabel: string;
   locationCreateLabel: string;
   locationDynamicLabel: string;
@@ -23,6 +25,7 @@ interface ResolveAppBreadcrumbsInput {
 }
 
 export const resolveAppBreadcrumbs = ({
+  deviceListLabel,
   fallbackLabel,
   locationCreateLabel,
   locationDynamicLabel,
@@ -30,6 +33,10 @@ export const resolveAppBreadcrumbs = ({
   pathname,
   sectionLabel,
 }: ResolveAppBreadcrumbsInput): AppBreadcrumbItem[] => {
+  if (isDevicesListRoute(pathname)) {
+    return [{ label: deviceListLabel }];
+  }
+
   if (isLocationsListRoute(pathname)) {
     return [{ label: locationListLabel }];
   }
@@ -72,6 +79,7 @@ export const useAppBreadcrumbs = (): AppBreadcrumbItem[] => {
   });
 
   return resolveAppBreadcrumbs({
+    deviceListLabel: t('workspace.menu.devices'),
     fallbackLabel: t('workspace.locationsPage.breadcrumbFallback'),
     locationCreateLabel: t('workspace.locationsPage.createTitle'),
     locationDynamicLabel: locationQuery.data?.name ?? locationId ?? '',

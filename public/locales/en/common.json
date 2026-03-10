@@ -27,6 +27,7 @@
       "surveys": "Surveys",
       "scans": "Scans",
       "campaigns": "Campaigns",
+      "devices": "Devices",
       "locations": "Locations"
     },
     "sections": {
@@ -50,6 +51,11 @@
         "description": "Build outreach campaigns and track delivery quality.",
         "emptyState": "Campaign tools are planned for this section."
       },
+      "devices": {
+        "title": "Devices",
+        "description": "Manage connected devices for the currently selected location.",
+        "emptyState": "Device management tools will appear in this section."
+      },
       "locations": {
         "title": "Locations",
         "description": "Configure business locations and map channels to them.",
@@ -67,6 +73,7 @@
     },
     "locationsPage": {
       "create": "Create location",
+      "emptyActionsTitle": "Get started",
       "edit": "Edit",
       "createTitle": "Create location",
       "createDescription": "Add a new location to your account.",
@@ -107,6 +114,43 @@
         "publicSlugPattern": "Use only lowercase letters, numbers, and dashes",
         "timeZoneMax": "Time zone must be at most 100 characters",
         "websiteMax": "Website must be at most 200 characters"
+      }
+    },
+    "devicesPage": {
+      "selectedLocationDescription": "Showing devices for the currently selected location.",
+      "locationRequiredTitle": "Select a location to view devices",
+      "locationRequiredDescription": "Choose a location in the sidebar before opening the devices list.",
+      "locationRequiredActionsTitle": "You may need",
+      "locationRequiredCardTitle": "Manage locations",
+      "locationRequiredCardDescription": "Create a location first, or pick one from the sidebar when it is available.",
+      "emptyTitle": "No devices in this location yet",
+      "emptyDescription": "Connected devices for the selected location will appear here.",
+      "emptyActionsTitle": "You may need",
+      "emptyLocationCardTitle": "Review location setup",
+      "emptyLocationCardDescription": "Check this location before connecting your first device.",
+      "shortCodeLabel": "Code",
+      "noName": "Device without a custom name",
+      "noTargetUrl": "No target URL configured",
+      "modeStatic": "Static",
+      "modeMultilink": "Multi-link",
+      "errors": {
+        "generic": "Something went wrong. Please try again.",
+        "invalidDeviceId": "This device link is invalid.",
+        "conflict": "This device conflicts with existing data.",
+        "forbidden": "You do not have access to this action.",
+        "network": "Network error. Check your connection and try again.",
+        "notFound": "This device does not exist or is not available in your account.",
+        "validation": "Please check the device settings and try again."
+      }
+    },
+    "devicesForm": {
+      "validation": {
+        "localeMax": "Locale must be at most 20 characters",
+        "modeRequired": "Select a device mode",
+        "nameMax": "Name must be at most 120 characters",
+        "singleLinkUrlMax": "Single link URL must be at most 2000 characters",
+        "typeMax": "Type must be at most 80 characters",
+        "singleLinkUrlRequired": "Single link URL is required for static mode"
       }
     }
   },

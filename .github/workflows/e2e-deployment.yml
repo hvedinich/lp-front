@@ -43,12 +43,16 @@ jobs:
       - name: Export deployment URL
         env:
           DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
-        run: echo "PLAYWRIGHT_BASE_URL=${DEPLOYMENT_URL}" >> "$GITHUB_ENV"
+          DEPLOYMENT_REF: ${{ github.event.deployment.ref }}
+        run: |
+          echo "PLAYWRIGHT_BASE_URL=${DEPLOYMENT_URL}" >> "$GITHUB_ENV"
+          echo "PLAYWRIGHT_E2E_SCOPE=${DEPLOYMENT_REF}" >> "$GITHUB_ENV"
 
       - name: Run Playwright tests against deployment
         env:
           CI: true
           PLAYWRIGHT_BASE_URL: ${{ env.PLAYWRIGHT_BASE_URL }}
+          PLAYWRIGHT_E2E_SCOPE: ${{ env.PLAYWRIGHT_E2E_SCOPE }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           PLAYWRIGHT_E2E_EMAIL: ${{ secrets.PLAYWRIGHT_E2E_EMAIL }}
           PLAYWRIGHT_E2E_PASSWORD: ${{ secrets.PLAYWRIGHT_E2E_PASSWORD }}
@@ -58,6 +62,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ github.event.deployment.id }}
+          name: playwright-report-${{ github.event.deployment.id }}-${{ github.run_attempt }}
           path: playwright-report
           if-no-files-found: ignore

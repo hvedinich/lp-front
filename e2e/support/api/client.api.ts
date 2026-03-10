@@ -29,6 +29,7 @@ export const sleep = async (ms: number): Promise<void> => {
 
 export const fromApiResponse = async (response: APIResponse): Promise<BrowserResponse> => {
   return {
+    headers: response.headers(),
     ok: response.ok(),
     status: response.status(),
     payload: (await response.json().catch(() => null)) as unknown,

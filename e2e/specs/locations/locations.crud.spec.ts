@@ -1,104 +1,74 @@
-import type { Page } from '@playwright/test';
 import { expect, locationsTest as test } from '../../fixtures/test';
-import { visibleByTestId } from '../../support/helpers/selectors';
+import {
+  deleteLocationFromList,
+  expectCreateLocationDisabled,
+  expectLocationCardName,
+  expectLocationRemovedFromList,
+  expectLocationVisibleInList,
+  expectLocationVisibleInSelector,
+  expectSelectedLocation,
+  openCreateLocationForm,
+  openLocationsPage,
+  returnToLocationsList,
+  selectLocation,
+  submitLocationCreateForm,
+  submitLocationEditForm,
+} from '../../support/helpers/locations-screen';
 
-const openSelector = async (page: Page) => {
-  await expect(page.getByTestId('location-selector-input')).toBeEnabled();
-  await page.getByTestId('location-selector-trigger').click();
-};
-
-const testPrefixes = new Map<string, string>();
-
-test.beforeEach(async ({ locations }, testInfo) => {
-  const prefix = await locations.cleanupForTest(testInfo.testId);
-  testPrefixes.set(testInfo.testId, prefix);
-});
+test.describe.configure({ mode: 'serial' });
 
 test('creates location and shows it in list and selector', async ({
+  locationTestPrefix,
   locations,
   page,
-}, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId)!;
-  await locations.createSeed(prefix);
+}) => {
+  await locations.createSeed(locationTestPrefix);
 
-  await page.goto('/locations');
-  await page.getByTestId('locations-create-button').click();
-  await expect(page).toHaveURL(/\/locations\/new$/);
+  await openLocationsPage(page);
+  await openCreateLocationForm(page);
 
-  const createdName = `PW-E2E-${prefix}-Create`;
-  await page.getByTestId('location-form-name-input').fill(createdName);
-  await page.getByTestId('location-form-phone-input').focus();
-  await expect(visibleByTestId(page, 'location-form-create-submit')).toBeEnabled();
-  await visibleByTestId(page, 'location-form-create-submit').click();
-  await expect(page).toHaveURL(/\/locations\/(?!new$)[^/?#]+$/);
-
-  const locationUrl = page.url();
-  const createdLocationId = locationUrl.match(/\/locations\/([^/?#]+)$/)?.[1];
-  expect(createdLocationId).toBeDefined();
-  expect(createdLocationId).not.toBe('new');
-
+  const createdName = `PW-E2E-${locationTestPrefix}-Create`;
+  const createdLocationId = await submitLocationCreateForm(page, { name: createdName });
   await expect(page).toHaveURL(new RegExp(`/locations/${createdLocationId}$`));
-  await visibleByTestId(page, 'location-form-cancel-button').click();
+  await returnToLocationsList(page);
 
-  await expect(page).toHaveURL(/\/locations$/);
-  await expect(page.getByTestId(`locations-card-${createdLocationId}`)).toBeVisible();
-
-  await openSelector(page);
-  await expect(page.getByTestId(`location-selector-option-${createdLocationId}`)).toBeVisible();
+  await expectLocationVisibleInList(page, createdLocationId);
+  await expectLocationVisibleInSelector(page, createdLocationId);
 });
 
-test('edits location name', async ({ locations, page }, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId)!;
-  const seed = await locations.createSeed(prefix);
+test('edits location name', async ({ locationTestPrefix, locations, page }) => {
+  const seed = await locations.createSeed(locationTestPrefix);
 
   await page.goto(`/locations/${seed.defaultLocation.id}`);
-  const editedName = `PW-E2E-${prefix}-Edited`;
-  await page.getByTestId('location-form-name-input').fill(editedName);
-  await page.getByTestId('location-form-phone-input').focus();
-  await expect(visibleByTestId(page, 'location-form-edit-submit')).toBeEnabled();
-  await visibleByTestId(page, 'location-form-edit-submit').click();
-
-  await visibleByTestId(page, 'location-form-cancel-button').click();
-  await expect(page).toHaveURL(/\/locations$/);
-  await expect(page.getByTestId(`locations-card-${seed.defaultLocation.id}`)).toContainText(
-    editedName,
-  );
+  const editedName = `PW-E2E-${locationTestPrefix}-Edited`;
+  await submitLocationEditForm(page, { name: editedName });
+  await returnToLocationsList(page);
+  await expectLocationCardName(page, seed.defaultLocation.id, editedName);
 });
 
 test('deletes selected location and falls back to default', async ({
+  locationTestPrefix,
   locations,
   page,
-}, testInfo) => {
-  const seed = await locations.createSeed(testPrefixes.get(testInfo.testId)!);
+}) => {
+  const seed = await locations.createSeed(locationTestPrefix);
 
-  await page.goto('/locations');
-  await expect(page.getByTestId(`locations-card-${seed.secondaryLocation.id}`)).toBeVisible();
-  await openSelector(page);
-  await expect(
-    page.getByTestId(`location-selector-option-${seed.secondaryLocation.id}`),
-  ).toBeVisible();
-  await page.getByTestId(`location-selector-option-${seed.secondaryLocation.id}`).click();
-  await expect(page.getByTestId('location-selector-input')).toHaveValue(
-    seed.secondaryLocation.name,
-  );
+  await openLocationsPage(page);
+  await expectLocationVisibleInList(page, seed.secondaryLocation.id);
+  await selectLocation(page, seed.secondaryLocation.id);
+  await expectSelectedLocation(page, seed.secondaryLocation.name);
 
-  await page.getByTestId(`locations-delete-button-${seed.secondaryLocation.id}`).click();
-  await expect(page.getByTestId(`locations-card-${seed.secondaryLocation.id}`)).toHaveCount(0);
-  await expect(page.getByTestId('location-selector-input')).toHaveValue(seed.defaultLocation.name);
+  await deleteLocationFromList(page, seed.secondaryLocation.id);
+  await expectLocationRemovedFromList(page, seed.secondaryLocation.id);
+  await expectSelectedLocation(page, seed.defaultLocation.name);
 });
 
-test('blocks submit for invalid create form', async ({ locations, page }, testInfo) => {
-  await locations.createSeed(testPrefixes.get(testInfo.testId)!);
+test('blocks submit for invalid create form', async ({ locationTestPrefix, locations, page }) => {
+  await locations.createSeed(locationTestPrefix);
 
   await page.goto('/locations/new');
-  await page.getByTestId('location-form-name-input').fill('A');
-  await page.getByTestId('location-form-phone-input').focus();
+  await page.getByLabel('Name').fill('A');
+  await page.getByLabel('Phone').focus();
 
-  await expect(visibleByTestId(page, 'location-form-create-submit')).toBeDisabled();
-});
-
-test.afterEach(async ({ locations }, testInfo) => {
-  const prefix = testPrefixes.get(testInfo.testId);
-  await locations.cleanupAfterTest(testInfo, prefix);
-  testPrefixes.delete(testInfo.testId);
+  await expectCreateLocationDisabled(page);
 });
