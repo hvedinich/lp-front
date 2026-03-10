@@ -5,6 +5,8 @@ import { LogoIcon } from './LogoIcon';
 export interface AppBrandProps extends Omit<FlexProps, 'children'> {
   /** When true, hides the text label — shows the icon only (collapsed sidebar). */
   collapsed?: boolean;
+  /** Fades out the text label while keeping layout stable during collapse animation. */
+  fadeLabel?: boolean;
 }
 
 /**
@@ -16,7 +18,7 @@ export interface AppBrandProps extends Omit<FlexProps, 'children'> {
  *
  * Replace the BrandIcon internals with an <Image> once a real logo file is available.
  */
-export function AppBrand({ collapsed = false, ...rest }: AppBrandProps) {
+export function AppBrand({ collapsed = false, fadeLabel = false, ...rest }: AppBrandProps) {
   const { t } = useTranslation('common');
 
   return (
@@ -32,6 +34,10 @@ export function AppBrand({ collapsed = false, ...rest }: AppBrandProps) {
           fontSize='lg'
           color='fg.default'
           whiteSpace='nowrap'
+          style={{
+            opacity: fadeLabel ? 0 : 1,
+            transition: 'opacity 120ms ease',
+          }}
         >
           {t('app.name')}
         </Text>

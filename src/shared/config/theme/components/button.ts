@@ -82,6 +82,30 @@ export const buttonRecipe = defineRecipe({
           bg: 'colorPalette.muted',
         },
       },
+
+      /**
+       * sidebarLocation — compact location trigger in sidebar.
+       */
+      sidebarLocation: {
+        justifyContent: 'center',
+        width: 'full',
+        minH: '10',
+        px: '1',
+        borderWidth: 'thin',
+        borderColor: 'border.muted',
+        borderRadius: 'control',
+        bg: 'bg.input',
+        color: 'fg.muted',
+        _hover: {
+          borderColor: 'border.default',
+          bg: 'bg.input',
+        },
+        _focusVisible: {
+          borderColor: 'border.focus',
+          bg: 'bg.input',
+          outlineColor: 'border.focusRing',
+        },
+      },
     },
 
     size: {

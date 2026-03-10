@@ -7,7 +7,8 @@ This document defines architecture rules for the LP application:
 - Feature-Sliced Design (FSD) layer boundaries
 - import/export policy
 - entity modeling policy
-- React Query data-access standard
+- React Query server-state standard
+- Zustand client-state standard
 
 This file is a ruleset, not a product specification.
 
@@ -17,6 +18,11 @@ The project follows a page-first FSD approach:
 
 - keep page-specific logic in `pages` slices first
 - extract code to lower layers only when it is reused or truly generic
+- keep page components composition-first and minimal:
+  - render structure only (header, actions, list/table, modal, empty state)
+  - avoid heavy orchestration logic inline
+  - move orchestration to `pages/*/model` controller hooks
+  - move presentational blocks to `pages/*/ui/*`
 
 Layers:
 
@@ -164,12 +170,51 @@ Mandatory rules:
 - define query keys per entity
 - keep `queryFn`/`mutationFn` close to entity API
 - use invalidate/update patterns via entity query keys
+- mutation-driven UI side effects (toasts, redirects, tracking) must use mutation callbacks (`onError`/`onSuccess`), not `useEffect` over mutation error state
+- query UI side effects must use component-level `useEffect` (React Query v5 query callbacks are removed)
+- entity query hooks (`entities/*/model/use*.ts`) must stay UI-pure (no toast/dialog/navigation side effects)
+- QueryClient global query handlers are infrastructure-only (telemetry/logging) unless explicitly overridden by feature policy
+- mutation hooks must use single object options API:
+  - `useMutationHook({ scope, options })`
+  - `scope` carries mutation infrastructure context (for example `accountId`)
+  - hooks without domain scope must still pass `scope: {}` to keep the contract uniform
+  - `options` uses `MutationOptions<...>` for lifecycle handlers and UI side effects
+  - new code must not use positional signatures like `(accountId, options?)`
 
 Layer usage:
 
 - `entities`: base query/mutation hooks
 - `features`: workflow orchestration and side effects
 - `pages/widgets`: composition and UI wiring only
+
+## 8.1 Client State Standard (Zustand)
+
+All client-only state must be implemented with `zustand`.
+
+Mandatory rules:
+
+- `zustand` stores only client state (selected IDs, UI flags, hydration/meta state)
+- React Query stores only server state (lists/details returned from backend)
+- do not duplicate server collections from React Query into `zustand`
+- components must subscribe with selectors, not read the whole store object
+
+Store placement:
+
+- `shared/store/core/*`: store infrastructure only (factory, middleware wiring, persist helpers)
+- `entities/*/model/store/*`: domain slice state, selectors, and actions
+- `widgets/*/model/store/*`: widget-scoped UI state slices (layout/view state), when not domain entity state
+- `app/providers/*`: app-level store composition/provider wiring
+
+Hydration and persistence:
+
+- persist only stable client state needed across reloads
+- include explicit hydration readiness flags for deterministic UI bootstrap
+- persist only validated values (for example, selected IDs that exist in current domain data)
+
+Cross-module lifecycle:
+
+- account/session changes must reset account-scoped slices
+- query cache invalidation and store reset must be coordinated in one protocol
 
 ## 9. DTO and Domain Mapping
 
@@ -185,6 +230,7 @@ Rules:
 
 - `shared/api` - HTTP client, query client factory, transport helpers
 - `shared/ui` - base UI primitives
+  - render Lucide icons via `AppIcon` from `@/shared/ui`; icon glyphs may be imported directly from `lucide-react`
 - `shared/lib` - generic utilities
 - `shared/config` - runtime config
 - `shared/types` - common non-domain types
@@ -198,6 +244,9 @@ No business rules in `shared`.
 - query key factories: `<entity>QueryKeys`
 - slice folders: `kebab-case`
 - public API entry: `index.ts`
+- zustand slices: `<domain><Purpose>Slice.ts`
+- selectors: expose as a namespaced object `<domain><Purpose>Selectors` (for example `locationSelectionSelectors`)
+- store/domain functions: selectors `select*`, actions `set/reset/resolve/mark*`, mappers `map<Entity>Dto`
 
 ## 12. Definition of Done (Architecture)
 
@@ -206,6 +255,7 @@ A change is architecture-compliant only if:
 - layer dependency rules are respected
 - cross-slice imports use public API only
 - entity data access uses React Query
+- client-only state uses Zustand with selector-based subscriptions
 - DTO/domain mapping is explicit
 - no business logic is added to `shared`
 
@@ -213,7 +263,7 @@ A change is architecture-compliant only if:
 
 Form architecture (React Hook Form + Zod + Chakra v3 wrappers) is defined in:
 
-- `apps/lp/FORMS_ARCHITECTURE.md`
+- `docs/agents/forms.md`
 
 ## 14. i18n and Text Rules
 

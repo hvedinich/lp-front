@@ -7,6 +7,7 @@ import {
 import { type ReactNode } from 'react';
 import {
   useController,
+  useFormState,
   type Control,
   type FieldPath,
   type FieldValues,
@@ -56,6 +57,7 @@ const CheckboxField = <
     control,
     rules,
   });
+  const { disabled } = useFormState({ control });
 
   const checked = value === true;
 
@@ -70,11 +72,13 @@ const CheckboxField = <
       {...rest}
     >
       <Checkbox.Root
-        checked={checked}
-        onCheckedChange={handleCheckedChange}
         {...checkboxProps}
+        checked={checked}
+        disabled={disabled || checkboxProps?.disabled}
+        onCheckedChange={handleCheckedChange}
       >
         <Checkbox.HiddenInput
+          disabled={disabled || checkboxProps?.disabled}
           name={fieldName}
           onBlur={onBlur}
           ref={ref}

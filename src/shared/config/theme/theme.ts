@@ -5,7 +5,7 @@
  *   L1 (tokens/)         — raw primitives: brand.500, gray.200, shadows.sm
  *   L2 (semanticTokens/) — named roles: fg.error, bg.surface, border.focus
  *
- * Developer rules, white-label setup and token addition guide: ARCHITECTURE.md
+ * Developer rules, white-label setup and token addition guide: docs/agents/architecture.md
  */
 
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
@@ -29,6 +29,8 @@ import { textareaRecipe } from './components/textarea';
 import { cardSlotRecipe } from './components/card';
 import { nativeSelectSlotRecipe } from './components/nativeSelect';
 import { checkboxSlotRecipe } from './components/checkbox';
+import { comboboxSlotRecipe } from './components/combobox';
+import { toastSlotRecipe } from './components/toast';
 import separatorRecipe from './components/separator';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -50,6 +52,17 @@ export const brandBaseConfig = defineConfig({
       ...radiiTokens,
       ...shadowTokens,
       ...borderWidthTokens,
+      /**
+       * Spacing tokens.
+       */
+      spacing: {
+        /**
+         * zero — explicit 0 spacing; used for positional props (bottom, top, left, right)
+         * and gap/padding resets.
+         * Usage: bottom='zero', top='zero', etc. instead of the escape-hatch '[0]' syntax.
+         */
+        zero: { value: '0px' },
+      },
       /**
        * Size tokens.
        */
@@ -120,6 +133,8 @@ export const brandBaseConfig = defineConfig({
       card: cardSlotRecipe,
       nativeSelect: nativeSelectSlotRecipe,
       checkbox: checkboxSlotRecipe,
+      combobox: comboboxSlotRecipe,
+      toast: toastSlotRecipe,
     },
   },
 });

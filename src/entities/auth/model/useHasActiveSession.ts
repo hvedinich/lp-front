@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getAuthSessionState } from '../api/session';
 import { authQueryKeys } from './queryKeys';
 import type { AuthSession } from './types';
-import type { QueryOptions } from '@/shared/lib';
+import type { QueryHookOptions } from '@/shared/lib';
 
-export const useHasActiveSession = (options?: QueryOptions<AuthSession>) => {
+export const useHasActiveSession = ({ options }: QueryHookOptions<void, AuthSession> = {}) => {
   return useQuery<AuthSession>({
     queryKey: authQueryKeys.session(),
     queryFn: getAuthSessionState,

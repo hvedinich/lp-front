@@ -2,6 +2,7 @@ import { Field, Textarea, type TextareaProps } from '@chakra-ui/react';
 import { type ChangeEventHandler, type FocusEventHandler, type ReactNode } from 'react';
 import {
   useController,
+  useFormState,
   type Control,
   type FieldPath,
   type FieldValues,
@@ -51,6 +52,7 @@ const TextareaField = <
     control,
     rules,
   });
+  const { disabled } = useFormState({ control });
 
   const fieldId = String(name);
 
@@ -72,6 +74,7 @@ const TextareaField = <
       {label ? <Field.Label htmlFor={fieldId}>{label}</Field.Label> : null}
       <Textarea
         {...textareaProps}
+        disabled={disabled || textareaProps.disabled}
         id={fieldId}
         name={fieldName}
         value={value ?? ''}

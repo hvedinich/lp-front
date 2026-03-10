@@ -42,8 +42,8 @@ npm run format
 
 ## Architecture
 
-- `ARCHITECTURE.md` - FSD rules, import/export policy, entities + React Query standards
-- `FORMS_ARCHITECTURE.md` - form stack, templates, and field/component rules
+- `docs/agents/architecture.md` - FSD rules, import/export policy, entities + React Query standards
+- `docs/agents/forms.md` - form stack, templates, and field/component rules
 
 ## Key Routes
 
@@ -59,6 +59,20 @@ Copy `.env.local` and configure:
 - `NEXT_PUBLIC_DEFAULT_LOCALE` - default locale (default: en)
 - `NEXT_PUBLIC_LOCALES` - available locales
 - `NEXT_PUBLIC_API_URL` - API base URL
-- `NEXT_PUBLIC_AUTH_LOGIN_PATH` - login endpoint
-- `NEXT_PUBLIC_AUTH_REGISTER_PATH` - registration endpoint
-- `NEXT_PUBLIC_AUTH_SESSION_PATH` - session endpoint
+- `NEXT_PUBLIC_SITE_URL` - explicit public app URL
+- `NEXT_PUBLIC_VERCEL_URL` - Vercel-provided app URL without protocol
+- `VERCEL_URL` - runtime Vercel URL fallback without protocol
+- `PLAYWRIGHT_E2E_EMAIL` - E2E user email
+- `PLAYWRIGHT_E2E_PASSWORD` - E2E user password
+- `PLAYWRIGHT_LOCATION_PREFIX` - prefix for E2E-created locations
+- `PLAYWRIGHT_WORKERS` - optional local Playwright workers override
+
+## GitHub Actions E2E
+
+- `npm run test` already covers unit tests and page-level integration tests in `src/**`.
+- Playwright E2E runs in `.github/workflows/e2e-deployment.yml` after a successful non-production deployment status.
+- The workflow takes the deployed preview URL from the deployment status payload and exports it to `PLAYWRIGHT_BASE_URL`.
+- In CI, Playwright requires `PLAYWRIGHT_BASE_URL`, fails fast if it is missing, and does not start a local app server.
+- Required GitHub Actions secrets: `NEXT_PUBLIC_API_URL`, `PLAYWRIGHT_E2E_EMAIL`, `PLAYWRIGHT_E2E_PASSWORD`.
+- This setup depends on Vercel Git integration publishing preview deployments back to GitHub as `deployment_status` events.
+- The workflow logs `deployment.environment`, `deployment_status.state`, and `deployment_status.target_url` to simplify debugging of deployment-triggered runs.

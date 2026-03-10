@@ -117,7 +117,10 @@ export const semanticColorTokens = {
        * Accent background — violet, separate from brand.
        * White-label: swap accent palette in colors.ts.
        */
-      accent: { value: { base: '{colors.accent.500}', _dark: '{colors.accent.500}' } },
+      accent: {
+        DEFAULT: { value: { base: '{colors.accent.500}', _dark: '{colors.accent.500}' } },
+        hover: { value: { base: '{colors.accent.100}', _dark: '{colors.accent.200/30}' } },
+      },
 
       // ── Status backgrounds ────────────────────────────────────
       /** Background block for errors (alert, toast, field error) */

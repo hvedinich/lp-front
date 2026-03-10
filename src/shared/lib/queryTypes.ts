@@ -1,14 +1,14 @@
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 
 /**
- * MutationCallbacks — reusable options type for custom mutation hooks.
+ * MutationOptions — reusable lifecycle options type for custom mutation hooks.
  *
  * Picks the four lifecycle callbacks from React Query's `UseMutationOptions`
  * so callers can pass them without referencing internal RQ generics directly.
  *
  * Usage:
  *
- *   export const useCreateFoo = (options?: MutationCallbacks<Foo, FooPayload>) => {
+ *   export const useCreateFoo = (options?: MutationOptions<Foo, FooPayload>) => {
  *     return useMutation<Foo, Error, FooPayload>({
  *       mutationFn: createFoo,
  *       ...options,
@@ -20,10 +20,21 @@ import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
  *   TVariables — variables passed to mutationFn (default: void)
  *   TError     — error type (default: Error)
  */
-export type MutationCallbacks<TData = void, TVariables = void, TError = Error> = Pick<
+export type MutationOptions<TData = void, TVariables = void, TError = Error> = Pick<
   UseMutationOptions<TData, TError, TVariables>,
   'onSuccess' | 'onError' | 'onSettled' | 'onMutate'
 >;
+
+export type MutationCallbacks<TData = void, TVariables = void, TError = Error> = MutationOptions<
+  TData,
+  TVariables,
+  TError
+>;
+
+export interface MutationHookOptions<TScope, TData = void, TVariables = void, TError = Error> {
+  options?: MutationOptions<TData, TVariables, TError>;
+  scope: TScope;
+}
 
 /**
  * QueryOptions — reusable options type for custom query hooks.
@@ -55,5 +66,17 @@ export type QueryOptions<TData = unknown, TError = Error, TSelectData = TData> =
   | 'retry'
   | 'refetchInterval'
   | 'refetchOnWindowFocus'
+  | 'initialData'
   | 'select'
 >;
+
+type QueryScopeField<TScope> = [TScope] extends [void] ? { scope?: never } : { scope: TScope };
+
+export type QueryHookOptions<
+  TScope = void,
+  TData = unknown,
+  TError = Error,
+  TSelectData = TData,
+> = QueryScopeField<TScope> & {
+  options?: QueryOptions<TData, TError, TSelectData>;
+};

@@ -21,21 +21,28 @@ const Form = <TFormValues extends FieldValues>({
   formId,
   ...layoutProps
 }: FormProps<TFormValues>) => {
+  const submitHandler = methods.handleSubmit(onSubmit);
+
   return (
     <FormProvider {...methods}>
-      <chakra.form
-        id={formId}
-        noValidate
-        onSubmit={methods.handleSubmit(onSubmit)}
+      <Stack
+        asChild
+        width='full'
+        gap='4'
+        {...layoutProps}
       >
-        <Stack
-          width='full'
-          gap='4'
-          {...layoutProps}
+        <chakra.form
+          id={formId}
+          noValidate
+          onSubmit={(event) => {
+            void submitHandler(event).catch(() => {
+              // Submit errors are surfaced through RHF and mutation state in the UI.
+            });
+          }}
         >
           {children}
-        </Stack>
-      </chakra.form>
+        </chakra.form>
+      </Stack>
     </FormProvider>
   );
 };

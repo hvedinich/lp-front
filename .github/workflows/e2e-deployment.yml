@@ -1,0 +1,63 @@
+name: E2E Deployment
+
+on:
+  deployment_status:
+
+jobs:
+  e2e:
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment_status.target_url != '' &&
+      github.event.deployment.environment != 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout deployed commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Print deployment payload
+        env:
+          DEPLOYMENT_ENVIRONMENT: ${{ github.event.deployment.environment }}
+          DEPLOYMENT_STATE: ${{ github.event.deployment_status.state }}
+          DEPLOYMENT_TARGET_URL: ${{ github.event.deployment_status.target_url }}
+        run: |
+          echo "deployment.environment=${DEPLOYMENT_ENVIRONMENT}"
+          echo "deployment_status.state=${DEPLOYMENT_STATE}"
+          echo "deployment_status.target_url=${DEPLOYMENT_TARGET_URL}"
+
+      - name: Export deployment URL
+        env:
+          DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
+        run: echo "PLAYWRIGHT_BASE_URL=${DEPLOYMENT_URL}" >> "$GITHUB_ENV"
+
+      - name: Run Playwright tests against deployment
+        env:
+          CI: true
+          PLAYWRIGHT_BASE_URL: ${{ env.PLAYWRIGHT_BASE_URL }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          PLAYWRIGHT_E2E_EMAIL: ${{ secrets.PLAYWRIGHT_E2E_EMAIL }}
+          PLAYWRIGHT_E2E_PASSWORD: ${{ secrets.PLAYWRIGHT_E2E_PASSWORD }}
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.event.deployment.id }}
+          path: playwright-report
+          if-no-files-found: ignore

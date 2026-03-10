@@ -18,6 +18,10 @@
     "collapseSidebar": "Zwiń pasek boczny",
     "expandSidebar": "Rozwiń pasek boczny",
     "logout": "Wyloguj się",
+    "breadcrumbs": {
+      "ariaLabel": "Nawigacja okruszkowa",
+      "separator": "/"
+    },
     "menu": {
       "reviews": "Opinie",
       "surveys": "Ankiety",
@@ -50,6 +54,59 @@
         "title": "Lokalizacje",
         "description": "Konfiguruj lokalizacje firmy i mapuj do nich kanały.",
         "emptyState": "Moduły konfiguracji lokalizacji pojawią się tutaj."
+      }
+    },
+    "locationSelector": {
+      "title": "Bieżąca lokalizacja",
+      "notSelected": "Nie wybrano",
+      "searchPlaceholder": "Szukaj lokalizacji",
+      "selected": "Wybrana",
+      "noMatch": "Brak pasujących lokalizacji.",
+      "empty": "Brak dostępnych lokalizacji.",
+      "manageLocations": "Zarządzaj lokalizacjami"
+    },
+    "locationsPage": {
+      "create": "Utwórz lokalizację",
+      "edit": "Edytuj",
+      "createTitle": "Utwórz lokalizację",
+      "createDescription": "Dodaj nową lokalizację do swojego konta.",
+      "editTitle": "Edytuj lokalizację",
+      "viewTitle": "Podgląd lokalizacji",
+      "delete": "Usuń",
+      "save": "Zapisz",
+      "defaultBadge": "Domyślna",
+      "noDetails": "Brak adresu lub strefy czasowej",
+      "readonlyDescription": "Możesz przeglądać tę lokalizację, ale nie masz uprawnień do edycji.",
+      "notFoundTitle": "Nie znaleziono lokalizacji",
+      "notFoundDescription": "Ta lokalizacja nie istnieje lub nie jest dostępna na Twoim koncie.",
+      "breadcrumbFallback": "Lokalizacja",
+      "locationNotFound": "Lokalizacja z URL nie została znaleziona.",
+      "errors": {
+        "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+        "network": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie.",
+        "forbidden": "Nie masz uprawnień do tej akcji.",
+        "validation": "Sprawdź pola formularza i spróbuj ponownie.",
+        "conflict": "Ta lokalizacja powoduje konflikt z istniejącymi danymi."
+      },
+      "empty": "Brak lokalizacji."
+    },
+    "locationsForm": {
+      "nameLabel": "Nazwa",
+      "phoneLabel": "Telefon",
+      "websiteLabel": "Strona WWW",
+      "addressLabel": "Adres",
+      "timeZoneLabel": "Strefa czasowa",
+      "publicSlugLabel": "Publiczny slug",
+      "defaultLabel": "Ustaw jako domyślną",
+      "validation": {
+        "addressMax": "Adres może mieć maksymalnie 300 znaków",
+        "nameMin": "Nazwa musi mieć co najmniej 2 znaki",
+        "nameMax": "Nazwa może mieć maksymalnie 120 znaków",
+        "phoneMax": "Telefon może mieć maksymalnie 40 znaków",
+        "publicSlugMax": "Publiczny slug może mieć maksymalnie 120 znaków",
+        "publicSlugPattern": "Używaj tylko małych liter, cyfr i myślników",
+        "timeZoneMax": "Strefa czasowa może mieć maksymalnie 100 znaków",
+        "websiteMax": "Strona internetowa może mieć maksymalnie 200 znaków"
       }
     }
   },
@@ -131,5 +188,16 @@
       "emailInvalid": "Wprowadź poprawny adres e-mail",
       "passwordMin": "Hasło musi mieć co najmniej 8 znaków"
     }
+  },
+  "commonActions": {
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "back": "Wstecz",
+    "delete": "Usuń",
+    "continue": "Kontynuuj"
+  },
+  "commonFeedback": {
+    "saved": "Zmiany zostały zapisane.",
+    "created": "Utworzono pomyślnie."
   }
 }

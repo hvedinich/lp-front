@@ -1,10 +1,7 @@
-import { buildLoginRedirect } from '@/shared/config';
+import { buildLoginRedirect, env } from '@/shared/config';
 import { isApiError } from './ApiError';
 import { createApiClient } from './createApiClient';
 import type { ApiRequestOptions } from './types';
-
-export const defaultApiUrl = 'http://localhost:3000';
-export const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? defaultApiUrl;
 
 const nonRefreshablePaths = new Set<string>([
   '/auth/login',
@@ -14,7 +11,7 @@ const nonRefreshablePaths = new Set<string>([
 ]);
 
 const client = createApiClient({
-  baseUrl: apiUrl,
+  baseUrl: env.app.apiUrl,
   defaultCredentials: 'include',
   defaultTimeoutMs: 15_000,
   shouldAttemptRefresh: (error, context) => {

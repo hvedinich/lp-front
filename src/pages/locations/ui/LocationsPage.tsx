@@ -1,17 +1,87 @@
-import { Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import { PlusIcon } from 'lucide-react';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useHasActiveSession } from '@/entities/auth';
+import { useLocations } from '@/entities/location';
+import { AppIcon } from '@/shared/ui';
+import { canManageLocationsRole } from '../model/locationPermissions';
+import { useLocationActions } from '../model/useLocationActions';
+import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
+import { LocationsList } from './LocationsList';
 
 export default function LocationsPage() {
+  const router = useRouter();
   const { t } = useTranslation('common');
+  const sessionQuery = useHasActiveSession();
+  const accountId = sessionQuery.data?.payload?.account.id ?? '';
+  const role = sessionQuery.data?.payload?.account.role;
+  const canManage = canManageLocationsRole(role);
+
+  const locationsQuery = useLocations({
+    scope: {
+      accountId,
+      params: { sort: 'name' },
+    },
+  });
+
+  const { deleteLocation, isDeletePending } = useLocationActions({ accountId });
+  useLocationQueryErrorToast({ error: locationsQuery.error });
+
+  const locations = locationsQuery.data ?? [];
+  const isEmpty = !locationsQuery.isPending && locations.length === 0;
 
   return (
     <Stack
       gap='5'
       maxW='3xl'
+      w='full'
     >
-      <Heading size='4xl'>{t('workspace.sections.locations.title')}</Heading>
-      <Text color='fg.muted'>{t('workspace.sections.locations.description')}</Text>
-      <Text color='fg.subtle'>{t('workspace.sections.locations.emptyState')}</Text>
+      <Flex
+        align='start'
+        justify='space-between'
+        gap='4'
+      >
+        <Box>
+          <Heading size={{ base: '2xl', md: '4xl' }}>
+            {t('workspace.sections.locations.title')}
+          </Heading>
+          <Text
+            color='fg.muted'
+            fontSize={{ base: 'sm', md: 'lg' }}
+          >
+            {t('workspace.sections.locations.description')}
+          </Text>
+        </Box>
+
+        {canManage ? (
+          <Button
+            data-testid='locations-create-button'
+            onClick={() => {
+              void router.push('/locations/new');
+            }}
+          >
+            <AppIcon
+              icon={PlusIcon}
+              size={16}
+            />
+            {t('workspace.locationsPage.create')}
+          </Button>
+        ) : null}
+      </Flex>
+
+      <LocationsList
+        data-testid='locations-list'
+        locations={locations}
+        canManage={canManage}
+        isDeletePending={isDeletePending}
+        onOpen={(locationId) => {
+          void router.push(`/locations/${locationId}`);
+        }}
+        onDelete={deleteLocation}
+      />
+
+      {isEmpty ? <Text color='fg.subtle'>{t('workspace.locationsPage.empty')}</Text> : null}
     </Stack>
   );
 }

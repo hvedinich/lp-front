@@ -3,16 +3,15 @@ import { initReactI18next } from 'react-i18next';
 import enCommon from '../../../public/locales/en/common.json';
 import plCommon from '../../../public/locales/pl/common.json';
 import ruCommon from '../../../public/locales/ru/common.json';
+import { env } from './env';
 
 const storageKey = 'lp.language';
 const allLanguages = ['en', 'pl', 'ru'] as const;
 
 export type AppLanguage = (typeof allLanguages)[number];
 
-const fallbackLanguage = allLanguages.includes(
-  process.env.NEXT_PUBLIC_DEFAULT_LOCALE as AppLanguage,
-)
-  ? (process.env.NEXT_PUBLIC_DEFAULT_LOCALE as AppLanguage)
+const fallbackLanguage = allLanguages.includes(env.app.defaultLocale as AppLanguage)
+  ? (env.app.defaultLocale as AppLanguage)
   : 'en';
 
 const parseLanguages = (value: string | undefined): AppLanguage[] => {
@@ -32,7 +31,7 @@ const parseLanguages = (value: string | undefined): AppLanguage[] => {
   return Array.from(new Set(parsed));
 };
 
-export const appLanguages = parseLanguages(process.env.NEXT_PUBLIC_LOCALES);
+export const appLanguages = parseLanguages(env.app.locales);
 
 const isAppLanguage = (value: unknown): value is AppLanguage => {
   return typeof value === 'string' && appLanguages.includes(value as AppLanguage);
