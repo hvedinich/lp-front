@@ -34,7 +34,7 @@ export const createDeviceSchema = (t: TFunction<'common'>) =>
         .default(''),
     })
     .superRefine((value, context) => {
-      if (value.mode === 'static' && value.singleLinkUrl.trim().length === 0) {
+      if (value.mode === DeviceModeEnum.SINGLE && value.singleLinkUrl.trim().length === 0) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: t('workspace.devicesForm.validation.singleLinkUrlRequired'),

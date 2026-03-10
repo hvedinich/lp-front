@@ -4,6 +4,7 @@ import { ApiError } from '@/shared/api';
 import { deactivateDevice } from '../api/deactivateDevice';
 import { invalidateDevices } from './invalidateDevices';
 import { useDeactivateDevice } from './useDeactivateDevice';
+import { DeviceModeEnum } from '@/shared/lib';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),
@@ -58,10 +59,10 @@ describe('useDeactivateDevice', () => {
       id: 'dev-1',
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'static',
+      mode: DeviceModeEnum.SINGLE,
       name: 'Lobby',
       shortCode: 'ABCD-1234',
-      status: 'inactive',
+      status: 'disabled',
       targetUrl: null,
       type: 'tablet',
       updatedAt: '2026-03-02T00:00:00.000Z',

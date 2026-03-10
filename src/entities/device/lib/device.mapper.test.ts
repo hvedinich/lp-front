@@ -1,4 +1,6 @@
+import { DeviceModeEnum } from '@/shared/lib';
 import { mapDeviceDto } from './device.mapper';
+import { DeviceStatus } from '../model/types';
 
 describe('mapDeviceDto', () => {
   it('maps dto fields and converts date strings to Date', () => {
@@ -9,10 +11,10 @@ describe('mapDeviceDto', () => {
       id: 'dev-1',
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'multilink' as const,
+      mode: DeviceModeEnum.MULTI,
       name: 'Lobby screen',
       shortCode: 'ABCD-1234',
-      status: 'active',
+      status: 'active' as DeviceStatus,
       targetUrl: 'https://example.com/reviews',
       type: 'tv',
       updatedAt: '2026-03-02T10:00:00.000Z',
@@ -37,12 +39,12 @@ describe('mapDeviceDto', () => {
       connectedAt: null,
       createdAt: 'not-a-date',
       id: 'dev-1',
-      locale: null,
+      locale: '',
       locationId: 'loc-1',
       mode: null,
       name: null,
       shortCode: 'ABCD-1234',
-      status: 'inactive',
+      status: 'disabled',
       targetUrl: null,
       type: null,
       updatedAt: 'also-not-a-date',
