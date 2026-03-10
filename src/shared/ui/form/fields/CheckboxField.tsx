@@ -55,7 +55,7 @@ const CheckboxField = <
   } = useController({
     name,
     control,
-    rules,
+    rules: { required: isRequired, ...rules },
   });
   const { disabled } = useFormState({ control });
 

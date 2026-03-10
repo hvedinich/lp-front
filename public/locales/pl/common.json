@@ -217,6 +217,89 @@
       "accountNameMin": "Nazwa konta musi mieć co najmniej 2 znaki"
     }
   },
+  "addDevice": {
+    "next": "Dalej",
+    "back": "Wstecz",
+    "notFound": {
+      "title": "Urządzenie niedostępne",
+      "description": "To urządzenie jest już podłączone lub nie istnieje."
+    },
+    "location": {
+      "title": "Wybierz lokalizację",
+      "description": "Wybierz istniejącą lokalizację lub dodaj nową dla urządzenia",
+      "newLocationTitle": "Utwórz nową lokalizację",
+      "newLocationDescription": "Skonfiguruj to urządzenie od podstaw, używając własnej strony i linków do recenzji",
+      "defaultName": "Nowa lokalizacja",
+      "defaultAddress": "Adres Lokalizacji"
+    },
+    "mode": {
+      "title": "Skonfiguruj stojak",
+      "description": "Wybierz, w jaki sposób klienci będą zostawiać opinie",
+      "multiTitle": "Możliwość wyboru platformy",
+      "multiDescription": "Klienci najpierw kierowani są do menu, z którego mogą wybrać platformę, na której chcą zostawić opinie",
+      "multiSubDescription": "Google, Facebook i inne platformy – wszystko na jednej stronie",
+      "singleTitle": "Bezpośrednie przekierowanie",
+      "singleDescription": "Klienci są przekierowywani bezpośrednio na stronę z opiniami",
+      "singleSubDescription": "Najlepsze rozwiązanie, jeśli chcesz gromadzić/zbierać opinie na jednej platformie (np. Google)"
+    },
+    "platformLinks": {
+      "title": "Gdzie chcesz zbierać opinie?",
+      "existedLinksTitle": "Ta lokalizacja ma już stronę z recenzjami",
+      "remove": "Usuń",
+      "urlPlaceholder": "https://...",
+      "googleSearchPlaceholder": "Znajdź lokalizację do połączenia z urządzeniem",
+      "reviews": "Dodaj linki do swoich platform",
+      "other": "Dodaj linki do swoich mediów społecznościowych",
+      "sameLocationMulti": "To urządzenie będzie używać tej samej strony",
+      "sameLocationSingle": "Użyj istniejącego łącza",
+      "or": "lub"
+    },
+    "userInfo": {
+      "title": "Ustaw dostęp do stojaka",
+      "description": "To konto służy do zarządzania stojakiem i otrzymywania raportów",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "ty@przykład.pl",
+      "emailHelperText": "Używany do raportów i dostępu do ustawień stojaka",
+      "nameLabel": "Imię i nazwisko",
+      "namePlaceholder": "Jan Kowalski",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "123 456 789",
+      "phoneHelperText": "Otrzymuj natychmiastowe powiadomienia, jeśli pojawi się negatywna opinia",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Minimum 8 znaków",
+      "notifyLabel": "Chcę otrzymywać wskazówki dotyczące poprawy opinii i rekomendacje na podstawie danych ze stojaka",
+      "accept": "Akceptuję",
+      "terms": "Regulamin Serwisu",
+      "and": "i",
+      "policy": "Politykę Prywatności"
+    },
+    "success": {
+      "title": "Urządzenie podłączone!",
+      "description": "Twoje urządzenie zostało pomyślnie skonfigurowane.",
+      "activatedText": "Stojak aktywowany",
+      "reportText": "Raporty będą wysyłane na e-mail / telefon",
+      "editText": "Możesz zmieniać ustawienia w dowolnym momencie",
+      "testText": "Przetestuj swoje urządzenie",
+      "testDescription": "Zeskanuj stojak, aby potwierdzić, że wszystko działa. To doda 1 skan do statystyk urządzenia",
+      "testStep1": "Zeskanuj teraz stojak",
+      "testStep2": "Następnie kliknij „Zakończ”",
+      "finish": "Zakończ"
+    },
+    "emailConflict": {
+      "title": "E-mail jest już używany",
+      "description": "Wygląda na to, że ten adres e-mail jest już powiązany z kontem. Aby dodać kolejne urządzenie, zaloguj się na swoje konto.",
+      "loginButton": "Zaloguj się",
+      "cancelButton": "Anuluj"
+    },
+    "validation": {
+      "urlInvalid": "Wprowadź poprawny URL",
+      "urlPlatformInvalid": "Podaj prawidłowy adres {{platform}}",
+      "emailInvalid": "Wprowadź poprawny e-mail",
+      "nameMin": "Imię musi mieć co najmniej 2 znaki",
+      "passwordMin": "Hasło musi mieć co najmniej 8 znaków",
+      "passwordsMismatch": "Hasła nie są zgodne"
+    }
+  },
   "login": {
     "title": "Zaloguj się",
     "subtitle": "Zaloguj się, aby uzyskać dostęp do swojego konta.",
@@ -243,5 +326,11 @@
   "commonFeedback": {
     "saved": "Zmiany zostały zapisane.",
     "created": "Utworzono pomyślnie."
+  },
+  "404": {
+    "title": "Ups! Nie znaleziono strony",
+    "description": "Link, który otworzyłeś, jest nieprawidłowy lub nieaktualny",
+    "loginBtn": "Zaloguj się",
+    "mainPageBtn": "Do domu"
   }
 }

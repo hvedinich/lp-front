@@ -21,6 +21,7 @@ export interface CreateLocationDtoRequest {
   address?: string | null;
   timeZone?: string | null;
   publicSlug?: string;
+  pageConfig?: Record<string, unknown>;
 }
 
 export interface UpdateLocationDtoRequest {

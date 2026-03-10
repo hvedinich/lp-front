@@ -1,5 +1,5 @@
-import { resolveLocationToastMessage } from './locationErrorUi';
 import type { TFunction } from 'i18next';
+import { resolveLocationToastMessage } from './locationErrorUi';
 
 const t = ((key: string) => key) as unknown as TFunction<'common'>;
 

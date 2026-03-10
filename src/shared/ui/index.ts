@@ -1,11 +1,15 @@
 export {
   Form,
   FormControls,
+  AutocompleteField,
+  type AutocompleteFieldProps,
+  type AutocompleteOption,
   CheckboxField,
   InputField,
   SelectField,
   TextareaField,
   FormFieldMeta,
+  PhoneField,
   type FormAction,
   type FormControlsProps,
 } from './form';
@@ -24,3 +28,5 @@ export { PageSpinner } from './PageSpinner';
 export { ThemeSwitcher } from './ThemeSwitcher';
 export { AppToaster, toaster } from './toaster';
 export * from './icons';
+export { SelectOptionCard } from './SelectOptionCard';
+export { default as Tooltip } from './Tooltip';

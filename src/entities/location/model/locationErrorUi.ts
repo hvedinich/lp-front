@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
-import type { LocationError } from '@/entities/location';
 import { createErrorKeyResolver } from '@/shared/lib';
+import { LocationError } from './errors';
 
 interface ResolveLocationToastMessageOptions {
   error: LocationError | null | undefined;

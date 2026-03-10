@@ -1,3 +1,5 @@
+import { DeviceModeEnum, type LocationPayload } from '@/shared/lib';
+
 export interface RegisterAccountPayload {
   name: string;
   region: string;
@@ -68,4 +70,39 @@ export interface AuthSessionPayload {
 export interface AuthSession {
   payload: AuthSessionPayload | null;
   state: AuthSessionState;
+}
+
+export interface DeviceOnboardingResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUserSummary;
+  account: AuthAccountSummary;
+  locationId: string;
+  deviceId: string;
+}
+
+export interface OnboardMultiDevicePayload {
+  id: string;
+  mode: DeviceModeEnum.MULTI;
+}
+
+export interface OnboardSingleDevicePayload {
+  id: string;
+  mode: DeviceModeEnum.SINGLE;
+  targetUrl: string;
+}
+
+export interface OnboardPayload {
+  email: string;
+  name: string;
+  phone: string;
+  password: string;
+  account: {
+    name: string;
+    region: string;
+    contentLanguage: string;
+  };
+  location: LocationPayload;
+  device: OnboardSingleDevicePayload | OnboardMultiDevicePayload;
+  deviceName: string;
 }

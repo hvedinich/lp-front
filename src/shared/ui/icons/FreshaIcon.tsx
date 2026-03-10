@@ -1,0 +1,94 @@
+import { Icon, IconProps } from '@chakra-ui/react';
+
+const FreshaIcon = (props: IconProps) => (
+  <Icon
+    asChild
+    {...props}
+  >
+    <svg
+      height='full'
+      width='auto'
+      viewBox='0 0 350 350'
+      fill='currentcolor'
+    >
+      <radialGradient
+        id='SVGID_1_'
+        cx='-8371.0596'
+        cy='8297.5195'
+        r='158.3779'
+        fx='-8371.0596'
+        fy='8453.5791'
+        gradientTransform='matrix(-1 3.665183e-03 3.628531e-03 0.99 -8227.4424 -8008.8027)'
+        gradientUnits='userSpaceOnUse'
+      >
+        <stop
+          offset='0.45'
+          stopColor='#7B69FF'
+        />
+        <stop
+          offset='0.49'
+          stopColor='#7B69FF'
+          stopOpacity='0.98'
+        />
+        <stop
+          offset='0.55'
+          stopColor='#7B69FF'
+          stopOpacity='0.91'
+        />
+        <stop
+          offset='0.61'
+          stopColor='#7B69FF'
+          stopOpacity='0.8'
+        />
+        <stop
+          offset='0.68'
+          stopColor='#7B69FF'
+          stopOpacity='0.65'
+        />
+        <stop
+          offset='0.75'
+          stopColor='#7B69FF'
+          stopOpacity='0.46'
+        />
+        <stop
+          offset='0.82'
+          stopColor='#7B69FF'
+          stopOpacity='0.25'
+        />
+        <stop
+          offset='0.82'
+          stopColor='#7B69FF'
+          stopOpacity='0.24'
+        />
+        <stop
+          offset='0.87'
+          stopColor='#7B69FF'
+          stopOpacity='0.13'
+        />
+        <stop
+          offset='0.91'
+          stopColor='#7B69FF'
+          stopOpacity='6.000000e-02'
+        />
+        <stop
+          offset='0.95'
+          stopColor='#7B69FF'
+          stopOpacity='1.000000e-02'
+        />
+        <stop
+          offset='1'
+          stopColor='#7B69FF'
+          stopOpacity='0'
+        />
+      </radialGradient>
+      <circle
+        fill='url(#SVGID_1_)'
+        cx='175'
+        cy='175'
+        r='175'
+      />
+    </svg>
+  </Icon>
+);
+
+export default FreshaIcon;
