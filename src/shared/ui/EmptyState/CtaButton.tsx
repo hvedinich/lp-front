@@ -5,11 +5,7 @@ import type { EmptyStateCta } from './types';
 
 export function EmptyStateCtaButton({ href, icon, label, onClick }: EmptyStateCta) {
   const content = (
-    <Button
-      onClick={onClick}
-      size='lg'
-      rounded='full'
-    >
+    <>
       {icon ? (
         <AppIcon
           icon={icon}
@@ -17,19 +13,29 @@ export function EmptyStateCtaButton({ href, icon, label, onClick }: EmptyStateCt
         />
       ) : null}
       {label}
-    </Button>
+    </>
   );
 
   if (href) {
     return (
-      <AppLink
-        href={href}
-        _hover={{ textDecoration: 'none' }}
+      <Button
+        asChild
+        onClick={onClick}
+        size='lg'
+        rounded='full'
       >
-        {content}
-      </AppLink>
+        <AppLink href={href}>{content}</AppLink>
+      </Button>
     );
   }
 
-  return content;
+  return (
+    <Button
+      onClick={onClick}
+      size='lg'
+      rounded='full'
+    >
+      {content}
+    </Button>
+  );
 }

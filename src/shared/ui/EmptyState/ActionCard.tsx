@@ -1,4 +1,4 @@
-import { Box, Card, Heading, HStack, Stack, Text } from '@chakra-ui/react';
+import { Box, Card, Heading, HStack, Stack, Text, chakra } from '@chakra-ui/react';
 import { AppLink } from '../AppLink';
 import { AppIcon } from '../icons';
 import type { EmptyStateAction } from './types';
@@ -44,12 +44,12 @@ export function EmptyStateActionCard({ action }: { action: EmptyStateAction }) {
   }
 
   return (
-    <Box
-      as='button'
+    <chakra.button
+      type='button'
       onClick={action.onClick}
       w='full'
     >
       {content}
-    </Box>
+    </chakra.button>
   );
 }
