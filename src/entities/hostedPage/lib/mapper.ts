@@ -1,0 +1,17 @@
+import { PlatformLink } from '@/shared/lib';
+import type { HostedPageDTO } from '../api/dto';
+import type { HostedPage } from '../model/types';
+
+export const mapHostedPageDTO = (dto: HostedPageDTO): HostedPage => ({
+  id: dto.id,
+  accountId: dto.accountId,
+  locationId: dto.locationId,
+  publishedConfig: {
+    ...dto.publishedConfig,
+    links: dto?.publishedConfig?.links
+      ? (JSON.parse(dto.publishedConfig.links) as PlatformLink[])
+      : undefined,
+  },
+  createdAt: dto.createdAt,
+  updatedAt: dto.updatedAt,
+});

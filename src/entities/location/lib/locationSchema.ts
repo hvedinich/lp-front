@@ -1,16 +1,6 @@
 import { z } from 'zod';
 import type { TFunction } from 'i18next';
 
-export interface LocationFormValues {
-  name: string;
-  phone: string;
-  website: string;
-  address: string;
-  timeZone: string;
-  publicSlug: string;
-  isDefault: boolean;
-}
-
 export const createLocationSchema = (t: TFunction<'common'>) =>
   z.object({
     address: z

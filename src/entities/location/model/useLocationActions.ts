@@ -1,16 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import {
-  type Location,
-  type LocationError,
-  type UpdateLocationDtoRequest,
-  useCreateLocation,
-  useDeleteLocation,
-  useUpdateLocation,
-} from '@/entities/location';
 import { toaster } from '@/shared/ui';
-import { mapCreateLocationFormValues } from './locationForm';
+import type { Location, LocationFormValues } from './types';
+import { UpdateLocationDtoRequest } from '../api/location.dto';
+import { LocationError } from './errors';
 import { resolveLocationToastMessage } from './locationErrorUi';
-import type { LocationFormValues } from './locationSchema';
+import { useCreateLocation } from './useCreateLocation';
+import { useUpdateLocation } from './useUpdateLocation';
+import { useDeleteLocation } from './useDeleteLocation';
+import { mapCreateLocationFormValues } from '../lib/location.mapper';
 
 interface UseLocationActionsOptions {
   accountId: string;

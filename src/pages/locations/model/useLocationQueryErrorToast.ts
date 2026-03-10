@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { LocationError } from '@/entities/location';
+import { resolveLocationToastMessage, type LocationError } from '@/entities/location';
 import { toaster } from '@/shared/ui';
-import { resolveLocationToastMessage } from './locationErrorUi';
 
 interface UseLocationQueryErrorToastOptions {
   error: LocationError | null | undefined;

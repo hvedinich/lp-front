@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { canManageLocationsRole } from '../model/locationPermissions';
-import { resolveLocationEditorState } from '../model/locationEditorState';
+import { canManageLocationsRole } from '../lib/locationPermissions';
+import { resolveLocationEditorState } from '../lib/locationEditorState';
 
 describe('locations role gates integration', () => {
   it('restricts mutate controls for member and enables for admin/owner', () => {

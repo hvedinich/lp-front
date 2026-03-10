@@ -14,6 +14,7 @@ import { colorTokens } from './tokens/colors';
 import { fontTokens } from './tokens/typography';
 import { radiiTokens } from './tokens/radii';
 import { shadowTokens } from './tokens/shadows';
+import { spacingTokens } from './tokens/spacing';
 import { borderWidthTokens } from './tokens/borderWidths';
 
 import { semanticColorTokens } from './semanticTokens/colors';
@@ -52,6 +53,7 @@ export const brandBaseConfig = defineConfig({
       ...radiiTokens,
       ...shadowTokens,
       ...borderWidthTokens,
+      ...spacingTokens,
       /**
        * Spacing tokens.
        */
@@ -66,6 +68,7 @@ export const brandBaseConfig = defineConfig({
       /**
        * Size tokens.
        */
+
       sizes: {
         /**
          * zero — explicit 0 size; used for flex min-height/min-width reset

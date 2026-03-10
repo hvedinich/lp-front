@@ -3,10 +3,9 @@ import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
-import { useLocations } from '@/entities/location';
 import { AppIcon, EmptyState } from '@/shared/ui';
-import { canManageLocationsRole } from '../model/locationPermissions';
-import { useLocationActions } from '../model/useLocationActions';
+import { useLocationActions, useLocations } from '@/entities/location';
+import { canManageLocationsRole } from '../lib/locationPermissions';
 import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
 import { LocationsList } from './LocationsList';
 

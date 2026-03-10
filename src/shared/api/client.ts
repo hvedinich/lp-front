@@ -72,3 +72,21 @@ const redirectToLogin = () => {
 
   window.location.replace(target);
 };
+
+export const parseErrorMessage = (payload: unknown): string | null => {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  const normalized = payload as { message?: unknown; error?: unknown };
+
+  if (typeof normalized.message === 'string') {
+    return normalized.message;
+  }
+
+  if (typeof normalized.error === 'string') {
+    return normalized.error;
+  }
+
+  return null;
+};
