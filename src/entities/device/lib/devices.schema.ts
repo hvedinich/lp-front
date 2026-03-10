@@ -1,17 +1,6 @@
+import { DeviceModeEnum } from '@/shared/lib';
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-
-const deviceModes = ['static', 'multilink'] as const;
-
-export type DeviceModeFormValue = (typeof deviceModes)[number];
-
-export interface DeviceFormValues {
-  locale: string;
-  mode: DeviceModeFormValue;
-  name: string;
-  singleLinkUrl: string;
-  type: string;
-}
 
 export const createDeviceSchema = (t: TFunction<'common'>) =>
   z
@@ -22,7 +11,7 @@ export const createDeviceSchema = (t: TFunction<'common'>) =>
         .max(20, t('workspace.devicesForm.validation.localeMax'))
         .optional()
         .default(''),
-      mode: z.enum(deviceModes, {
+      mode: z.enum(DeviceModeEnum, {
         error: () => t('workspace.devicesForm.validation.modeRequired'),
       }),
       name: z

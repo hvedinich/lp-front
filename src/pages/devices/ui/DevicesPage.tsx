@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useDevices } from '@/entities/device';
 import { useLocationSelection } from '@/features/location-selection';
 import { EmptyState } from '@/shared/ui';
-import { useDeviceQueryErrorToast } from '../model/useDeviceQueryErrorToast';
-import { useDevicesListState } from '../model/useDevicesListState';
+import { useDeviceQueryErrorToast } from '../lib/useDeviceQueryErrorToast';
+import { useDevicesListState } from '../lib/useDevicesListState';
 import { DevicesList } from './DevicesList';
 
 export default function DevicesPage() {

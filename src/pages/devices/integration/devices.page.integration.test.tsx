@@ -37,7 +37,7 @@ vi.mock('@/features/location-selection', () => ({
   useLocationSelection,
 }));
 
-vi.mock('../model/useDeviceQueryErrorToast', () => ({
+vi.mock('../lib/useDeviceQueryErrorToast', () => ({
   useDeviceQueryErrorToast,
 }));
 

@@ -1,15 +1,14 @@
-import type { ListQueryParams } from '@/shared/lib';
-
-export type DeviceMode = 'static' | 'multilink';
+import type { DeviceModeEnum, ListQueryParams } from '@/shared/lib';
+import { DeviceStatus } from '../model/types';
 
 export interface DeviceDto {
   id: string;
   shortCode: string;
-  locale: string | null;
+  locale: string;
   type: string | null;
   connectedAt: string | null;
-  status: string;
-  mode: DeviceMode | null;
+  status: DeviceStatus;
+  mode: DeviceModeEnum | null;
   targetUrl: string | null;
   accountId: string;
   locationId: string;
@@ -20,7 +19,7 @@ export interface DeviceDto {
 
 interface DeviceLifecycleDtoRequest {
   locationId: string;
-  mode: DeviceMode;
+  mode: DeviceModeEnum;
   locale?: string | null;
   name?: string | null;
   singleLinkUrl?: string | null;

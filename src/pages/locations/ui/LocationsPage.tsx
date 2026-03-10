@@ -6,7 +6,7 @@ import { useHasActiveSession } from '@/entities/auth';
 import { AppIcon, EmptyState } from '@/shared/ui';
 import { useLocationActions, useLocations } from '@/entities/location';
 import { canManageLocationsRole } from '../lib/locationPermissions';
-import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
+import { useLocationQueryErrorToast } from '../lib/useLocationQueryErrorToast';
 import { LocationsList } from './LocationsList';
 
 export default function LocationsPage() {

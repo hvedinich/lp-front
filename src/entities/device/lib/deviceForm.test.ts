@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   deviceFormDefaultValues,
-  mapActivateDeviceFormValues,
   mapConfigureDeviceFormValues,
   mapDeviceToFormValues,
-} from './deviceForm';
+} from './device.mapper';
+import { DeviceModeEnum } from '@/shared/lib';
 
 describe('deviceForm', () => {
   it('provides stable default values', () => {
     expect(deviceFormDefaultValues).toEqual({
       locale: '',
-      mode: 'multilink',
+      mode: DeviceModeEnum.SINGLE,
       name: '',
       singleLinkUrl: '',
       type: '',
@@ -26,7 +26,7 @@ describe('deviceForm', () => {
         id: 'dev-1',
         locale: 'en',
         locationId: 'loc-1',
-        mode: 'static',
+        mode: DeviceModeEnum.SINGLE,
         name: 'Lobby',
         shortCode: 'ABCD-1234',
         status: 'active',
@@ -36,7 +36,7 @@ describe('deviceForm', () => {
       }),
     ).toEqual({
       locale: 'en',
-      mode: 'static',
+      mode: DeviceModeEnum.SINGLE,
       name: 'Lobby',
       singleLinkUrl: 'https://example.com',
       type: 'tablet',
@@ -46,16 +46,16 @@ describe('deviceForm', () => {
   it('maps activate/configure form values to lifecycle payloads', () => {
     const values = {
       locale: ' en ',
-      mode: 'static' as const,
+      mode: DeviceModeEnum.SINGLE,
       name: ' Lobby ',
       singleLinkUrl: ' https://example.com ',
       type: ' tablet ',
     };
 
-    expect(mapActivateDeviceFormValues(values, 'loc-1')).toEqual({
+    expect(mapConfigureDeviceFormValues(values, 'loc-1')).toEqual({
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'static',
+      mode: DeviceModeEnum.SINGLE,
       name: 'Lobby',
       singleLinkUrl: 'https://example.com',
       type: 'tablet',
@@ -65,7 +65,7 @@ describe('deviceForm', () => {
       mapConfigureDeviceFormValues(
         {
           ...values,
-          mode: 'multilink',
+          mode: DeviceModeEnum.MULTI,
           singleLinkUrl: '',
         },
         'loc-1',
@@ -73,7 +73,7 @@ describe('deviceForm', () => {
     ).toEqual({
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'multilink',
+      mode: DeviceModeEnum.MULTI,
       name: 'Lobby',
       singleLinkUrl: null,
       type: 'tablet',
