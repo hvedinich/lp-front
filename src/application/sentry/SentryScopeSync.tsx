@@ -1,3 +1,5 @@
+'use client';
+
 import { setContext, setTag, setUser } from '@sentry/core';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef } from 'react';
