@@ -29,7 +29,6 @@ export const DEFAULT_VALUES = {
     location: null,
     fieldData: null,
   },
-  googlePlace: null,
   links: [{ type: 'google', url: '' } satisfies PlatformLink],
   isNotify: false,
   isConsent: false,

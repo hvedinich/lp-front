@@ -295,6 +295,7 @@
       "urlInvalid": "Введите корректный URL",
       "urlPlatformInvalid": "Введите корректный URL для {{platform}}",
       "emailInvalid": "Введите корректный email",
+      "requiredField": "Поле не может быть пустым",
       "nameMin": "Имя должно содержать минимум 2 символа",
       "passwordMin": "Пароль должен содержать минимум 8 символов",
       "passwordsMismatch": "Пароли не совпадают"

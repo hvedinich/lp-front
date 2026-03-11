@@ -93,18 +93,18 @@ const AutocompleteField = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleInputChange = (value: string) => {
-    onChange(value);
+  const handleInputChange = (input: string) => {
+    onChange({ value: value || '', label: input });
     setIsClosed(false);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    if (value.length < minChars) {
+    if (input.length < minChars) {
       return;
     }
 
     debounceRef.current = setTimeout(() => {
-      onSearch?.(value);
+      onSearch?.(input);
     }, debounceMs);
   };
 
@@ -172,13 +172,7 @@ const AutocompleteField = ({
             {options.map((option) => (
               <Box
                 key={option.value}
-                px='4'
-                py='3'
-                cursor='button'
-                _hover={{ bg: 'gray.50' }}
-                borderBottomWidth='thin'
-                borderColor='gray.100'
-                _last={{ borderBottomWidth: 'none' }}
+                layerStyle='option'
                 onClick={() => handleSelect(option)}
               >
                 <Text

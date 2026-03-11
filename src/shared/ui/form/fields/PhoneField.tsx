@@ -134,7 +134,7 @@ const PhoneField = <
           flex={1}
           borderTopLeftRadius='none'
           borderBottomLeftRadius='none'
-          borderLeft='[none]'
+          borderLeftWidth='none'
         />
       </Flex>
 
