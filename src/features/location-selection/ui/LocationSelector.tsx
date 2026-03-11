@@ -141,12 +141,16 @@ export const LocationSelector = ({
         </Combobox.Control>
 
         <Combobox.Positioner>
-          <Combobox.Content maxH='40'>
+          <Combobox.Content
+            maxH='40'
+            borderRadius='2xl'
+          >
             <Combobox.Empty>{t('workspace.locationSelector.noMatch')}</Combobox.Empty>
             {locationOptions.map((option) => (
               <Combobox.Item
                 key={option.value}
                 item={option}
+                borderRadius='2xl'
                 data-testid={`location-selector-option-${option.value}`}
               >
                 <Combobox.ItemText>{option.label}</Combobox.ItemText>

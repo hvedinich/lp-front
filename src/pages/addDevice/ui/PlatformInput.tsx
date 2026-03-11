@@ -59,7 +59,7 @@ const PlatformInput = ({ index, platform, onRemove, onUpdate }: PlatformInputPro
 
       {isGoogle ? (
         <GooglePlacesField
-          rules={{ required: 'Error' }}
+          rules={{ required: t('addDevice.validation.requiredField') }}
           isRequired
           name='googleLocation.fieldData'
           region={device.locale}

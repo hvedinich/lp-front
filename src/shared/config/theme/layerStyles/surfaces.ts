@@ -10,6 +10,8 @@
  *   - Set bg.surface → bg.subtle (tinted background)
  */
 
+import { defineLayerStyles, LayerStyle, Token } from '@chakra-ui/react';
+
 export const layerStyles = {
   /**
    * card — standard card container.
@@ -47,5 +49,17 @@ export const layerStyles = {
    */
   subtle: {
     bg: 'bg.subtle',
+  },
+
+  option: {
+    value: {
+      cursor: 'button',
+      borderBottomWidth: 'thin',
+      borderColor: 'gray.100',
+      px: '4',
+      py: '3',
+      _hover: { bg: 'gray.50' },
+      _last: { borderBottomWidth: '0' },
+    },
   },
 } as const;

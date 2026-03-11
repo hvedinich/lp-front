@@ -11,5 +11,5 @@ export const deviceQueryKeys = {
     ['devices', 'account', accountId, 'list', normalizeParams(params)] as const,
   items: (accountId: string) => ['devices', 'account', accountId, 'item'] as const,
   item: (accountId: string, id: string) => ['devices', 'account', accountId, 'item', id] as const,
-  public: (shortCode: string) => ['devices', 'account', shortCode] as const,
+  public: (shortCode: string) => ['devices', 'public', shortCode] as const,
 } as const;

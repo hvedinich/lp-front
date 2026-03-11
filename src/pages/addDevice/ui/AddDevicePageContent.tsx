@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { AuthPageLayout } from '@/widgets/authLayout';
 import { useSubmitOnboarding } from '../lib/useSubmitOnboarding';
 import { buildLoginRedirect } from '@/shared/config';
+import { useZodForm } from '@/shared/lib';
 import type { OnboardingFormValues, OnboardingStep } from '../model/types';
+import { createAddDeviceSchema } from '../model/schema';
 import { EmailConflictNotification } from './EmailConflictNotification';
 import LocationStep from './LocationStep';
 import ModeStep from './ModeStep';
@@ -30,13 +33,17 @@ export default function AddDevicePageContent({ defaultValues, isAuth }: AddDevic
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const currentStep = steps[currentStepIndex];
 
-  const methods = useForm<OnboardingFormValues>({
+  const { t } = useTranslation('common');
+  const schema = useMemo(() => createAddDeviceSchema(t), [t]);
+
+  const methods = useZodForm<OnboardingFormValues>({
+    schema,
     defaultValues,
     mode: 'onBlur',
   });
 
   const onComplete = async () => {
-    const updatedUrl = `add-device?id=${shortCode}&success=true`;
+    const updatedUrl = `/add-device?id=${shortCode}&success=true`;
     await router.replace(updatedUrl);
     setCurrentStepIndex(steps.indexOf('success'));
   };

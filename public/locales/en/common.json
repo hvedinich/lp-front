@@ -295,6 +295,7 @@
       "urlInvalid": "Enter a valid URL",
       "urlPlatformInvalid": "Enter a valid {{platform}} URL",
       "emailInvalid": "Enter a valid email",
+      "requiredField": "The field cannot be empty",
       "nameMin": "Name must be at least 2 characters",
       "passwordMin": "Password must be at least 8 characters",
       "passwordsMismatch": "Passwords do not match"
