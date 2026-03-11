@@ -177,7 +177,7 @@ Initialize Sentry correctly in all supported runtimes while keeping runtime conf
 
 ## Phase 3. Pages Router Error Capture Wiring
 
-Status: pending
+Status: completed
 
 ### Goal
 
@@ -214,7 +214,7 @@ Capture Pages Router errors using the current Sentry-recommended hooks without a
 
 ## Phase 4. Tests And Static Verification
 
-Status: pending
+Status: completed
 
 ### Goal
 

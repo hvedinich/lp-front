@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 export async function register() {
   // Next.js invokes this hook per runtime, so keep imports runtime-specific.
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -8,3 +10,5 @@ export async function register() {
     await import('./sentry.edge.config');
   }
 }
+
+export const onRequestError = Sentry.captureRequestError;
