@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import { getBrowserSentryRuntimeOptions } from '@/shared/config/sentry';
+import { getBrowserSentryRuntimeOptions } from '@/application/sentry';
 
 // Next.js loads this file automatically for the browser runtime.
 const sentryOptions = getBrowserSentryRuntimeOptions();

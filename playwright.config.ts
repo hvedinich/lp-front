@@ -1,15 +1,15 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { env } from './src/shared/config/env';
+import { testEnv } from './e2e/support/config/env';
 import { isLocalUrl, resolveE2EBaseUrl } from './e2e/support/helpers/base-url';
 
-const runningInCi = env.playwright.isCi;
-const debugArtifactsEnabled = env.playwright.debugArtifacts;
+const runningInCi = testEnv.playwright.isCi;
+const debugArtifactsEnabled = testEnv.playwright.debugArtifacts;
 const e2eLane = process.env.PLAYWRIGHT_E2E_LANE ?? 'all';
 const baseURL = resolveE2EBaseUrl();
 const localWorkersDefault = 2;
 const ciWorkersDefault = 4;
-const localWorkers = env.playwright.workers ?? localWorkersDefault;
+const localWorkers = testEnv.playwright.workers ?? localWorkersDefault;
 const authSpecPattern = /.*\/auth\/.*\.spec\.ts/;
 const workerCount = e2eLane === 'auth' ? 1 : runningInCi ? ciWorkersDefault : localWorkers;
 const outputDir =
@@ -35,9 +35,9 @@ if (runningInCi && isLocalUrl(baseURL)) {
   );
 }
 
-const apiUrl = env.app.apiUrl;
+const apiUrl = testEnv.app.apiUrl;
 const webServerEnv = {
-  PORT: String(env.app.port),
+  PORT: String(testEnv.app.port),
   NEXT_PUBLIC_API_URL: apiUrl,
 } satisfies Record<string, string>;
 

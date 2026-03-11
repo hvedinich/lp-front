@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { env } from '../../../src/shared/config/env';
+import { testEnv } from '../config/env';
 import { resolveE2EBaseUrl } from './base-url';
 
 const normalizeBaseUrl = (value: string): string => value.replace(/\/$/, '');
@@ -13,7 +13,7 @@ const getRequestOrigin = (value: string): string | null => {
 };
 
 const appOrigin = getRequestOrigin(resolveE2EBaseUrl());
-const apiBaseUrl = normalizeBaseUrl(env.app.apiUrl);
+const apiBaseUrl = normalizeBaseUrl(testEnv.app.apiUrl);
 const apiOrigin = getRequestOrigin(apiBaseUrl);
 const useSameOriginApi = appOrigin !== null && apiOrigin !== null && appOrigin === apiOrigin;
 

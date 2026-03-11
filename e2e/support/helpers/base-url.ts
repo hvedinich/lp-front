@@ -1,4 +1,4 @@
-import { env } from '../../../src/shared/config/env';
+import { testEnv } from '../config/env';
 
 const normalizeBaseUrl = (value: string): string => value.trim().replace(/\/$/, '');
 
@@ -15,7 +15,7 @@ export const resolveE2EBaseUrl = (): string => {
   const explicitBaseUrl = process.env.PLAYWRIGHT_BASE_URL;
 
   if (!explicitBaseUrl) {
-    return env.app.url;
+    return testEnv.app.url;
   }
 
   try {

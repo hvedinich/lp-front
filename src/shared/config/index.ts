@@ -2,9 +2,6 @@ export { appLanguages, getPreferredLanguage, setAppLanguage, type AppLanguage } 
 export { buildLoginRedirect, isPublicRoute, publicRoutes } from './routes';
 export {
   buildSentryRelease,
-  getBrowserSentryRuntimeOptions,
-  getEdgeSentryRuntimeOptions,
-  getServerSentryRuntimeOptions,
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
   type SentryEnvironment,

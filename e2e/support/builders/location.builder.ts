@@ -1,6 +1,6 @@
-import { env } from '../../../src/shared/config/env';
+import { testEnv } from '../config/env';
 
-const TEST_LOCATION_PREFIX = env.playwright.locationPrefix;
+const TEST_LOCATION_PREFIX = testEnv.playwright.locationPrefix;
 
 export const buildLocationSeedNames = (testPrefix: string) => {
   const token = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;

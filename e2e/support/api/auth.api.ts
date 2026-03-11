@@ -1,6 +1,6 @@
 import type { APIRequestContext, Page } from '@playwright/test';
 import { createHash, randomBytes } from 'node:crypto';
-import { env } from '../../../src/shared/config/env';
+import { testEnv } from '../config/env';
 import type { AuthCredentials, BrowserResponse, SessionPayload } from '../contracts/backend.types';
 import { fillLoginForm, openLoginPage } from '../helpers/auth-screen';
 import { trackE2EUser, untrackE2EUser } from './auth-registry';
@@ -66,8 +66,8 @@ interface CleanupOptions {
 }
 
 export const getE2ECredentials = (): AuthCredentials => ({
-  email: env.playwright.e2eEmail,
-  password: env.playwright.e2ePassword,
+  email: testEnv.playwright.e2eEmail,
+  password: testEnv.playwright.e2ePassword,
 });
 
 const LOCAL_RUN_SCOPE = randomBytes(6).toString('hex');
@@ -87,7 +87,7 @@ const resolveE2EUserScope = (): string => {
     return explicitScope;
   }
 
-  return env.playwright.isCi ? '' : LOCAL_RUN_SCOPE;
+  return testEnv.playwright.isCi ? '' : LOCAL_RUN_SCOPE;
 };
 
 const toCredentialKey = (scope: string, workerIndex: number): string => {

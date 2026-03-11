@@ -1,36 +1,15 @@
 import type { SentryBuildOptions } from '@sentry/nextjs';
+import { resolveBuildEnv } from '../../src/shared/config/env/build';
+import { normalizeOptionalString } from '../../src/shared/config/env/shared';
 import {
   buildSentryRelease,
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
 } from '../../src/shared/config/sentry';
-
-type SentryBuildEnv = Partial<
-  Record<
-    | 'CI'
-    | 'GIT_COMMIT_SHA'
-    | 'NEXT_PUBLIC_SENTRY_ENABLED'
-    | 'NEXT_PUBLIC_SENTRY_ENV'
-    | 'SENTRY_AUTH_TOKEN'
-    | 'SENTRY_ORG'
-    | 'SENTRY_PROJECT'
-    | 'SENTRY_RELEASE_SHA'
-    | 'VERCEL_GIT_COMMIT_SHA',
-    string | undefined
-  >
->;
-
-const normalizeEnvString = (value: string | undefined): string | undefined => {
-  if (!value) {
-    return undefined;
-  }
-
-  const normalized = value.trim();
-  return normalized === '' ? undefined : normalized;
-};
+import type { BuildEnv } from '../../src/shared/config/env/build';
 
 const isCi = (value: string | undefined): boolean => {
-  const normalized = normalizeEnvString(value)?.toLowerCase();
+  const normalized = normalizeOptionalString(value)?.toLowerCase();
 
   if (!normalized) {
     return false;
@@ -40,8 +19,9 @@ const isCi = (value: string | undefined): boolean => {
 };
 
 export const getSentryBuildOptions = (
-  env: SentryBuildEnv = process.env as SentryBuildEnv,
+  source: Record<string, unknown> = process.env as Record<string, unknown>,
 ): SentryBuildOptions => {
+  const env = resolveBuildEnv(source) as BuildEnv;
   const runtimeMode = resolveSentryRuntimeMode({
     enabled: env.NEXT_PUBLIC_SENTRY_ENABLED,
     environment: env.NEXT_PUBLIC_SENTRY_ENV,
@@ -61,9 +41,9 @@ export const getSentryBuildOptions = (
     };
   }
 
-  const authToken = normalizeEnvString(env.SENTRY_AUTH_TOKEN);
-  const org = normalizeEnvString(env.SENTRY_ORG);
-  const project = normalizeEnvString(env.SENTRY_PROJECT);
+  const authToken = normalizeOptionalString(env.SENTRY_AUTH_TOKEN);
+  const org = normalizeOptionalString(env.SENTRY_ORG);
+  const project = normalizeOptionalString(env.SENTRY_PROJECT);
   const gitSha = resolveSentryReleaseSha(env);
 
   // Build-time release must match runtime release so uploaded artifacts and events cannot drift.

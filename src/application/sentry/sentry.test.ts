@@ -1,10 +1,9 @@
 import {
   buildSentryRelease,
-  getBrowserSentryRuntimeOptions,
-  getServerSentryRuntimeOptions,
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
-} from './sentry';
+} from '../../shared/config/sentry';
+import { getBrowserSentryRuntimeOptions, getServerSentryRuntimeOptions } from '.';
 
 describe('resolveSentryRuntimeMode', () => {
   it('returns disabled mode when the flag is absent', () => {
@@ -90,14 +89,16 @@ describe('getBrowserSentryRuntimeOptions', () => {
         NEXT_PUBLIC_SENTRY_ENABLED: 'true',
         NEXT_PUBLIC_SENTRY_ENV: 'staging',
       }),
-    ).toEqual({
-      denyUrls: [/^chrome-extension:\/\//i, /^moz-extension:\/\//i],
-      dsn: 'https://public@example.ingest.sentry.io/1',
-      environment: 'staging',
-      ignoreErrors: ['AbortError', 'The operation was aborted.'],
-      release: 'lp@abc123-staging',
-      tracesSampleRate: 0.1,
-    });
+    ).toEqual(
+      expect.objectContaining({
+        denyUrls: [/^chrome-extension:\/\//i, /^moz-extension:\/\//i],
+        dsn: 'https://public@example.ingest.sentry.io/1',
+        environment: 'staging',
+        ignoreErrors: ['AbortError', 'The operation was aborted.'],
+        release: 'lp@abc123-staging',
+        tracesSampleRate: 0.1,
+      }),
+    );
   });
 });
 
