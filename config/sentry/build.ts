@@ -3,7 +3,7 @@ import {
   buildSentryRelease,
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
-} from '../../src/shared/config';
+} from '../../src/shared/config/sentry';
 
 type SentryBuildEnv = Partial<
   Record<

@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import { getEdgeSentryRuntimeOptions } from '@/shared/config';
+import { getEdgeSentryRuntimeOptions } from './src/shared/config/sentry';
 
 // Next.js loads this file from instrumentation.ts for the edge runtime.
 const sentryOptions = getEdgeSentryRuntimeOptions();

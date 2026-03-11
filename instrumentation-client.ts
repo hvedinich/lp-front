@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import { getBrowserSentryRuntimeOptions } from '@/shared/config';
+import { getBrowserSentryRuntimeOptions } from '@/shared/config/sentry';
 
 // Next.js loads this file automatically for the browser runtime.
 const sentryOptions = getBrowserSentryRuntimeOptions();
@@ -7,3 +7,5 @@ const sentryOptions = getBrowserSentryRuntimeOptions();
 if (sentryOptions) {
   Sentry.init(sentryOptions);
 }
+
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
