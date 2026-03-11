@@ -152,6 +152,39 @@
         "typeMax": "Type must be at most 80 characters",
         "singleLinkUrlRequired": "Single link URL is required for static mode"
       }
+    },
+    "surveysPage": {
+      "sentryLab": {
+        "title": "Sentry manual verification lab",
+        "description": "Use this temporary panel to generate controlled Sentry events from the browser, node API, edge API, and SSR flows.",
+        "warning": "Each action below is expected to create an error event. Use it only in preview or staging-like environments.",
+        "lastAction": "Last triggered scenario",
+        "idleState": "No test action triggered yet.",
+        "groups": {
+          "clientTitle": "Client-side scenarios",
+          "clientDescription": "Use these buttons to test browser capture, unhandled exceptions, and render failures.",
+          "serverTitle": "Server-side scenarios",
+          "serverDescription": "Use these buttons to trigger node API, edge API, or SSR failures through the current Pages Router app."
+        },
+        "actions": {
+          "clientCapture": "Client captureException",
+          "clientUnhandled": "Client unhandled error",
+          "clientRender": "Client render error",
+          "nodeCapture": "Node API captureException",
+          "nodeThrow": "Node API throw",
+          "edgeCapture": "Edge API captureException",
+          "edgeThrow": "Edge API throw",
+          "ssrThrow": "SSR throw"
+        },
+        "notifications": {
+          "clientCaptureTitle": "Client event queued",
+          "clientCaptureDescription": "Check Sentry Issues for the captured browser exception.",
+          "clientUnhandledTitle": "Unhandled client error scheduled",
+          "clientUnhandledDescription": "The page will throw on the next tick so Sentry can capture an unhandled browser exception.",
+          "serverTriggerTitle": "Server trigger sent",
+          "serverTriggerDescription": "Check Sentry for the matching node, edge, or SSR event after this request finishes."
+        }
+      }
     }
   },
   "theme": {

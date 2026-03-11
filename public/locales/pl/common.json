@@ -152,6 +152,39 @@
         "typeMax": "Typ może mieć maksymalnie 80 znaków",
         "singleLinkUrlRequired": "Dla trybu statycznego wymagany jest Single link URL"
       }
+    },
+    "surveysPage": {
+      "sentryLab": {
+        "title": "Panel ręcznej weryfikacji Sentry",
+        "description": "Użyj tego tymczasowego panelu, aby generować kontrolowane zdarzenia Sentry z przeglądarki, node API, edge API i scenariuszy SSR.",
+        "warning": "Każda akcja poniżej powinna utworzyć zdarzenie błędu. Używaj panelu tylko w preview lub środowiskach podobnych do staging.",
+        "lastAction": "Ostatnio uruchomiony scenariusz",
+        "idleState": "Nie uruchomiono jeszcze żadnego scenariusza testowego.",
+        "groups": {
+          "clientTitle": "Scenariusze po stronie klienta",
+          "clientDescription": "Te przyciski testują browser capture, nieobsłużone wyjątki oraz błędy renderowania.",
+          "serverTitle": "Scenariusze po stronie serwera",
+          "serverDescription": "Te przyciski wywołują błędy node API, edge API albo SSR w bieżącej aplikacji Pages Router."
+        },
+        "actions": {
+          "clientCapture": "Client captureException",
+          "clientUnhandled": "Client unhandled error",
+          "clientRender": "Client render error",
+          "nodeCapture": "Node API captureException",
+          "nodeThrow": "Node API throw",
+          "edgeCapture": "Edge API captureException",
+          "edgeThrow": "Edge API throw",
+          "ssrThrow": "SSR throw"
+        },
+        "notifications": {
+          "clientCaptureTitle": "Zdarzenie klienta zostało wysłane",
+          "clientCaptureDescription": "Sprawdź Sentry Issues pod kątem przechwyconego wyjątku przeglądarki.",
+          "clientUnhandledTitle": "Zaplanowano nieobsłużony błąd klienta",
+          "clientUnhandledDescription": "Na następnym ticku strona rzuci błąd, aby Sentry mogło przechwycić nieobsłużony wyjątek przeglądarki.",
+          "serverTriggerTitle": "Wyzwalacz serwerowy został wysłany",
+          "serverTriggerDescription": "Po zakończeniu żądania sprawdź w Sentry zdarzenie node, edge lub SSR."
+        }
+      }
     }
   },
   "theme": {
