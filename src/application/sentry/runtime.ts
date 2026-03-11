@@ -19,6 +19,33 @@ type SentryRuntimeOptions = {
   tracesSampleRate: number;
 };
 
+type SentryRuntimeLogContext = {
+  hasDsn: boolean;
+  hasReleaseSha: boolean;
+  nextPublicEnabled: string | null;
+  nextPublicEnv: string | null;
+  tracesSampleRate: string | null;
+};
+
+const logSentryRuntimeDebug = (
+  runtime: 'browser' | 'server' | 'edge',
+  stage: 'env' | 'options',
+  payload: Record<string, unknown>,
+): void => {
+  console.info(`[SENTRY_DEBUG][${runtime}][${stage}]`, payload);
+};
+
+const buildRuntimeLogContext = (
+  env: BrowserSentryRuntimeEnv | ServerSentryRuntimeEnv,
+  dsn: string | undefined,
+): SentryRuntimeLogContext => ({
+  hasDsn: Boolean(dsn),
+  hasReleaseSha: Boolean(resolveSentryReleaseSha(env)),
+  nextPublicEnabled: env.NEXT_PUBLIC_SENTRY_ENABLED ?? null,
+  nextPublicEnv: env.NEXT_PUBLIC_SENTRY_ENV ?? null,
+  tracesSampleRate: env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? null,
+});
+
 const parseSentryTracesSampleRate = (value: string | undefined): number => {
   if (!value) {
     return 0.1;
@@ -73,11 +100,20 @@ export const getBrowserSentryRuntimeOptions = (
   source: Record<string, unknown> = process.env as Record<string, unknown>,
 ) => {
   const env = resolveBrowserSentryRuntimeEnv(source);
+  logSentryRuntimeDebug('browser', 'env', buildRuntimeLogContext(env, env.NEXT_PUBLIC_SENTRY_DSN));
   const options = getEnabledSentryRuntimeOptions(env, env.NEXT_PUBLIC_SENTRY_DSN);
 
   if (!options) {
+    logSentryRuntimeDebug('browser', 'options', { enabled: false, reason: 'runtime-disabled' });
     return null;
   }
+
+  logSentryRuntimeDebug('browser', 'options', {
+    enabled: true,
+    environment: options.environment,
+    release: options.release,
+    tracesSampleRate: options.tracesSampleRate,
+  });
 
   return {
     ...options,
@@ -92,12 +128,42 @@ export const getServerSentryRuntimeOptions = (
   source: Record<string, unknown> = process.env as Record<string, unknown>,
 ) => {
   const env = resolveServerSentryRuntimeEnv(source);
-  return getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+  logSentryRuntimeDebug('server', 'env', buildRuntimeLogContext(env, env.SENTRY_DSN));
+  const options = getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+
+  if (!options) {
+    logSentryRuntimeDebug('server', 'options', { enabled: false, reason: 'runtime-disabled' });
+    return null;
+  }
+
+  logSentryRuntimeDebug('server', 'options', {
+    enabled: true,
+    environment: options.environment,
+    release: options.release,
+    tracesSampleRate: options.tracesSampleRate,
+  });
+
+  return options;
 };
 
 export const getEdgeSentryRuntimeOptions = (
   source: Record<string, unknown> = process.env as Record<string, unknown>,
 ) => {
   const env = resolveServerSentryRuntimeEnv(source);
-  return getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+  logSentryRuntimeDebug('edge', 'env', buildRuntimeLogContext(env, env.SENTRY_DSN));
+  const options = getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+
+  if (!options) {
+    logSentryRuntimeDebug('edge', 'options', { enabled: false, reason: 'runtime-disabled' });
+    return null;
+  }
+
+  logSentryRuntimeDebug('edge', 'options', {
+    enabled: true,
+    environment: options.environment,
+    release: options.release,
+    tracesSampleRate: options.tracesSampleRate,
+  });
+
+  return options;
 };
