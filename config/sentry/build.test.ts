@@ -55,7 +55,7 @@ describe('getSentryBuildOptions', () => {
       org: 'org',
       project: 'project',
       release: {
-        name: 'lp@abc123-staging',
+        name: 'lp@staging-abc123',
       },
       silent: false,
     });
@@ -86,7 +86,7 @@ describe('getSentryBuildReleaseName', () => {
         NEXT_PUBLIC_SENTRY_ENABLED: 'true',
         NEXT_PUBLIC_SENTRY_ENV: 'staging',
       }),
-    ).toBe('lp@abc123-staging');
+    ).toBe('lp@staging-abc123');
   });
 
   it('returns undefined when Sentry is disabled', () => {

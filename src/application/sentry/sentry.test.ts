@@ -42,7 +42,7 @@ describe('resolveSentryRuntimeMode', () => {
 describe('buildSentryRelease', () => {
   it('builds a release name with the default app name', () => {
     expect(buildSentryRelease({ environment: 'production', gitSha: 'abc123' })).toBe(
-      'lp@abc123-production',
+      'lp@production-abc123',
     );
   });
 
@@ -95,7 +95,7 @@ describe('getBrowserSentryRuntimeOptions', () => {
         dsn: 'https://public@example.ingest.sentry.io/1',
         environment: 'staging',
         ignoreErrors: ['AbortError', 'The operation was aborted.'],
-        release: 'lp@abc123-staging',
+        release: 'lp@staging-abc123',
         tracesSampleRate: 0.1,
       }),
     );

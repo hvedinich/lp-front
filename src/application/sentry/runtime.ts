@@ -3,13 +3,13 @@ import {
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
   type SentryEnvironment,
-} from '../../shared/config/sentry';
+} from '@/shared/config/sentry';
 import {
   getBrowserSentryRuntimeEnv,
   getServerSentryRuntimeEnv,
   type BrowserSentryRuntimeEnv,
   type ServerSentryRuntimeEnv,
-} from '../../shared/config/env/sentry';
+} from '@/shared/config/env/sentry';
 import { beforeBrowserSentryBreadcrumb, beforeSendBrowserSentryEvent } from './browser-filtering';
 
 type SentryRuntimeOptions = {

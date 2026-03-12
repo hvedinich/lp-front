@@ -2,9 +2,11 @@ import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
 import { getSentryBuildOptions, getSentryBuildReleaseName } from './config/sentry/build';
 
+const sentryRelease = getSentryBuildReleaseName();
+
 const nextConfig: NextConfig = {
   env: {
-    NEXT_PUBLIC_SENTRY_RELEASE: getSentryBuildReleaseName(),
+    ...(sentryRelease ? { NEXT_PUBLIC_SENTRY_RELEASE: sentryRelease } : {}),
   },
 };
 

@@ -59,7 +59,7 @@ export const buildSentryRelease = ({
     throw new Error('[config] A git SHA is required to build the Sentry release name.');
   }
 
-  return `${appName}@${normalizedGitSha}-${environment}`;
+  return `${appName}@${environment}-${normalizedGitSha}`;
 };
 
 export const resolveSentryReleaseSha = (env: SentryReleaseEnv): string | undefined => {
