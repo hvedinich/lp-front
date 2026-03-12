@@ -44,6 +44,14 @@ Pick docs by task, not all at once:
 
 When rules conflict, prefer the most specific document for that task, while keeping architectural invariants from `docs/agents/architecture.md`.
 
+### 3a) Agent skills
+
+Reusable slash-command workflows live in `.github/skills/`. Invoke them when the task matches:
+
+| Task                                              | Skill                                        |
+| ------------------------------------------------- | -------------------------------------------- |
+| Distill human PR comments → Copilot policy update | `.github/skills/pr-comments-copilot-evolve/` |
+
 ### 3) Mandatory post-change quality gate
 
 After any code change, run exactly in this order:
