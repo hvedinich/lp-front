@@ -34,16 +34,7 @@ const PlatformCardsList = ({ title, platforms, togglePlatform }: PlatformCardsLi
             onClick={() => togglePlatform(platform)}
             cursor='button'
           >
-            <Flex
-              _hover={{ borderColor: 'brand.muted' }}
-              gap='2'
-              borderWidth='thin'
-              borderColor='border.muted'
-              borderRadius='2xl'
-              p='2'
-              bg='bg.input'
-              justifyContent='center'
-            >
+            <Flex layerStyle='focusBox'>
               <PlatformIcon boxSize={5} />
 
               <Text fontSize='sm'>{getPlatformLabel(platform)}</Text>

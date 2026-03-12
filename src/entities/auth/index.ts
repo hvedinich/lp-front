@@ -4,6 +4,7 @@ export { useHasActiveSession } from './model/useHasActiveSession';
 export { useLoginUser } from './model/useLoginUser';
 export { useRegisterUser } from './model/useRegisterUser';
 export { useOnboardDevice } from './model/useOnboardDevice';
+export type { OnboardDeviceError, OnboardDeviceErrorCode } from './model/errors';
 export type {
   AuthSession,
   AuthSessionPayload,

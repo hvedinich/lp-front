@@ -1,4 +1,4 @@
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum, toNullable } from '@/shared/lib';
 import type {
   ActivateDeviceDtoRequest,
   ConfigureDeviceDtoRequest,
@@ -19,11 +19,6 @@ export const deviceFormDefaultValues: DeviceFormValues = {
   name: '',
   singleLinkUrl: '',
   type: '',
-};
-
-const toNullable = (value: string) => {
-  const normalized = value.trim();
-  return normalized.length > 0 ? normalized : null;
 };
 
 const mapDeviceMode = (mode: DeviceModeEnum | null): DeviceModeEnum => {

@@ -1,15 +1,6 @@
-import {
-  Box,
-  Field,
-  Input,
-  InputGroup,
-  InputGroupProps,
-  InputProps,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
+import { Combobox, createListCollection, Field, InputProps, Spinner } from '@chakra-ui/react';
 import { SearchIcon } from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   useController,
   type FieldError,
@@ -44,7 +35,6 @@ export interface AutocompleteFieldProps<
   onSearch?: (query: string) => void;
   onSelect?: (option: AutocompleteOption) => void;
   id?: string;
-  invalid?: boolean;
   isRequired?: boolean;
   label?: ReactNode;
   helperText?: ReactNode;
@@ -52,9 +42,7 @@ export interface AutocompleteFieldProps<
   placeholder?: string;
   debounceMs?: number;
   minChars?: number;
-  startElement?: ReactNode;
   inputProps?: InputProps;
-  inputGroupProps?: Omit<InputGroupProps, 'children'>;
 }
 
 const AutocompleteField = ({
@@ -71,11 +59,10 @@ const AutocompleteField = ({
   minChars = 2,
   name,
   rules,
-  inputGroupProps,
   inputProps,
 }: AutocompleteFieldProps) => {
-  const [isClosed, setIsClosed] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
@@ -83,49 +70,35 @@ const AutocompleteField = ({
     fieldState: { invalid, error },
   } = useController({ name, rules });
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsClosed(true);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const collection = useMemo(() => createListCollection({ items: options }), [options]);
 
-  const handleInputChange = (input: string) => {
-    onChange({ value: value || '', label: input });
-    setIsClosed(false);
+  // While open show what the user typed; once closed show the selected label.
+  const inputValue = isOpen ? searchQuery : (value?.label ?? '');
+
+  const handleInputValueChange = ({ inputValue: query }: { inputValue: string }) => {
+    setSearchQuery(query);
+    onChange({ value: value?.value ?? '', label: query });
+
+    if (query.length < minChars) return;
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    if (input.length < minChars) {
-      return;
-    }
-
     debounceRef.current = setTimeout(() => {
-      onSearch?.(input);
+      onSearch?.(query);
     }, debounceMs);
   };
 
-  const handleSelect = (option: AutocompleteOption) => {
-    setIsClosed(true);
+  const handleValueChange = ({ value: selected }: { value: string[] }) => {
+    const option = options.find((o) => o.value === selected[0]);
+    if (!option) return;
     onChange(option);
     onSelect?.(option);
+    setSearchQuery('');
   };
 
-  const rightIcon = onSearch ? (
-    <SearchIcon
-      width='16'
-      height='16'
-    />
-  ) : (
-    <ArrowDownIcon
-      boxSize='5'
-      transition='common'
-      transform={`rotate(${isClosed ? '0deg' : '180deg'})`}
-    />
-  );
+  const handleOpenChange = ({ open }: { open: boolean }) => {
+    setIsOpen(open);
+    if (!open) setSearchQuery('');
+  };
 
   return (
     <Field.Root
@@ -134,58 +107,58 @@ const AutocompleteField = ({
       onClick={(e) => e.stopPropagation()}
     >
       {label ? <Field.Label htmlFor={id}>{label}</Field.Label> : null}
-      <Box
-        ref={containerRef}
-        position='relative'
+
+      <Combobox.Root
+        collection={collection}
+        value={value?.value ? [value.value] : []}
+        inputValue={inputValue}
+        open={isOpen}
+        onInputValueChange={handleInputValueChange}
+        onValueChange={handleValueChange}
+        onOpenChange={handleOpenChange}
+        closeOnSelect
+        openOnChange
+        variant='outline'
         w='full'
-        onClick={() => setIsClosed((prev) => !prev)}
       >
-        <InputGroup
-          endElement={isLoading ? <Spinner size='sm' /> : rightIcon}
-          {...inputGroupProps}
-        >
-          <Input
+        <Combobox.Control>
+          <Combobox.Input
             id={id}
             ref={ref}
-            value={value?.label}
-            onChange={(e) => handleInputChange(e.target.value)}
             placeholder={placeholder}
             w='full'
             {...inputProps}
           />
-        </InputGroup>
+          <Combobox.IndicatorGroup>
+            {isLoading ? (
+              <Spinner size='sm' />
+            ) : onSearch ? (
+              <SearchIcon
+                width='16'
+                height='16'
+              />
+            ) : (
+              <Combobox.Trigger>
+                <ArrowDownIcon boxSize='5' />
+              </Combobox.Trigger>
+            )}
+          </Combobox.IndicatorGroup>
+        </Combobox.Control>
 
-        {!isClosed && options.length > 0 && (
-          <Box
-            position='absolute'
-            w='full'
-            mt='1'
-            bg='white'
-            borderWidth='thin'
-            borderColor='gray.200'
-            borderRadius='2xl'
-            zIndex='dropdown'
-            shadow='md'
-            maxH='60'
-            overflowY='auto'
-          >
+        <Combobox.Positioner>
+          <Combobox.Content borderRadius='2xl'>
+            <Combobox.Empty />
             {options.map((option) => (
-              <Box
+              <Combobox.Item
                 key={option.value}
-                layerStyle='option'
-                onClick={() => handleSelect(option)}
+                item={option}
               >
-                <Text
-                  color={value.value === option.value ? 'fg.brand' : 'gray.900'}
-                  fontWeight='medium'
-                >
-                  {option.label}
-                </Text>
-              </Box>
+                <Combobox.ItemText>{option.label}</Combobox.ItemText>
+              </Combobox.Item>
             ))}
-          </Box>
-        )}
-      </Box>
+          </Combobox.Content>
+        </Combobox.Positioner>
+      </Combobox.Root>
 
       <FormFieldMeta
         error={error}

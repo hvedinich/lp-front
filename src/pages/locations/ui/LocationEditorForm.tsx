@@ -5,14 +5,16 @@ import {
   type Location,
   type UpdateLocationDtoRequest,
   type LocationFormValues,
-  createLocationSchema,
-  mapLocationToFormValues,
-  locationFormDefaultValues,
-  mapUpdateLocationFormValues,
 } from '@/entities/location';
 import { useZodForm } from '@/shared/lib';
 import { Form, FormControls, toaster } from '@/shared/ui';
 import { LocationFormFields } from './LocationFormFields';
+import { createLocationSchema } from '../lib/locationSchema';
+import {
+  locationFormDefaultValues,
+  mapLocationToFormValues,
+  mapUpdateLocationFormValues,
+} from '../lib/locationForm';
 
 type LocationEditorMode = 'create' | 'edit';
 

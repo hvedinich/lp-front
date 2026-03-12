@@ -218,8 +218,6 @@
     }
   },
   "addDevice": {
-    "next": "Dalej",
-    "back": "Wstecz",
     "notFound": {
       "title": "Urządzenie niedostępne",
       "description": "To urządzenie jest już podłączone lub nie istnieje."
@@ -245,7 +243,6 @@
     "platformLinks": {
       "title": "Gdzie chcesz zbierać opinie?",
       "existedLinksTitle": "Ta lokalizacja ma już stronę z recenzjami",
-      "remove": "Usuń",
       "urlPlaceholder": "https://...",
       "googleSearchPlaceholder": "Znajdź lokalizację do połączenia z urządzeniem",
       "reviews": "Dodaj linki do swoich platform",
@@ -282,14 +279,11 @@
       "testText": "Przetestuj swoje urządzenie",
       "testDescription": "Zeskanuj stojak, aby potwierdzić, że wszystko działa. To doda 1 skan do statystyk urządzenia",
       "testStep1": "Zeskanuj teraz stojak",
-      "testStep2": "Następnie kliknij „Zakończ”",
-      "finish": "Zakończ"
+      "testStep2": "Następnie kliknij „Zakończ”"
     },
     "emailConflict": {
       "title": "E-mail jest już używany",
-      "description": "Wygląda na to, że ten adres e-mail jest już powiązany z kontem. Aby dodać kolejne urządzenie, zaloguj się na swoje konto.",
-      "loginButton": "Zaloguj się",
-      "cancelButton": "Anuluj"
+      "description": "Wygląda na to, że ten adres e-mail jest już powiązany z kontem. Aby dodać kolejne urządzenie, zaloguj się na swoje konto."
     },
     "validation": {
       "urlInvalid": "Wprowadź poprawny URL",
@@ -322,7 +316,10 @@
     "cancel": "Anuluj",
     "back": "Wstecz",
     "delete": "Usuń",
-    "continue": "Kontynuuj"
+    "continue": "Kontynuuj",
+    "next": "Dalej",
+    "login": "Zaloguj się",
+    "finish": "Zakończ"
   },
   "commonFeedback": {
     "saved": "Zmiany zostały zapisane.",

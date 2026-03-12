@@ -4,7 +4,6 @@ import {
   type ActivateMultiDevicePayload,
   useDeviceActions,
 } from '@/entities/device';
-import { parseErrorMessage } from '@/shared/api';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
 import { OnboardingFormValues } from '../model/types';
@@ -42,7 +41,16 @@ export const useSubmitOnboarding = ({
 
   const [isEmailConflict, setIsEmailConflict] = useState(false);
 
-  const { mutateAsync: onboardDevice, isPending: isOnboarding } = useOnboardDevice();
+  const { mutateAsync: onboardDevice, isPending: isOnboarding } = useOnboardDevice({
+    options: {
+      onError: (err) => {
+        if (err.code === 'CONFLICT') {
+          setIsEmailConflict(true);
+        }
+      },
+    },
+    scope: {},
+  });
   const createLocationMutation = useCreateLocation({ scope: { accountId } });
 
   const { activateDevice, isActivatePending } = useDeviceActions({ accountId });
@@ -68,52 +76,45 @@ export const useSubmitOnboarding = ({
       },
     };
 
-    try {
-      if (isAuth) {
-        const locationId = isNewLocation
-          ? (await createLocationMutation.mutateAsync(locationPayload)).id
-          : currentLocationId;
+    if (isAuth) {
+      const locationId = isNewLocation
+        ? (await createLocationMutation.mutateAsync(locationPayload)).id
+        : currentLocationId;
 
-        const activateDevicePayload =
-          mode === DeviceModeEnum.SINGLE
-            ? ({
-                locationId,
-                targetMode: mode,
-                singleLinkUrl: formData.singleLinkUrl || links?.[0]?.url,
-              } as ActivateSingleDevicePayload)
-            : ({ locationId, targetMode: mode } as ActivateMultiDevicePayload);
+      const activateDevicePayload =
+        mode === DeviceModeEnum.SINGLE
+          ? ({
+              locationId,
+              targetMode: mode,
+              singleLinkUrl: formData.singleLinkUrl || links?.[0]?.url,
+            } as ActivateSingleDevicePayload)
+          : ({ locationId, targetMode: mode } as ActivateMultiDevicePayload);
 
-        await activateDevice({ deviceId: device.id }, activateDevicePayload);
-      } else {
-        const deviceName = getDeviceName(links[0]!.type, mode);
-        const onboardingDevicePayload =
-          mode === DeviceModeEnum.MULTI
-            ? ({ id: device.id, mode } as OnboardMultiDevicePayload)
-            : ({ id: device.id, mode, targetUrl: links?.[0]?.url } as OnboardSingleDevicePayload);
+      await activateDevice({ deviceId: device.id }, activateDevicePayload);
+    } else {
+      const deviceName = getDeviceName(links[0]!.type, mode);
+      const onboardingDevicePayload =
+        mode === DeviceModeEnum.MULTI
+          ? ({ id: device.id, mode } as OnboardMultiDevicePayload)
+          : ({ id: device.id, mode, targetUrl: links?.[0]?.url } as OnboardSingleDevicePayload);
 
-        await onboardDevice({
-          email: user.email,
+      await onboardDevice({
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        phone: user.phone,
+        account: {
           name: user.name,
-          password: user.password,
-          phone: user.phone,
-          account: {
-            name: user.name,
-            region: device.locale,
-            contentLanguage: device.locale,
-          },
-          location: locationPayload,
-          device: onboardingDevicePayload,
-          deviceName,
-        });
-      }
-
-      onComplete();
-    } catch (err) {
-      const parsedErr = parseErrorMessage(err);
-      if (parsedErr === 'Email already in use') {
-        setIsEmailConflict(true);
-      }
+          region: device.locale,
+          contentLanguage: device.locale,
+        },
+        location: locationPayload,
+        device: onboardingDevicePayload,
+        deviceName,
+      });
     }
+
+    onComplete();
   };
 
   return { onSubmit, isSubmitting, isEmailConflict };

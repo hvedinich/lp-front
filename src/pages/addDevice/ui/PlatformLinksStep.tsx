@@ -10,10 +10,10 @@ import { PlatformCard } from './PlatformCard';
 import { useHostedPage } from '@/entities/hostedPage';
 import PlatformCardsList from './PlatformCardsList';
 import { ContactPlatform, DeviceModeEnum, ReviewPlatform } from '@/shared/lib';
-import { ALL_PLATFORMS, REVIEW_PLATFORMS } from '@/shared/lib';
 import { useUiStore } from '@/shared/store';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useHasActiveSession } from '@/entities/auth';
+import { ALL_PLATFORMS, REVIEW_PLATFORMS } from '../lib/linkPlatform';
 
 const reviewSet = new Set<string>(REVIEW_PLATFORMS);
 interface PlatformLinksStepProps {
@@ -29,7 +29,7 @@ const PlatformLinksStep = ({ onNext, onBack }: PlatformLinksStepProps) => {
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const selectedLocationId = useUiStore(locationSelectionSelectors.selectedLocationId(accountId));
 
-  const hostedPageQuery = useHostedPage(selectedLocationId);
+  const hostedPageQuery = useHostedPage({ scope: { locationId: selectedLocationId } });
 
   const { mode, isNewLocation } = getValues();
   const isSingle = mode === DeviceModeEnum.SINGLE;

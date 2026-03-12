@@ -38,7 +38,7 @@ export function EmailConflictNotification({ loginUrl }: EmailConflictNotificatio
         w='full'
         onClick={() => void router.push(loginUrl)}
       >
-        {t('addDevice.emailConflict.loginButton')}
+        {t('commonActions.login')}
       </Button>
     </Stack>
   );

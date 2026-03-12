@@ -24,7 +24,7 @@ export function StepsButtons({ onBack, onNext, isDisabled, isSubmitting }: Steps
           disabled={isSubmitting}
           variant='outline'
         >
-          {t('addDevice.back')}
+          {t('commonActions.back')}
         </Button>
       )}
       <Button
@@ -34,7 +34,7 @@ export function StepsButtons({ onBack, onNext, isDisabled, isSubmitting }: Steps
         loading={isSubmitting}
         disabled={isDisabled}
       >
-        {t('addDevice.next')}
+        {t('commonActions.next')}
       </Button>
     </Flex>
   );

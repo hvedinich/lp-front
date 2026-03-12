@@ -4,7 +4,7 @@ import { OnboardingFormValues } from '../model/types';
 import { PLATFORM_ICON, PLATFORM_URL_PATTERNS } from '../lib/constants';
 import { Button, Flex, Text, Card } from '@chakra-ui/react';
 import { InputField } from '@/shared/ui';
-import { GooglePlacesField } from '@/entities/google';
+import { GooglePlacesField } from '@/features/google';
 import { getPlatformLabel } from '../lib/helpers';
 import { ContactPlatform } from '@/shared/lib';
 
@@ -53,7 +53,7 @@ const PlatformInput = ({ index, platform, onRemove, onUpdate }: PlatformInputPro
           colorPalette='red'
           onClick={onRemove}
         >
-          {t('addDevice.platformLinks.remove')}
+          {t('commonActions.delete')}
         </Button>
       </Flex>
 

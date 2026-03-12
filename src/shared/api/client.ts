@@ -48,9 +48,12 @@ client.setRefreshHandler(async () => {
 export const apiRequest = async <TResponse, TBody = unknown>(
   options: ApiRequestOptions<TBody>,
 ): Promise<TResponse> => {
+  const queryParams = new URLSearchParams(options?.params).toString();
+
   try {
     return await client.request<TResponse, TBody>({
       ...options,
+      path: queryParams ? `${options.path}?${queryParams}` : options.path,
       skipAuthRefresh: options.skipAuthRefresh ?? nonRefreshablePaths.has(options.path),
     });
   } catch (error) {
