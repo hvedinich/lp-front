@@ -13,6 +13,7 @@ Review against project rules in `AGENTS.md` — it routes to specific docs per t
 - `useQuery` / `useMutation` defined in pages, widgets, or shared; raw API usage outside entity/feature model; `invalidateQueries` outside entity/feature hooks; inline query keys; direct `fetch` outside `apiRequest()`
 - Custom query/mutation hooks that skip the shared `QueryHookOptions` / `MutationHookOptions` object contract
 - Repeated manual query-string assembly around `apiRequest()` when shared query support should be used instead
+- Cross-module imports that bypass an existing public barrel, or barrel changes that widen a module's public API only to expose one-off internals for tests, scripts, or local convenience
 - Direct `process.env.*` access instead of the shared env contract
 - Submit handlers that swallow errors instead of rethrowing, or branched flows that still validate inactive fields
 - Hardcoded validation messages, missing locale keys in any of `public/locales/{en,ru,pl}/common.json`, or duplicated generic copy instead of `commonActions.*` / `commonFeedback.*`
