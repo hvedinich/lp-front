@@ -152,39 +152,6 @@
         "typeMax": "Тип должен содержать не более 80 символов",
         "singleLinkUrlRequired": "Для статического режима требуется Single link URL"
       }
-    },
-    "surveysPage": {
-      "sentryLab": {
-        "title": "Лаборатория ручной проверки Sentry",
-        "description": "Используйте эту временную панель, чтобы генерировать контролируемые события Sentry из браузера, node API, edge API и SSR-сценариев.",
-        "warning": "Каждое действие ниже должно создать событие ошибки. Используйте панель только в preview или staging-подобных окружениях.",
-        "lastAction": "Последний запущенный сценарий",
-        "idleState": "Тестовые сценарии ещё не запускались.",
-        "groups": {
-          "clientTitle": "Клиентские сценарии",
-          "clientDescription": "Эти кнопки проверяют browser capture, необработанные исключения и ошибки рендера.",
-          "serverTitle": "Серверные сценарии",
-          "serverDescription": "Эти кнопки вызывают ошибки node API, edge API или SSR в текущем Pages Router приложении."
-        },
-        "actions": {
-          "clientCapture": "Client captureException",
-          "clientUnhandled": "Client unhandled error",
-          "clientRender": "Client render error",
-          "nodeCapture": "Node API captureException",
-          "nodeThrow": "Node API throw",
-          "edgeCapture": "Edge API captureException",
-          "edgeThrow": "Edge API throw",
-          "ssrThrow": "SSR throw"
-        },
-        "notifications": {
-          "clientCaptureTitle": "Клиентское событие отправлено",
-          "clientCaptureDescription": "Проверьте Sentry Issues на наличие зафиксированного browser exception.",
-          "clientUnhandledTitle": "Необработанная клиентская ошибка запланирована",
-          "clientUnhandledDescription": "На следующем тике страница выбросит ошибку, чтобы Sentry зафиксировал необработанное browser exception.",
-          "serverTriggerTitle": "Серверный trigger отправлен",
-          "serverTriggerDescription": "После завершения запроса проверьте Sentry на событие node, edge или SSR."
-        }
-      }
     }
   },
   "theme": {

@@ -1,4 +1,3 @@
-import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import { withMainLayout } from '@/widgets/mainLayout';
 import { PageSpinner } from '@/shared/ui';
@@ -9,13 +8,3 @@ export default withMainLayout(
     loading: () => <PageSpinner />,
   }),
 );
-
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  if (query.sentry === 'ssr-throw') {
-    throw new Error('Sentry manual SSR test error');
-  }
-
-  return {
-    props: {},
-  };
-};
