@@ -28,7 +28,6 @@
     "test:e2e:report": "playwright show-report",
     "test:e2e:ui": "playwright test --ui",
     "prepare": "husky",
-    "check-translations": "node scripts/check-translations.mjs",
     "pr:comments:export": "node scripts/export-pr-comments.mjs"
   },
   "dependencies": {
