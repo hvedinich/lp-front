@@ -27,7 +27,8 @@
     "test:e2e:debug": "PLAYWRIGHT_DEBUG_ARTIFACTS=1 node scripts/run-e2e.mjs --workers=1 --retries=0 --max-failures=1",
     "test:e2e:report": "playwright show-report",
     "test:e2e:ui": "playwright test --ui",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pr:comments:export": "node scripts/export-pr-comments.mjs"
   },
   "dependencies": {
     "@chakra-ui/react": "3.33.0",
