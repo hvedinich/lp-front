@@ -75,7 +75,7 @@ describe('useActivateDevice', () => {
     }) as unknown as {
       mutationFn: (input: {
         id: string;
-        input: { locationId: string; mode: DeviceModeEnum.SINGLE; singleLinkUrl: string };
+        input: { locationId: string; mode: DeviceModeEnum; singleLinkUrl: string };
         previousLocationId?: string | null;
       }) => Promise<{ locationId: string }>;
       onSuccess?: (...args: unknown[]) => void;
@@ -85,7 +85,7 @@ describe('useActivateDevice', () => {
       id: 'dev-1',
       input: {
         locationId: 'loc-2',
-        mode: DeviceModeEnum.SINGLE as const,
+        mode: DeviceModeEnum.SINGLE,
         singleLinkUrl: 'https://example.com',
       },
       previousLocationId: 'loc-1',
