@@ -29,7 +29,7 @@ Freeze the integration contract before touching runtime files so later phases do
 ### Scope
 
 - Confirm the integration target is Pages Router only.
-- Keep migration from [next.config.mjs](/Users/kuh_st/Code/localprof/lp-front/next.config.mjs) to `next.config.ts` as an explicit repository decision.
+- Keep migration from `next.config.mjs` to `next.config.ts` as an explicit repository decision.
 - Freeze env naming, release naming, runtime enablement rules, and v1 exclusions.
 
 ### Deliverables
@@ -56,7 +56,7 @@ Make `next build` upload sourcemaps correctly and ensure runtime events use the 
 ### Scope
 
 - Install `@sentry/nextjs`.
-- Migrate [next.config.mjs](/Users/kuh_st/Code/localprof/lp-front/next.config.mjs) to `next.config.ts`.
+- Migrate `next.config.mjs` to `next.config.ts`.
 - Wrap the Next config with `withSentryConfig(...)`.
 - Add build-only Sentry config outside `src`, for example in `config/sentry/build.ts`, with no barrel export.
 - Add pure shared helpers for release and build option derivation:
