@@ -277,10 +277,6 @@ i18n stack:
   - account language (when available)
   - local storage/browser language fallback
 
-Lint policy for untranslated UI text:
-
-- `react/jsx-no-literals` is enabled in `apps/lp/eslint.config.mjs`
-
 ## 15. Auth Routing
 
 Access policy:
