@@ -1,4 +1,4 @@
-import { ContactPlatform, ReviewPlatform } from './linkPlatformTypes';
+import { ContactPlatform, ReviewPlatform } from '@/shared/lib';
 
 export const REVIEW_PLATFORMS: ReviewPlatform[] = [
   'google',

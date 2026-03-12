@@ -10,8 +10,6 @@
  *   - Set bg.surface → bg.subtle (tinted background)
  */
 
-import { defineLayerStyles, LayerStyle, Token } from '@chakra-ui/react';
-
 export const layerStyles = {
   /**
    * card — standard card container.
@@ -60,6 +58,31 @@ export const layerStyles = {
       py: '3',
       _hover: { bg: 'gray.50' },
       _last: { borderBottomWidth: '0' },
+    },
+  },
+
+  emptyInput: {
+    value: {
+      bg: 'transparent',
+      cursor: 'button',
+      _hover: {
+        borderColor: 'border.default',
+        bg: 'bg.subtle',
+      },
+      borderColor: 'transparent',
+    },
+  },
+
+  focusBox: {
+    value: {
+      gap: '2',
+      borderWidth: 'thin',
+      borderColor: 'border.muted',
+      borderRadius: '2xl',
+      p: '2',
+      bg: 'bg.input',
+      justifyContent: 'center',
+      _hover: { borderColor: 'brand.muted' },
     },
   },
 } as const;

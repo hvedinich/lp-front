@@ -48,13 +48,7 @@ const LocationStep = ({ onNext }: LocationStepProps) => {
             onClick={(e) => e.preventDefault()}
             onLocationSelect={() => handleNext(false)}
             inputProps={{
-              bg: 'transparent',
-              cursor: 'button',
-              _hover: {
-                borderColor: 'border.default',
-                bg: 'bg.subtle',
-              },
-              borderColor: 'transparent',
+              layerStyle: 'emptyInput',
             }}
             controlProps={{ insetStart: '2' }}
           />

@@ -17,6 +17,10 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_LOCALES: z.preprocess(emptyStringToUndefined, z.string().default('en,pl,ru')),
   NEXT_PUBLIC_SITE_URL: z.preprocess(emptyStringToUndefined, z.url().optional()),
   NEXT_PUBLIC_VERCEL_URL: z.preprocess(emptyStringToUndefined, z.string().min(1).optional()),
+  NEXT_PUBLIC_LANDING_URL: z.preprocess(
+    emptyStringToUndefined,
+    z.string().default('https://localprof.com'),
+  ),
 });
 
 const runtimeEnvSchema = z.object({
@@ -99,6 +103,7 @@ const pub = parseOrThrow(publicEnvSchema, 'Invalid public environment variables'
   NEXT_PUBLIC_LOCALES: process.env.NEXT_PUBLIC_LOCALES,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+  NEXT_PUBLIC_LANDING_URL: process.env.NEXT_PUBLIC_LANDING_URL,
 });
 
 const runtime = parseOrThrow(
@@ -112,6 +117,7 @@ const ci = isCi(runtime.CI);
 const deploymentUrlCandidates = [
   ['NEXT_PUBLIC_SITE_URL', pub.NEXT_PUBLIC_SITE_URL],
   ['NEXT_PUBLIC_VERCEL_URL', pub.NEXT_PUBLIC_VERCEL_URL],
+  ['NEXT_PUBLIC_LANDING_URL', pub.NEXT_PUBLIC_LANDING_URL],
   ['VERCEL_URL', runtime.VERCEL_URL],
 ] as const;
 
@@ -121,6 +127,7 @@ export const env = {
     defaultLocale: pub.NEXT_PUBLIC_DEFAULT_LOCALE,
     locales: pub.NEXT_PUBLIC_LOCALES,
     port,
+    landingUrl: pub.NEXT_PUBLIC_LANDING_URL,
     url: deriveAppUrl(
       pub.NEXT_PUBLIC_SITE_URL,
       pub.NEXT_PUBLIC_VERCEL_URL,

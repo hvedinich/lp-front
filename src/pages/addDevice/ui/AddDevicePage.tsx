@@ -14,7 +14,7 @@ export default function AddDevicePage() {
   const shortCode = typeof router.query.id === 'string' ? router.query.id : undefined;
   const isSuccess = router?.query?.success === 'true';
 
-  const deviceQuery = usePublicDevice(shortCode);
+  const deviceQuery = usePublicDevice({ scope: { shortCode } });
   const sessionQuery = useHasActiveSession({ options: { enabled: router.isReady } });
   const accountId = sessionQuery.data?.payload?.account.id ?? '';
   const locationsQuery = useLocations({ scope: { accountId }, options: { enabled: true } });

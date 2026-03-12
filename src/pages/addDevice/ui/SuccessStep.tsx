@@ -98,7 +98,7 @@ const SuccessStep = ({ deviceId }: SuccessStepProps) => {
         w='full'
         onClick={() => void handleGoToDevice()}
       >
-        {t('addDevice.success.finish')}
+        {t('commonActions.finish')}
       </Button>
     </Stack>
   );

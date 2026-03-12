@@ -10,11 +10,5 @@ export type { Location, LocationFormValues } from './model/types';
 export { locationQueryKeys } from './model/queryKeys';
 export { useLocations } from './model/useLocations';
 export { useCreateLocation } from './model/useCreateLocation';
-export { createLocationSchema } from './lib/locationSchema';
 export { resolveLocationToastMessage } from './model/locationErrorUi';
-export {
-  mapLocationToFormValues,
-  mapUpdateLocationFormValues,
-  locationFormDefaultValues,
-} from './lib/location.mapper';
 export { useLocationActions } from './model/useLocationActions';
