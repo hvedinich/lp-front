@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { deriveAppUrl } from './app-url';
-import { emptyStringToUndefined, parseOrThrow } from './shared';
+import { emptyStringToUndefined, parseEnv } from './core';
 
 const publicEnvSchema = z.object({
   NEXT_PUBLIC_API_URL: z.preprocess(
@@ -15,24 +15,28 @@ const publicEnvSchema = z.object({
 
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
 
-const publicEnv = parseOrThrow(publicEnvSchema, 'Invalid public environment variables', {
+const publicEnvSource = {
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
   NEXT_PUBLIC_LOCALES: process.env.NEXT_PUBLIC_LOCALES,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+} satisfies Record<string, unknown>;
+
+export const envPublic = parseEnv({
+  label: 'Invalid public environment variables',
+  schema: publicEnvSchema,
+  source: publicEnvSource,
 });
 
-export const resolvePublicEnv = (): PublicEnv => publicEnv;
-
-export const env = {
+export const envApp = {
   app: {
-    apiUrl: publicEnv.NEXT_PUBLIC_API_URL,
-    defaultLocale: publicEnv.NEXT_PUBLIC_DEFAULT_LOCALE,
-    locales: publicEnv.NEXT_PUBLIC_LOCALES,
+    apiUrl: envPublic.NEXT_PUBLIC_API_URL,
+    defaultLocale: envPublic.NEXT_PUBLIC_DEFAULT_LOCALE,
+    locales: envPublic.NEXT_PUBLIC_LOCALES,
     url: deriveAppUrl({
-      explicitSiteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
-      publicVercelUrl: publicEnv.NEXT_PUBLIC_VERCEL_URL,
+      explicitSiteUrl: envPublic.NEXT_PUBLIC_SITE_URL,
+      publicVercelUrl: envPublic.NEXT_PUBLIC_VERCEL_URL,
     }),
   },
 } as const;

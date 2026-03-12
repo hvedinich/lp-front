@@ -1,4 +1,4 @@
-import { buildLoginRedirect, env } from '@/shared/config';
+import { buildLoginRedirect, envApp } from '@/shared/config';
 import { isApiError } from './ApiError';
 import { createApiClient } from './createApiClient';
 import type { ApiRequestOptions } from './types';
@@ -11,7 +11,7 @@ const nonRefreshablePaths = new Set<string>([
 ]);
 
 const client = createApiClient({
-  baseUrl: env.app.apiUrl,
+  baseUrl: envApp.app.apiUrl,
   defaultCredentials: 'include',
   defaultTimeoutMs: 15_000,
   shouldAttemptRefresh: (error, context) => {

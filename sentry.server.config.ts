@@ -5,15 +5,5 @@ import { getServerSentryRuntimeOptions } from './src/application/sentry';
 const sentryOptions = getServerSentryRuntimeOptions();
 
 if (sentryOptions) {
-  console.info('[SENTRY_DEBUG][server][init]', {
-    environment: sentryOptions.environment,
-    release: sentryOptions.release,
-    tracesSampleRate: sentryOptions.tracesSampleRate,
-  });
   Sentry.init(sentryOptions);
-} else {
-  console.info('[SENTRY_DEBUG][server][init]', {
-    enabled: false,
-    reason: 'no-runtime-options',
-  });
 }

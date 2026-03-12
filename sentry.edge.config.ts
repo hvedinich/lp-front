@@ -5,15 +5,5 @@ import { getEdgeSentryRuntimeOptions } from './src/application/sentry';
 const sentryOptions = getEdgeSentryRuntimeOptions();
 
 if (sentryOptions) {
-  console.info('[SENTRY_DEBUG][edge][init]', {
-    environment: sentryOptions.environment,
-    release: sentryOptions.release,
-    tracesSampleRate: sentryOptions.tracesSampleRate,
-  });
   Sentry.init(sentryOptions);
-} else {
-  console.info('[SENTRY_DEBUG][edge][init]', {
-    enabled: false,
-    reason: 'no-runtime-options',
-  });
 }

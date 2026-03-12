@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { deriveAppUrl } from './app-url';
-import { resolvePublicEnv } from './public';
-import { emptyStringToUndefined, parseOrThrow } from './shared';
+import { envPublic } from './public';
+import { emptyStringToUndefined, parseEnv } from './core';
 
 const serverRuntimeEnvSchema = z.object({
   CI: z.string().optional(),
@@ -14,33 +14,34 @@ const serverRuntimeEnvSchema = z.object({
 
 export type ServerRuntimeEnv = z.infer<typeof serverRuntimeEnvSchema>;
 
-export const resolveServerRuntimeEnv = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-): ServerRuntimeEnv =>
-  parseOrThrow(serverRuntimeEnvSchema, 'Invalid runtime environment variables', source);
+const parseServerRuntimeEnv = (source: Record<string, unknown>): ServerRuntimeEnv =>
+  parseEnv({
+    label: 'Invalid runtime environment variables',
+    schema: serverRuntimeEnvSchema,
+    source,
+  });
 
-export const resolveAppUrl = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-): string => {
-  const publicEnv = resolvePublicEnv();
-  const serverEnv = resolveServerRuntimeEnv(source);
+export const envServer = parseServerRuntimeEnv(process.env as Record<string, unknown>);
+
+const getServerRuntimeEnv = (source?: Record<string, unknown>): ServerRuntimeEnv =>
+  source ? parseServerRuntimeEnv(source) : envServer;
+
+export const resolveAppUrl = (source?: Record<string, unknown>): string => {
+  const serverEnv = getServerRuntimeEnv(source);
 
   return deriveAppUrl({
-    explicitSiteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
+    explicitSiteUrl: envPublic.NEXT_PUBLIC_SITE_URL,
     port: serverEnv.PORT,
-    publicVercelUrl: publicEnv.NEXT_PUBLIC_VERCEL_URL,
+    publicVercelUrl: envPublic.NEXT_PUBLIC_VERCEL_URL,
     runtimeVercelUrl: serverEnv.VERCEL_URL,
   });
 };
 
-export const resolveDeploymentAppUrl = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-): string => {
-  const publicEnv = resolvePublicEnv();
-  const serverEnv = resolveServerRuntimeEnv(source);
+export const resolveDeploymentAppUrl = (source?: Record<string, unknown>): string => {
+  const serverEnv = getServerRuntimeEnv(source);
   const deploymentUrlCandidates = [
-    ['NEXT_PUBLIC_SITE_URL', publicEnv.NEXT_PUBLIC_SITE_URL],
-    ['NEXT_PUBLIC_VERCEL_URL', publicEnv.NEXT_PUBLIC_VERCEL_URL],
+    ['NEXT_PUBLIC_SITE_URL', envPublic.NEXT_PUBLIC_SITE_URL],
+    ['NEXT_PUBLIC_VERCEL_URL', envPublic.NEXT_PUBLIC_VERCEL_URL],
     ['VERCEL_URL', serverEnv.VERCEL_URL],
   ] as const;
 

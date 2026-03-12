@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { emptyStringToUndefined, parseOrThrow } from './shared';
+import { emptyStringToUndefined, parseEnv } from './core';
 
 const buildEnvSchema = z.object({
   CI: z.preprocess(emptyStringToUndefined, z.string().optional()),
@@ -15,6 +15,14 @@ const buildEnvSchema = z.object({
 
 export type BuildEnv = z.infer<typeof buildEnvSchema>;
 
-export const resolveBuildEnv = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-): BuildEnv => parseOrThrow(buildEnvSchema, 'Invalid build environment variables', source);
+const parseBuildEnv = (source: Record<string, unknown>): BuildEnv =>
+  parseEnv({
+    label: 'Invalid build environment variables',
+    schema: buildEnvSchema,
+    source,
+  });
+
+export const envBuild = parseBuildEnv(process.env as Record<string, unknown>);
+
+export const getBuildEnv = (source?: Record<string, unknown>): BuildEnv =>
+  source ? parseBuildEnv(source) : envBuild;

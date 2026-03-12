@@ -1,5 +1,5 @@
-import { resolveSentryReleaseSha } from '@/shared/config';
-import { getSentryBuildOptions } from './build';
+import { resolveSentryReleaseSha } from '@/shared/config/sentry';
+import { getSentryBuildOptions, getSentryBuildReleaseName } from './build';
 
 describe('resolveSentryReleaseSha', () => {
   it('prefers SENTRY_RELEASE_SHA over Vercel and generic git sha', () => {
@@ -75,5 +75,25 @@ describe('getSentryBuildOptions', () => {
     }
 
     throw new Error('Expected getSentryBuildOptions to throw when build secrets are missing.');
+  });
+});
+
+describe('getSentryBuildReleaseName', () => {
+  it('returns the public release name for enabled staging builds', () => {
+    expect(
+      getSentryBuildReleaseName({
+        GIT_COMMIT_SHA: 'abc123',
+        NEXT_PUBLIC_SENTRY_ENABLED: 'true',
+        NEXT_PUBLIC_SENTRY_ENV: 'staging',
+      }),
+    ).toBe('lp@abc123-staging');
+  });
+
+  it('returns undefined when Sentry is disabled', () => {
+    expect(
+      getSentryBuildReleaseName({
+        NEXT_PUBLIC_SENTRY_ENABLED: 'false',
+      }),
+    ).toBe(undefined);
   });
 });

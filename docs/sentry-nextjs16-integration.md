@@ -118,7 +118,7 @@ Initialize Sentry correctly in all supported runtimes while keeping runtime conf
   - `sentry.server.config.ts`
   - `sentry.edge.config.ts`
   - `instrumentation.ts`
-- Keep runtime-safe shared config inside `src/shared/config/sentry.ts`.
+- Keep shared env contracts inside `src/shared/config/env/*` and runtime integration inside `src/application/sentry/*`.
 - Add pure runtime helpers:
   - `resolveSentryRuntimeMode(...)`
   - `buildSentryRelease(...)`
@@ -148,6 +148,7 @@ Initialize Sentry correctly in all supported runtimes while keeping runtime conf
 - If Sentry is enabled, runtime must fail fast when the required DSN or environment contract is missing or invalid.
 - `NEXT_PUBLIC_SENTRY_ENV` must allow only `staging` or `production` when Sentry is enabled.
 - `VERCEL_ENV` may be used only as a secondary guard or sanity check, not as the primary source of truth.
+- Browser/public env reads must use explicit direct `process.env.NEXT_PUBLIC_*` access so Next.js can inline them into the client bundle.
 
 ### Runtime Configuration Rules
 

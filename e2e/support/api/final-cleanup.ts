@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { request } from '@playwright/test';
 import { cleanupE2EUser } from './auth.api';
 import { listTrackedE2EUsers } from './auth-registry';
-import { resolveE2EBaseUrl } from '../helpers/base-url';
+import { envTest } from '@/shared/config/env';
 
 export const runFinalE2ECleanup = async (): Promise<void> => {
   const entries = await listTrackedE2EUsers();
@@ -12,7 +12,7 @@ export const runFinalE2ECleanup = async (): Promise<void> => {
 
   for (const credentials of entries) {
     const api = await request.newContext({
-      baseURL: resolveE2EBaseUrl(),
+      baseURL: envTest.playwright.baseUrl,
     });
 
     try {

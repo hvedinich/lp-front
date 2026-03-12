@@ -5,46 +5,19 @@ import {
   type SentryEnvironment,
 } from '../../shared/config/sentry';
 import {
-  resolveBrowserSentryRuntimeEnv,
-  resolveServerSentryRuntimeEnv,
+  getBrowserSentryRuntimeEnv,
+  getServerSentryRuntimeEnv,
   type BrowserSentryRuntimeEnv,
   type ServerSentryRuntimeEnv,
-} from './env';
+} from '../../shared/config/env/sentry';
 import { beforeBrowserSentryBreadcrumb, beforeSendBrowserSentryEvent } from './browser-filtering';
 
 type SentryRuntimeOptions = {
   dsn: string;
   environment: SentryEnvironment;
-  release: string;
+  release?: string;
   tracesSampleRate: number;
 };
-
-type SentryRuntimeLogContext = {
-  hasDsn: boolean;
-  hasReleaseSha: boolean;
-  nextPublicEnabled: string | null;
-  nextPublicEnv: string | null;
-  tracesSampleRate: string | null;
-};
-
-const logSentryRuntimeDebug = (
-  runtime: 'browser' | 'server' | 'edge',
-  stage: 'env' | 'options',
-  payload: Record<string, unknown>,
-): void => {
-  console.info(`[SENTRY_DEBUG][${runtime}][${stage}]`, payload);
-};
-
-const buildRuntimeLogContext = (
-  env: BrowserSentryRuntimeEnv | ServerSentryRuntimeEnv,
-  dsn: string | undefined,
-): SentryRuntimeLogContext => ({
-  hasDsn: Boolean(dsn),
-  hasReleaseSha: Boolean(resolveSentryReleaseSha(env)),
-  nextPublicEnabled: env.NEXT_PUBLIC_SENTRY_ENABLED ?? null,
-  nextPublicEnv: env.NEXT_PUBLIC_SENTRY_ENV ?? null,
-  tracesSampleRate: env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? null,
-});
 
 const parseSentryTracesSampleRate = (value: string | undefined): number => {
   if (!value) {
@@ -61,7 +34,19 @@ const parseSentryTracesSampleRate = (value: string | undefined): number => {
   return parsed;
 };
 
-const getEnabledSentryRuntimeOptions = (
+const getBrowserGlobalSentryRelease = (): string | undefined => {
+  if (typeof globalThis === 'undefined') {
+    return undefined;
+  }
+
+  const sentryRelease = (globalThis as { SENTRY_RELEASE?: { id?: unknown } }).SENTRY_RELEASE;
+
+  return typeof sentryRelease?.id === 'string' && sentryRelease.id.trim().length > 0
+    ? sentryRelease.id
+    : undefined;
+};
+
+const getRequiredEnabledSentryRuntimeOptions = (
   env: BrowserSentryRuntimeEnv | ServerSentryRuntimeEnv,
   dsn: string | undefined,
 ): SentryRuntimeOptions | null => {
@@ -96,24 +81,47 @@ const getEnabledSentryRuntimeOptions = (
   };
 };
 
-export const getBrowserSentryRuntimeOptions = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-) => {
-  const env = resolveBrowserSentryRuntimeEnv(source);
-  logSentryRuntimeDebug('browser', 'env', buildRuntimeLogContext(env, env.NEXT_PUBLIC_SENTRY_DSN));
-  const options = getEnabledSentryRuntimeOptions(env, env.NEXT_PUBLIC_SENTRY_DSN);
+const getEnabledBrowserSentryRuntimeOptions = (
+  env: BrowserSentryRuntimeEnv,
+): SentryRuntimeOptions | null => {
+  const runtimeMode = resolveSentryRuntimeMode({
+    enabled: env.NEXT_PUBLIC_SENTRY_ENABLED,
+    environment: env.NEXT_PUBLIC_SENTRY_ENV,
+  });
 
-  if (!options) {
-    logSentryRuntimeDebug('browser', 'options', { enabled: false, reason: 'runtime-disabled' });
+  if (!runtimeMode.enabled) {
     return null;
   }
 
-  logSentryRuntimeDebug('browser', 'options', {
-    enabled: true,
-    environment: options.environment,
-    release: options.release,
-    tracesSampleRate: options.tracesSampleRate,
-  });
+  if (!env.NEXT_PUBLIC_SENTRY_DSN) {
+    throw new Error('[config] A Sentry DSN is required when Sentry is enabled.');
+  }
+
+  const gitSha = resolveSentryReleaseSha(env);
+  const release = env.NEXT_PUBLIC_SENTRY_RELEASE
+    ? env.NEXT_PUBLIC_SENTRY_RELEASE
+    : gitSha
+      ? buildSentryRelease({
+          environment: runtimeMode.environment,
+          gitSha,
+        })
+      : getBrowserGlobalSentryRelease();
+
+  return {
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+    environment: runtimeMode.environment,
+    release,
+    tracesSampleRate: parseSentryTracesSampleRate(env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE),
+  };
+};
+
+export const getBrowserSentryRuntimeOptions = (source?: Record<string, unknown>) => {
+  const env = getBrowserSentryRuntimeEnv(source);
+  const options = getEnabledBrowserSentryRuntimeOptions(env);
+
+  if (!options) {
+    return null;
+  }
 
   return {
     ...options,
@@ -124,46 +132,24 @@ export const getBrowserSentryRuntimeOptions = (
   };
 };
 
-export const getServerSentryRuntimeOptions = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-) => {
-  const env = resolveServerSentryRuntimeEnv(source);
-  logSentryRuntimeDebug('server', 'env', buildRuntimeLogContext(env, env.SENTRY_DSN));
-  const options = getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+export const getServerSentryRuntimeOptions = (source?: Record<string, unknown>) => {
+  const env = getServerSentryRuntimeEnv(source);
+  const options = getRequiredEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
 
   if (!options) {
-    logSentryRuntimeDebug('server', 'options', { enabled: false, reason: 'runtime-disabled' });
     return null;
   }
-
-  logSentryRuntimeDebug('server', 'options', {
-    enabled: true,
-    environment: options.environment,
-    release: options.release,
-    tracesSampleRate: options.tracesSampleRate,
-  });
 
   return options;
 };
 
-export const getEdgeSentryRuntimeOptions = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-) => {
-  const env = resolveServerSentryRuntimeEnv(source);
-  logSentryRuntimeDebug('edge', 'env', buildRuntimeLogContext(env, env.SENTRY_DSN));
-  const options = getEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
+export const getEdgeSentryRuntimeOptions = (source?: Record<string, unknown>) => {
+  const env = getServerSentryRuntimeEnv(source);
+  const options = getRequiredEnabledSentryRuntimeOptions(env, env.SENTRY_DSN);
 
   if (!options) {
-    logSentryRuntimeDebug('edge', 'options', { enabled: false, reason: 'runtime-disabled' });
     return null;
   }
-
-  logSentryRuntimeDebug('edge', 'options', {
-    enabled: true,
-    environment: options.environment,
-    release: options.release,
-    tracesSampleRate: options.tracesSampleRate,
-  });
 
   return options;
 };

@@ -1,6 +1,6 @@
 import type { SentryBuildOptions } from '@sentry/nextjs';
-import { resolveBuildEnv } from '../../src/shared/config/env/build';
-import { normalizeOptionalString } from '../../src/shared/config/env/shared';
+import { getBuildEnv } from '../../src/shared/config/env/build';
+import { normalizeOptionalString, parseBooleanFlag } from '../../src/shared/config/env/core';
 import {
   buildSentryRelease,
   resolveSentryReleaseSha,
@@ -8,20 +8,35 @@ import {
 } from '../../src/shared/config/sentry';
 import type { BuildEnv } from '../../src/shared/config/env/build';
 
-const isCi = (value: string | undefined): boolean => {
-  const normalized = normalizeOptionalString(value)?.toLowerCase();
+const isCi = (value: string | undefined): boolean => parseBooleanFlag(value);
 
-  if (!normalized) {
-    return false;
+export const getSentryBuildReleaseName = (source?: Record<string, unknown>): string | undefined => {
+  const env = getBuildEnv(source) as BuildEnv;
+  const runtimeMode = resolveSentryRuntimeMode({
+    enabled: env.NEXT_PUBLIC_SENTRY_ENABLED,
+    environment: env.NEXT_PUBLIC_SENTRY_ENV,
+  });
+
+  if (!runtimeMode.enabled) {
+    return undefined;
   }
 
-  return normalized !== '0' && normalized !== 'false';
+  const gitSha = resolveSentryReleaseSha(env);
+
+  if (!gitSha) {
+    throw new Error(
+      '[config] Missing required Sentry build variables: SENTRY_RELEASE_SHA or VERCEL_GIT_COMMIT_SHA or GIT_COMMIT_SHA.',
+    );
+  }
+
+  return buildSentryRelease({
+    environment: runtimeMode.environment,
+    gitSha,
+  });
 };
 
-export const getSentryBuildOptions = (
-  source: Record<string, unknown> = process.env as Record<string, unknown>,
-): SentryBuildOptions => {
-  const env = resolveBuildEnv(source) as BuildEnv;
+export const getSentryBuildOptions = (source?: Record<string, unknown>): SentryBuildOptions => {
+  const env = getBuildEnv(source) as BuildEnv;
   const runtimeMode = resolveSentryRuntimeMode({
     enabled: env.NEXT_PUBLIC_SENTRY_ENABLED,
     environment: env.NEXT_PUBLIC_SENTRY_ENV,
@@ -45,13 +60,19 @@ export const getSentryBuildOptions = (
   const org = normalizeOptionalString(env.SENTRY_ORG);
   const project = normalizeOptionalString(env.SENTRY_PROJECT);
   const gitSha = resolveSentryReleaseSha(env);
+  const releaseName = gitSha
+    ? buildSentryRelease({
+        environment: runtimeMode.environment,
+        gitSha,
+      })
+    : undefined;
 
   // Build-time release must match runtime release so uploaded artifacts and events cannot drift.
   const missingKeys = [
     ['SENTRY_AUTH_TOKEN', authToken],
     ['SENTRY_ORG', org],
     ['SENTRY_PROJECT', project],
-    ['SENTRY_RELEASE_SHA or VERCEL_GIT_COMMIT_SHA or GIT_COMMIT_SHA', gitSha],
+    ['SENTRY_RELEASE_SHA or VERCEL_GIT_COMMIT_SHA or GIT_COMMIT_SHA', releaseName],
   ]
     .filter(([, value]) => !value)
     .map(([key]) => key);
@@ -65,10 +86,7 @@ export const getSentryBuildOptions = (
     org,
     project,
     release: {
-      name: buildSentryRelease({
-        environment: runtimeMode.environment,
-        gitSha: gitSha!,
-      }),
+      name: releaseName!,
     },
     silent: !isCi(env.CI),
   };

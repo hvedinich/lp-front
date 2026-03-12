@@ -1,4 +1,4 @@
-import { normalizeOptionalString } from './env/shared';
+import { normalizeOptionalString, parseBooleanFlag } from './env/core';
 
 export type SentryEnvironment = 'staging' | 'production';
 
@@ -26,21 +26,11 @@ export type SentryReleaseEnv = Partial<
   Record<'GIT_COMMIT_SHA' | 'SENTRY_RELEASE_SHA' | 'VERCEL_GIT_COMMIT_SHA', string | undefined>
 >;
 
-const normalizeBooleanFlag = (value: string | undefined): boolean => {
-  const normalized = normalizeOptionalString(value)?.toLowerCase();
-
-  if (!normalized) {
-    return false;
-  }
-
-  return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on';
-};
-
 export const resolveSentryRuntimeMode = ({
   enabled,
   environment,
 }: ResolveSentryRuntimeModeInput): SentryRuntimeMode => {
-  if (!normalizeBooleanFlag(enabled)) {
+  if (!parseBooleanFlag(enabled)) {
     return { enabled: false };
   }
 

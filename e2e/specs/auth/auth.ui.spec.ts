@@ -1,3 +1,4 @@
+import { envTest } from '@/shared/config/env';
 import { expect, test } from '../../fixtures/test';
 import {
   expectLoginError,
@@ -8,7 +9,7 @@ import {
   submitLoginForm,
 } from '../../support/helpers/auth-screen';
 
-const authHappyPathRetries = process.env.PLAYWRIGHT_DEBUG_ARTIFACTS ? 0 : 2;
+const authHappyPathRetries = envTest.playwright.debugArtifacts ? 0 : 2;
 
 test.beforeEach(async ({ auth }) => {
   await auth.clearState();

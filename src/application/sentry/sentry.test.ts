@@ -2,7 +2,7 @@ import {
   buildSentryRelease,
   resolveSentryReleaseSha,
   resolveSentryRuntimeMode,
-} from '../../shared/config/sentry';
+} from '@/shared/config/sentry';
 import { getBrowserSentryRuntimeOptions, getServerSentryRuntimeOptions } from '.';
 
 describe('resolveSentryRuntimeMode', () => {
@@ -96,6 +96,22 @@ describe('getBrowserSentryRuntimeOptions', () => {
         environment: 'staging',
         ignoreErrors: ['AbortError', 'The operation was aborted.'],
         release: 'lp@abc123-staging',
+        tracesSampleRate: 0.1,
+      }),
+    );
+  });
+
+  it('does not throw when browser Sentry is enabled without a release sha', () => {
+    expect(
+      getBrowserSentryRuntimeOptions({
+        NEXT_PUBLIC_SENTRY_DSN: 'https://public@example.ingest.sentry.io/1',
+        NEXT_PUBLIC_SENTRY_ENABLED: 'true',
+        NEXT_PUBLIC_SENTRY_ENV: 'staging',
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        dsn: 'https://public@example.ingest.sentry.io/1',
+        environment: 'staging',
         tracesSampleRate: 0.1,
       }),
     );

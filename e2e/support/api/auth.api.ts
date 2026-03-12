@@ -1,11 +1,11 @@
 import type { APIRequestContext, Page } from '@playwright/test';
 import { createHash, randomBytes } from 'node:crypto';
-import { testEnv } from '../config/env';
 import type { AuthCredentials, BrowserResponse, SessionPayload } from '../contracts/backend.types';
 import { fillLoginForm, openLoginPage } from '../helpers/auth-screen';
 import { trackE2EUser, untrackE2EUser } from './auth-registry';
 import { parseRetryAfterSeconds, runSharedLoginAttempt } from './auth-rate-limit';
 import { apiRequest, ensureOk, sleep, toApiError } from './client.api';
+import { envTest } from '@/shared/config/env';
 
 const ensuredUserCache = new Map<string, AuthCredentials>();
 const AUTH_RETRY_DELAYS_MS = [300, 700, 1500, 3000, 5000, 8000] as const;
@@ -66,8 +66,8 @@ interface CleanupOptions {
 }
 
 export const getE2ECredentials = (): AuthCredentials => ({
-  email: testEnv.playwright.e2eEmail,
-  password: testEnv.playwright.e2ePassword,
+  email: envTest.playwright.e2eEmail,
+  password: envTest.playwright.e2ePassword,
 });
 
 const LOCAL_RUN_SCOPE = randomBytes(6).toString('hex');
@@ -82,12 +82,12 @@ const normalizeScopePart = (value: string): string => {
 };
 
 const resolveE2EUserScope = (): string => {
-  const explicitScope = normalizeScopePart(process.env.PLAYWRIGHT_E2E_SCOPE ?? '');
+  const explicitScope = normalizeScopePart(envTest.playwright.scope ?? '');
   if (explicitScope) {
     return explicitScope;
   }
 
-  return testEnv.playwright.isCi ? '' : LOCAL_RUN_SCOPE;
+  return envTest.playwright.isCi ? '' : LOCAL_RUN_SCOPE;
 };
 
 const toCredentialKey = (scope: string, workerIndex: number): string => {
