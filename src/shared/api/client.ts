@@ -1,4 +1,5 @@
-import { buildLoginRedirect, env } from '@/shared/config';
+import { buildLoginRedirect, envApp } from '@/shared/config';
+import { getClientSessionId } from '@/shared/lib';
 import { isApiError } from './ApiError';
 import { createApiClient } from './createApiClient';
 import type { ApiRequestOptions } from './types';
@@ -11,9 +12,20 @@ const nonRefreshablePaths = new Set<string>([
 ]);
 
 const client = createApiClient({
-  baseUrl: env.app.apiUrl,
+  baseUrl: envApp.app.apiUrl,
   defaultCredentials: 'include',
   defaultTimeoutMs: 15_000,
+  resolveDefaultHeaders: () => {
+    const clientSessionId = getClientSessionId();
+
+    if (!clientSessionId) {
+      return undefined;
+    }
+
+    return {
+      'X-Client-Session-Id': clientSessionId,
+    };
+  },
   shouldAttemptRefresh: (error, context) => {
     if (context.skipAuthRefresh) {
       return false;

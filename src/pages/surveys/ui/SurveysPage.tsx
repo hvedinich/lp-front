@@ -7,10 +7,11 @@ export default function SurveysPage() {
   return (
     <Stack
       gap='5'
-      maxW='3xl'
+      maxW='5xl'
     >
       <Heading size='4xl'>{t('workspace.sections.surveys.title')}</Heading>
       <Text color='fg.muted'>{t('workspace.sections.surveys.description')}</Text>
+
       <Text color='fg.subtle'>{t('workspace.sections.surveys.emptyState')}</Text>
     </Stack>
   );

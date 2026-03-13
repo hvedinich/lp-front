@@ -26,7 +26,7 @@ The project follows a page-first FSD approach:
 
 Layers:
 
-- `app` - global bootstrap (providers, app wiring, global styles)
+- `application` - global bootstrap (providers, app wiring, global styles)
 - `pages` - page slices and page composition
 - `widgets` - large UI blocks composed from features/entities
 - `features` - user scenarios/use-cases
@@ -37,7 +37,7 @@ Layers:
 
 Allowed dependencies:
 
-- `app` -> `pages`, `widgets`, `features`, `entities`, `shared`
+- `application` -> `pages`, `widgets`, `features`, `entities`, `shared`
 - `pages` -> `widgets`, `features`, `entities`, `shared`
 - `widgets` -> `features`, `entities`, `shared`
 - `features` -> `entities`, `shared`
@@ -203,7 +203,7 @@ Store placement:
 - `shared/store/core/*`: store infrastructure only (factory, middleware wiring, persist helpers)
 - `entities/*/model/store/*`: domain slice state, selectors, and actions
 - `widgets/*/model/store/*`: widget-scoped UI state slices (layout/view state), when not domain entity state
-- `app/providers/*`: app-level store composition/provider wiring
+- `application/*`: app-level store composition/provider wiring
 
 Hydration and persistence:
 
@@ -232,10 +232,18 @@ Rules:
 - `shared/ui` - base UI primitives
   - render Lucide icons via `AppIcon` from `@/shared/ui`; icon glyphs may be imported directly from `lucide-react`
 - `shared/lib` - generic utilities
-- `shared/config` - runtime config
+- `shared/config` - reusable config primitives and browser-safe config exports
 - `shared/types` - common non-domain types
 
 No business rules in `shared`.
+
+Ownership notes:
+
+- `shared/config/env/*` owns env parsing helpers and runtime-specific env contracts
+- `shared/config` common barrel must stay browser-safe by default
+- `application/sentry/*` owns browser/server/edge Sentry runtime integration
+- `shared/lib/sentry/*` may expose reusable capture helpers for lower layers
+- build-time Sentry config may live outside `src/` under `config/`
 
 ## 11. Naming Rules
 
@@ -286,6 +294,6 @@ Access policy:
 
 Behavior:
 
-- protected routes are guarded in app shell (`pages/_app.tsx`)
+- protected routes are guarded in the application shell (`pages/_app.tsx`)
 - auth check uses cookie-based session endpoint (`/auth/me`)
 - unauthenticated users are redirected to `/login?next=<requested-path>`

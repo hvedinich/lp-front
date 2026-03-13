@@ -7,6 +7,7 @@ interface ApiClientConfig {
   defaultHeaders?: HeadersInit;
   defaultTimeoutMs?: number;
   fetchFn?: typeof fetch;
+  resolveDefaultHeaders?: () => HeadersInit | undefined;
   shouldAttemptRefresh?: (error: ApiError, context: ApiRequestContext) => boolean;
 }
 
@@ -156,13 +157,16 @@ const parseSuccess = async <TResponse>(
   return (await response.text()) as TResponse;
 };
 
-const createHeaders = (defaultHeaders?: HeadersInit, headers?: HeadersInit): Headers => {
-  const merged = new Headers(defaultHeaders);
-  const incoming = new Headers(headers);
+const createHeaders = (...sources: Array<HeadersInit | undefined>): Headers => {
+  const merged = new Headers();
 
-  incoming.forEach((value, key) => {
-    merged.set(key, value);
-  });
+  for (const source of sources) {
+    const incoming = new Headers(source);
+
+    incoming.forEach((value, key) => {
+      merged.set(key, value);
+    });
+  }
 
   if (!merged.has('Accept')) {
     merged.set('Accept', 'application/json');
@@ -261,7 +265,11 @@ export const createApiClient = (config: ApiClientConfig): ApiClient => {
       };
 
       const parseAs = optionParseAs ?? 'json';
-      const headers = createHeaders(config.defaultHeaders, optionHeaders);
+      const headers = createHeaders(
+        config.defaultHeaders,
+        config.resolveDefaultHeaders?.(),
+        optionHeaders,
+      );
 
       let body: BodyInit | undefined;
       if (rawBody !== undefined && rawBody !== null) {

@@ -227,4 +227,32 @@ describe('createApiClient', () => {
     expect(resourceCalls).toBe(1);
     expect(refreshCalls).toBe(1);
   });
+
+  it('adds resolved default headers to each request', async () => {
+    let fetchCalls = 0;
+
+    const fetchFn: typeof fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      fetchCalls += 1;
+      const headers = new Headers(init?.headers);
+
+      expect(headers.get('X-Client-Session-Id')).toBe('session-123');
+      return jsonResponse(200, { ok: true });
+    };
+
+    const client = createApiClient({
+      baseUrl: 'https://api.test',
+      fetchFn,
+      resolveDefaultHeaders: () => ({
+        'X-Client-Session-Id': 'session-123',
+      }),
+    });
+
+    await expect(
+      client.request<{ ok: boolean }>({
+        path: '/profile',
+      }),
+    ).resolves.toEqual({ ok: true });
+
+    expect(fetchCalls).toBe(1);
+  });
 });

@@ -5,6 +5,7 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
 import { useEffect } from 'react';
+import { SentryScopeSync } from '@/application/sentry';
 import { UiStoreProvider } from '@/application/providers';
 import { getPreferredLanguage, setAppLanguage, system } from '@/shared/config';
 import { useDvh } from '@/shared/hooks';
@@ -38,6 +39,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
       >
         <QueryClientProvider client={queryClient}>
           <UiStoreProvider>
+            <SentryScopeSync />
             {getLayout(<Component {...pageProps} />)}
             <AppToaster />
           </UiStoreProvider>

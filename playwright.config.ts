@@ -1,15 +1,14 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { env } from './src/shared/config/env';
-import { isLocalUrl, resolveE2EBaseUrl } from './e2e/support/helpers/base-url';
+import { envTest, isLocalUrl } from '@/shared/config';
 
-const runningInCi = env.playwright.isCi;
-const debugArtifactsEnabled = env.playwright.debugArtifacts;
-const e2eLane = process.env.PLAYWRIGHT_E2E_LANE ?? 'all';
-const baseURL = resolveE2EBaseUrl();
+const runningInCi = envTest.playwright.isCi;
+const debugArtifactsEnabled = envTest.playwright.debugArtifacts;
+const e2eLane = envTest.playwright.lane;
+const baseURL = envTest.playwright.baseUrl;
 const localWorkersDefault = 2;
 const ciWorkersDefault = 4;
-const localWorkers = env.playwright.workers ?? localWorkersDefault;
+const localWorkers = envTest.playwright.workers ?? localWorkersDefault;
 const authSpecPattern = /.*\/auth\/.*\.spec\.ts/;
 const workerCount = e2eLane === 'auth' ? 1 : runningInCi ? ciWorkersDefault : localWorkers;
 const outputDir =
@@ -25,7 +24,7 @@ const htmlReportFolder =
       ? 'playwright-report/app'
       : 'playwright-report';
 
-if (runningInCi && !process.env.PLAYWRIGHT_BASE_URL) {
+if (runningInCi && !envTest.playwright.hasExplicitBaseUrl) {
   throw new Error('[config] CI mode requires PLAYWRIGHT_BASE_URL to target a deployed app.');
 }
 
@@ -35,9 +34,9 @@ if (runningInCi && isLocalUrl(baseURL)) {
   );
 }
 
-const apiUrl = env.app.apiUrl;
+const apiUrl = envTest.app.apiUrl;
 const webServerEnv = {
-  PORT: String(env.app.port),
+  PORT: String(envTest.app.port),
   NEXT_PUBLIC_API_URL: apiUrl,
 } satisfies Record<string, string>;
 
