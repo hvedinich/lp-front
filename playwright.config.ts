@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { envTest, isLocalUrl } from '@/shared/config/env';
+import { envTest, isLocalUrl } from '@/shared/config';
 
 const runningInCi = envTest.playwright.isCi;
 const debugArtifactsEnabled = envTest.playwright.debugArtifacts;

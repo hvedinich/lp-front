@@ -2,7 +2,7 @@ import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { sleep } from './client.api';
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 
 export interface SharedLoginResponse {
   headers?: Record<string, string>;

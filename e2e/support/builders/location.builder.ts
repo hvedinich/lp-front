@@ -1,4 +1,4 @@
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 
 const TEST_LOCATION_PREFIX = envTest.playwright.locationPrefix;
 

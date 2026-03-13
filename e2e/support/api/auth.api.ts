@@ -5,7 +5,7 @@ import { fillLoginForm, openLoginPage } from '../helpers/auth-screen';
 import { trackE2EUser, untrackE2EUser } from './auth-registry';
 import { parseRetryAfterSeconds, runSharedLoginAttempt } from './auth-rate-limit';
 import { apiRequest, ensureOk, sleep, toApiError } from './client.api';
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 
 const ensuredUserCache = new Map<string, AuthCredentials>();
 const AUTH_RETRY_DELAYS_MS = [300, 700, 1500, 3000, 5000, 8000] as const;

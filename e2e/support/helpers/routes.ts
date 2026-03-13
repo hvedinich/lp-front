@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 
 const normalizeBaseUrl = (value: string): string => value.replace(/\/$/, '');
 

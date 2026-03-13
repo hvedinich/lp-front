@@ -1,4 +1,4 @@
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 import { expect, test } from '../../fixtures/test';
 import {
   expectLoginError,

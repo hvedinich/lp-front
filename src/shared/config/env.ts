@@ -5,6 +5,8 @@ export {
   getBrowserSentryRuntimeEnv,
   getServerSentryRuntimeEnv,
   envServerSentry,
+  type BrowserSentryRuntimeEnv,
+  type ServerSentryRuntimeEnv,
 } from './env/sentry';
 export { resolveAppUrl, resolveDeploymentAppUrl, envServer } from './env/server';
 export { isLocalUrl, envTest, envTestRuntime } from './env/test';

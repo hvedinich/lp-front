@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { request } from '@playwright/test';
 import { cleanupE2EUser } from './auth.api';
 import { listTrackedE2EUsers } from './auth-registry';
-import { envTest } from '@/shared/config/env';
+import { envTest } from '@/shared/config';
 
 export const runFinalE2ECleanup = async (): Promise<void> => {
   const entries = await listTrackedE2EUsers();
