@@ -1,4 +1,5 @@
-import { ContactPlatform, DeviceModeEnum, PlatformLink } from '@/shared/lib';
+import { DeviceModeEnum } from '@/entities/device';
+import type { ContactPlatform, PlatformLink } from '@/entities/hostedPage';
 import {
   AutotraderIcon,
   BookingsIcon,

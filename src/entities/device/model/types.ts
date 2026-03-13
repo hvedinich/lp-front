@@ -1,10 +1,13 @@
-import { DeviceModeEnum } from '@/shared/lib';
-
 export type DeviceStatus = 'active' | 'disabled' | 'unconfigured';
 export interface PublicDevice {
   id: string;
   locale: string;
   status: DeviceStatus;
+}
+
+export enum DeviceModeEnum {
+  MULTI = 'multilink',
+  SINGLE = 'static',
 }
 
 export interface Device extends PublicDevice {

@@ -1,6 +1,5 @@
-import { DeviceModeEnum } from '@/shared/lib';
 import { mapDeviceDto } from './device.mapper';
-import { DeviceStatus } from '../model/types';
+import { DeviceModeEnum, DeviceStatus } from '../model/types';
 
 describe('mapDeviceDto', () => {
   it('maps dto fields and converts date strings to Date', () => {

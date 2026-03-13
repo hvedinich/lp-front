@@ -7,6 +7,7 @@ export type {
   ActivateSingleDevicePayload,
   ActivateMultiDevicePayload,
 } from './model/types';
+export { DeviceModeEnum } from './model/types';
 export { usePublicDevice } from './model/usePublicDevice';
 export { useDeviceActions } from './model/useDeviceActions';
 export { resolveDeviceToastMessage } from './model/deviceErrorUi';

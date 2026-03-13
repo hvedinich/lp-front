@@ -1,10 +1,10 @@
-import { DeviceModeEnum, toNullable } from '@/shared/lib';
+import { toNullable } from '@/shared/lib';
 import type {
   ActivateDeviceDtoRequest,
   ConfigureDeviceDtoRequest,
   DeviceDto,
 } from '../api/device.dto';
-import type { Device, DeviceFormValues } from '../model/types';
+import { type Device, type DeviceFormValues, DeviceModeEnum } from '../model/types';
 
 export const mapDeviceDto = (dto: DeviceDto): Device => ({
   ...dto,

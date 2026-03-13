@@ -1,6 +1,6 @@
-import { DeviceModeEnum } from '@/shared/lib';
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { DeviceModeEnum } from '../model/types';
 
 export const createDeviceSchema = (t: TFunction<'common'>) =>
   z

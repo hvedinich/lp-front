@@ -13,7 +13,4 @@ export {
   type UseZodFormOptions,
 } from './form';
 export type { MutationCallbacks, QueryOptions } from './queryTypes';
-export { DeviceModeEnum } from './deviceModeEnum';
-export type { LocationPayload } from './locationTypes';
-export type { ContactPlatform, ReviewPlatform, PlatformLink } from './linkPlatformTypes';
 export { toNullable } from './toNullable';

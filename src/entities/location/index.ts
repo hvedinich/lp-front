@@ -6,7 +6,7 @@ export {
   type LocationSelectionSlice,
 } from './model/store/locationSelectionSlice';
 export { useLocationById } from './model/useLocationById';
-export type { Location, LocationFormValues } from './model/types';
+export type { Location, LocationFormValues, LocationPayload } from './model/types';
 export { locationQueryKeys } from './model/queryKeys';
 export { useLocations } from './model/useLocations';
 export { useCreateLocation } from './model/useCreateLocation';

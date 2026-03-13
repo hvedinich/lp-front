@@ -1,9 +1,12 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getPlaceDetails, normalizeLocationFromPlace, searchPlaces } from '../lib';
-import type { PlaceSuggestion } from '../lib';
-import { AutocompleteField, AutocompleteFieldProps, type AutocompleteOption } from '@/shared/ui';
-import type { LocationPayload } from '@/shared/lib';
+import { normalizeLocationFromPlace, useGetPlaceDetails, useSearchPlaces } from '../lib';
+import {
+  AutocompleteField,
+  type AutocompleteFieldProps,
+  type AutocompleteOption,
+} from '@/shared/ui';
+import { LocationPayload } from '@/entities/location';
 
 export interface GooglePlacesFieldProps extends Omit<
   AutocompleteFieldProps,
@@ -25,32 +28,26 @@ const GooglePlacesField = ({
   placeholder,
 }: GooglePlacesFieldProps) => {
   const { t } = useTranslation('common');
-  const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const sessionTokenRef = useRef<string | null>(null);
 
-  const handleSearch = async (query: string) => {
+  const searchMutation = useSearchPlaces({ scope: { region } });
+  const detailsMutation = useGetPlaceDetails();
+
+  const handleSearch = (query: string) => {
     if (!sessionTokenRef.current) {
       sessionTokenRef.current = crypto.randomUUID();
     }
-    setIsLoading(true);
-    try {
-      const results = await searchPlaces({
-        input: query,
-        sessionToken: sessionTokenRef.current,
-        region,
-      });
-      setSuggestions(results);
-    } finally {
-      setIsLoading(false);
-    }
+    void searchMutation.mutate({ input: query, sessionToken: sessionTokenRef.current });
   };
 
   const handleSelect = async (option: AutocompleteOption) => {
     if (!onSelect) return;
-    setIsLoading(true);
+
     try {
-      const details = await getPlaceDetails(option.value, sessionTokenRef.current ?? undefined);
+      const details = await detailsMutation.mutateAsync({
+        placeId: option.value,
+        sessionToken: sessionTokenRef.current ?? undefined,
+      });
       sessionTokenRef.current = null;
 
       if (!details || !details.name) {
@@ -62,11 +59,10 @@ const GooglePlacesField = ({
       onSelect(location, placeId);
     } finally {
       sessionTokenRef.current = crypto.randomUUID();
-      setIsLoading(false);
     }
   };
 
-  const options: AutocompleteOption[] = suggestions.map((s) => ({
+  const options: AutocompleteOption[] = (searchMutation.data ?? []).map((s) => ({
     value: s.placeId,
     label: s.name,
   }));
@@ -77,8 +73,8 @@ const GooglePlacesField = ({
       rules={rules}
       id={String(name)}
       options={options}
-      isLoading={isLoading}
-      onSearch={(query) => void handleSearch(query)}
+      isLoading={searchMutation.isPending || detailsMutation.isPending}
+      onSearch={handleSearch}
       onSelect={(option) => void handleSelect(option)}
       label={label}
       helperText={helperText}

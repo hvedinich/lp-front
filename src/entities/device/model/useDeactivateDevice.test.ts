@@ -4,7 +4,7 @@ import { ApiError } from '@/shared/api';
 import { deactivateDevice } from '../api/deactivateDevice';
 import { invalidateDevices } from './invalidateDevices';
 import { useDeactivateDevice } from './useDeactivateDevice';
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from './types';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),

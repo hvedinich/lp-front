@@ -1,4 +1,4 @@
-import { LocationPayload } from '@/shared/lib';
+import { LocationPayload } from '@/entities/location';
 import type { PlaceDetails } from './google-places.types';
 
 /**

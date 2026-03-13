@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { onboardDevice } from '../api/onboarding';
-import type { DeviceOnboardingResponse, OnboardPayload } from './types';
+import { onboardDevice } from './onboarding';
 import { authQueryKeys } from '@/entities/auth';
 import type { MutationHookOptions } from '@/shared/lib';
 import { mapToOnboardDeviceError, type OnboardDeviceError } from './errors';
+import { DeviceOnboardingResponse, OnboardPayload } from './types';
 
 export const useOnboardDevice = (
   params: MutationHookOptions<

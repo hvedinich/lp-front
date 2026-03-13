@@ -1,5 +1,5 @@
-import type { DeviceModeEnum, ListQueryParams } from '@/shared/lib';
-import { DeviceStatus } from '../model/types';
+import type { ListQueryParams } from '@/shared/lib';
+import { DeviceModeEnum, DeviceStatus } from '../model/types';
 
 export interface DeviceDto {
   id: string;

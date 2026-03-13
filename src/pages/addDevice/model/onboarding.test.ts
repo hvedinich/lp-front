@@ -1,8 +1,8 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { apiRequest } from '@/shared/api';
 import { onboardDevice } from './onboarding';
-import type { OnboardPayload, DeviceOnboardingResponse } from '../model/types';
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from '@/entities/device';
+import { DeviceOnboardingResponse, OnboardPayload } from './types';
 
 vi.mock('@/shared/api', () => ({
   apiRequest: vi.fn(),

@@ -1,8 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Badge, Box, Card, HStack, Stack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import type { Device } from '@/entities/device';
-import { DeviceModeEnum } from '@/shared/lib';
+import { type Device, DeviceModeEnum } from '@/entities/device';
 
 interface DeviceCardProps extends Omit<
   ComponentProps<typeof Card.Root>,

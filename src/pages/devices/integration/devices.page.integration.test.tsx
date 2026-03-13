@@ -1,10 +1,9 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Device } from '@/entities/device';
+import { type Device, DeviceModeEnum } from '@/entities/device';
 import { system } from '@/shared/config';
 import DevicesPage from '../ui/DevicesPage';
-import { DeviceModeEnum } from '@/shared/lib';
 
 const { push, useDeviceQueryErrorToast, useDevices, useLocationSelection } = vi.hoisted(() => ({
   push: vi.fn(),

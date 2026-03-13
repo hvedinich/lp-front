@@ -1,4 +1,4 @@
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from '@/entities/device';
 
 export const getPlatformLabel = (platform: string) =>
   platform.charAt(0).toUpperCase() + platform.slice(1);
