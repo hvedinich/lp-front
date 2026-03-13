@@ -217,6 +217,84 @@
       "accountNameMin": "Account name must be at least 2 characters"
     }
   },
+  "addDevice": {
+    "notFound": {
+      "title": "Device not available",
+      "description": "This device is already connected or does not exist."
+    },
+    "location": {
+      "title": "Choose a location for this device",
+      "description": "Select existed one or add a new location for device",
+      "newLocationTitle": "Create new location",
+      "newLocationDescription": "Set up this device from scratch with its own page and review links",
+      "defaultName": "New location",
+      "defaultAddress": "Location Address"
+    },
+    "mode": {
+      "title": "Set up your stand",
+      "description": "Choose how customers will leave reviews",
+      "multiTitle": "Multi-Platform Choice",
+      "multiDescription": "Customers first see a selection page and choose where to leave a review",
+      "multiSubDescription": "Google, Facebook, and other platforms - all on one page",
+      "singleTitle": "Instant Review",
+      "singleDescription": "Customers go straight to the review page",
+      "singleSubDescription": "Best if you want all customers to leave reviews in one place (for example, Google)"
+    },
+    "platformLinks": {
+      "title": "Where do you want to collect reviews?",
+      "existedLinksTitle": "This location already has a review page",
+      "urlPlaceholder": "https://...",
+      "googleSearchPlaceholder": "Find location to connect with device",
+      "reviews": "Add your review platforms links",
+      "other": "Add links to your social media",
+      "sameLocationMulti": "This device will use the same page",
+      "sameLocationSingle": "Use an existing link",
+      "or": "or"
+    },
+    "userInfo": {
+      "title": "Get access to your stand",
+      "description": "This account will be used to manage this stand and receive reports",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailHelperText": "Used for reports and access to stand settings",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "123 456 789",
+      "phoneHelperText": "Get instant alerts if a negative review appears",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "notifyLabel": "I want to receive tips on improving reviews and recommendations based on stand data",
+      "accept": "I accept the",
+      "terms": "User Agreement",
+      "and": "and",
+      "policy": "Privacy Policy"
+    },
+    "success": {
+      "title": "All set",
+      "description": "You can now place the stand and start collecting reviews. Customers can scan the stand and leave reviews right away.",
+      "activatedText": "Stand activated",
+      "reportText": "Reports will be sent to email / phone",
+      "editText": "You can change settings anytime",
+      "testText": "Test your device",
+      "testDescription": "Scan the stand once to confirm everything works. This will add 1 scan to your device stats",
+      "testStep1": "Scan the stand now",
+      "testStep2": "Then click finish"
+    },
+    "emailConflict": {
+      "title": "Email already in use",
+      "description": "Looks like this email is already connected to an account. To add another device, log in to your account."
+    },
+    "validation": {
+      "urlInvalid": "Enter a valid URL",
+      "urlPlatformInvalid": "Enter a valid {{platform}} URL",
+      "emailInvalid": "Enter a valid email",
+      "requiredField": "The field cannot be empty",
+      "nameMin": "Name must be at least 2 characters",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordsMismatch": "Passwords do not match"
+    }
+  },
   "login": {
     "title": "Sign In",
     "subtitle": "Log in to access your account workspace.",
@@ -238,10 +316,19 @@
     "cancel": "Cancel",
     "back": "Back",
     "delete": "Delete",
-    "continue": "Continue"
+    "continue": "Continue",
+    "next": "Next",
+    "login": "Log in",
+    "finish": "Finish"
   },
   "commonFeedback": {
     "saved": "Changes saved successfully.",
     "created": "Created successfully."
+  },
+  "404": {
+    "title": "Oops! Page not found",
+    "description": "The link you followed is wrong or outdated",
+    "loginBtn": "Login",
+    "mainPageBtn": "Home"
   }
 }

@@ -36,9 +36,12 @@ client.setRefreshHandler(async () => {
 export const apiRequest = async <TResponse, TBody = unknown>(
   options: ApiRequestOptions<TBody>,
 ): Promise<TResponse> => {
+  const queryParams = new URLSearchParams(options?.params).toString();
+
   try {
     return await client.request<TResponse, TBody>({
       ...options,
+      path: queryParams ? `${options.path}?${queryParams}` : options.path,
       skipAuthRefresh: options.skipAuthRefresh ?? nonRefreshablePaths.has(options.path),
     });
   } catch (error) {
@@ -71,4 +74,22 @@ const redirectToLogin = () => {
   }
 
   window.location.replace(target);
+};
+
+export const parseErrorMessage = (payload: unknown): string | null => {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  const normalized = payload as { message?: unknown; error?: unknown };
+
+  if (typeof normalized.message === 'string') {
+    return normalized.message;
+  }
+
+  if (typeof normalized.error === 'string') {
+    return normalized.error;
+  }
+
+  return null;
 };

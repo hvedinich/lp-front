@@ -19,7 +19,7 @@ import { defineRecipe } from '@chakra-ui/react';
 export const buttonRecipe = defineRecipe({
   base: {
     fontWeight: 'semibold',
-    borderRadius: 'control',
+    borderRadius: '2xl',
     // 'common' covers: background, border, color, fill, stroke, opacity, box-shadow, transform
     transitionProperty: 'common',
     transitionDuration: 'fast',

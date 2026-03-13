@@ -5,7 +5,9 @@ import {
   Stack,
   Text,
   createListCollection,
-  type BoxProps,
+  type ComboboxRootProps,
+  type ComboboxControlProps,
+  type ComboboxInputProps,
 } from '@chakra-ui/react';
 import { ChevronDown, MapPin } from 'lucide-react';
 import { useRouter } from 'next/router';
@@ -14,11 +16,21 @@ import { useTranslation } from 'react-i18next';
 import { AppIcon } from '@/shared/ui';
 import { useLocationSelection } from '../model/useLocationSelection';
 
-export interface LocationSelectorProps extends BoxProps {
+export interface LocationSelectorProps extends Partial<ComboboxRootProps> {
   onLocationSelect?: () => void;
+  iconSize?: number;
+  inputProps?: ComboboxInputProps;
+  controlProps?: Omit<ComboboxControlProps, 'color'>;
 }
 
-export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelectorProps) => {
+export const LocationSelector = ({
+  onLocationSelect,
+  iconSize = 16,
+  inputProps,
+  controlProps,
+  onClick,
+  ...rest
+}: LocationSelectorProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,111 +66,126 @@ export const LocationSelector = ({ onLocationSelect, ...rest }: LocationSelector
   const isLoading = locationsQuery.isPending;
 
   return (
-    <Box {...rest}>
-      <Stack gap='2'>
-        <Combobox.Root
-          collection={collection}
-          data-testid='location-selector-root'
-          value={selectedLocationId ? [selectedLocationId] : []}
-          inputValue={inputValue}
-          onInputValueChange={(details) => setSearchQuery(details.inputValue)}
-          onOpenChange={(details) => {
-            setIsOpen(details.open);
-            if (details.open) {
-              setSearchQuery('');
-            }
-          }}
-          onValueChange={(details) => {
-            const locationId = details.value[0];
-            if (!locationId) {
-              return;
-            }
-
-            onSelectLocation(locationId);
+    <Stack
+      gap='2'
+      onClick={(e) => onClick?.(e)}
+    >
+      <Combobox.Root
+        open={isOpen}
+        collection={collection}
+        data-testid='location-selector-root'
+        value={selectedLocationId ? [selectedLocationId] : []}
+        inputValue={inputValue}
+        onInputValueChange={(details) => setSearchQuery(details.inputValue)}
+        onOpenChange={(details) => {
+          setIsOpen(details.open);
+          if (details.open) {
             setSearchQuery('');
-            onLocationSelect?.();
-          }}
-          closeOnSelect
-        >
-          <Combobox.Control>
-            <Box
-              color='fg.muted'
-              position='absolute'
-              insetY='1'
-              insetStart='3'
-              display='inline-flex'
-              alignItems='center'
-              justifyContent='center'
-              pointerEvents='none'
-            >
+          }
+        }}
+        variant='outline'
+        onClick={(e) => {
+          setIsOpen(true);
+          e.stopPropagation();
+        }}
+        onValueChange={(details) => {
+          const locationId = details.value[0];
+          if (!locationId) {
+            return;
+          }
+
+          onSelectLocation(locationId);
+          setSearchQuery('');
+          onLocationSelect?.();
+        }}
+        closeOnSelect
+        {...rest}
+      >
+        <Combobox.Control>
+          <Box
+            color='fg.muted'
+            position='absolute'
+            insetY='1'
+            insetStart='3'
+            display='inline-flex'
+            alignItems='center'
+            justifyContent='center'
+            pointerEvents='none'
+            {...controlProps}
+          >
+            <AppIcon
+              icon={MapPin}
+              size={iconSize}
+            />
+          </Box>
+          <Combobox.Input
+            borderRadius='2xl'
+            data-testid='location-selector-input'
+            placeholder={
+              selectedLocation?.name
+                ? t('workspace.locationSelector.searchPlaceholder')
+                : t('workspace.locationSelector.notSelected')
+            }
+            disabled={!hasLocations || isLoading}
+            ps='10'
+            {...inputProps}
+          />
+          <Combobox.IndicatorGroup>
+            <Combobox.Trigger data-testid='location-selector-trigger'>
               <AppIcon
-                icon={MapPin}
+                icon={ChevronDown}
                 size={16}
               />
-            </Box>
-            <Combobox.Input
-              data-testid='location-selector-input'
-              placeholder={
-                selectedLocation?.name
-                  ? t('workspace.locationSelector.searchPlaceholder')
-                  : t('workspace.locationSelector.notSelected')
-              }
-              disabled={!hasLocations || isLoading}
-              ps='10'
-            />
-            <Combobox.IndicatorGroup>
-              <Combobox.Trigger data-testid='location-selector-trigger'>
-                <AppIcon
-                  icon={ChevronDown}
-                  size={16}
-                />
-              </Combobox.Trigger>
-            </Combobox.IndicatorGroup>
-          </Combobox.Control>
+            </Combobox.Trigger>
+          </Combobox.IndicatorGroup>
+        </Combobox.Control>
 
-          <Combobox.Positioner>
-            <Combobox.Content maxH='40'>
-              <Combobox.Empty>{t('workspace.locationSelector.noMatch')}</Combobox.Empty>
-              {locationOptions.map((option) => (
-                <Combobox.Item
-                  key={option.value}
-                  item={option}
-                  data-testid={`location-selector-option-${option.value}`}
-                >
-                  <Combobox.ItemText>{option.label}</Combobox.ItemText>
-                  <Combobox.ItemIndicator>
-                    {t('workspace.locationSelector.selected')}
-                  </Combobox.ItemIndicator>
-                </Combobox.Item>
-              ))}
-            </Combobox.Content>
-          </Combobox.Positioner>
-        </Combobox.Root>
+        <Combobox.Positioner>
+          <Combobox.Content
+            maxH='40'
+            borderRadius='2xl'
+          >
+            <Combobox.Empty>{t('workspace.locationSelector.noMatch')}</Combobox.Empty>
+            {locationOptions.map((option) => (
+              <Combobox.Item
+                key={option.value}
+                item={option}
+                borderRadius='2xl'
+                data-testid={`location-selector-option-${option.value}`}
+              >
+                <Combobox.ItemText>{option.label}</Combobox.ItemText>
+                <Combobox.ItemIndicator>
+                  {t('workspace.locationSelector.selected')}
+                </Combobox.ItemIndicator>
+              </Combobox.Item>
+            ))}
+          </Combobox.Content>
+        </Combobox.Positioner>
+      </Combobox.Root>
 
-        {!isLoading && !hasLocations ? (
-          <Box>
-            <Text
-              fontSize='xs'
-              color='fg.muted'
-              mb='2'
-            >
-              {t('workspace.locationSelector.empty')}
-            </Text>
-            <Button
-              data-testid='location-selector-manage-button'
-              size='sm'
-              variant='subtle'
-              width='full'
-              onClick={() => {
-                void router.push('/locations');
-                onLocationSelect?.();
-              }}
-            >
-              {t('workspace.locationSelector.manageLocations')}
-            </Button>
-          </Box>
-        ) : null}
-      </Stack>
-    </Box>
+      {!isLoading && !hasLocations ? (
+        <Box>
+          <Text
+            fontSize='xs'
+            color='fg.muted'
+            mb='2'
+          >
+            {t('workspace.locationSelector.empty')}
+          </Text>
+          <Button
+            data-testid='location-selector-manage-button'
+            size='sm'
+            variant='subtle'
+            width='full'
+            onClick={() => {
+              void router.push('/locations');
+              onLocationSelect?.();
+            }}
+          >
+            {t('workspace.locationSelector.manageLocations')}
+          </Button>
+        </Box>
+      ) : null}
+    </Stack>
   );
 };

@@ -2,11 +2,10 @@ import { Alert, Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
-import { useLocationById } from '@/entities/location';
-import { canManageLocationsRole } from '../model/locationPermissions';
-import { useLocationActions } from '../model/useLocationActions';
-import { resolveLocationEditorState } from '../model/locationEditorState';
-import { useLocationQueryErrorToast } from '../model/useLocationQueryErrorToast';
+import { useLocationActions, useLocationById } from '@/entities/location';
+import { canManageLocationsRole } from '../lib/locationPermissions';
+import { resolveLocationEditorState } from '../lib/locationEditorState';
+import { useLocationQueryErrorToast } from '../lib/useLocationQueryErrorToast';
 import { LocationEditorForm } from './LocationEditorForm';
 
 export default function LocationEditPage() {

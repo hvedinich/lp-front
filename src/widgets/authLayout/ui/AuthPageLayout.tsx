@@ -1,37 +1,37 @@
-import { Card, Flex } from '@chakra-ui/react';
-import { type ReactNode } from 'react';
+import { Card, CardRootProps, Flex, FlexProps } from '@chakra-ui/react';
 import { AppBrand } from '@/shared/ui';
+import { FC } from 'react';
 
-interface AuthPageLayoutProps {
-  children: ReactNode;
-}
+type AuthPageLayoutProps = {
+  childrenProps?: Omit<CardRootProps, 'bg'>;
+} & Omit<FlexProps, 'bg'>;
 
-export function AuthPageLayout({ children }: AuthPageLayoutProps) {
-  return (
+export const AuthPageLayout: FC<AuthPageLayoutProps> = ({ children, childrenProps, ...props }) => (
+  <Flex
+    minH='dvh100'
+    align='center'
+    direction='column'
+    p='6'
+    gap='6'
+    bg='bg.gradient.hero'
+    {...props}
+  >
+    <AppBrand />
     <Flex
-      minH='dvh100'
       align='center'
-      direction='column'
-      p='6'
-      gap='6'
-      bg='bg.gradient.hero'
+      justify='center'
+      flex='1'
+      maxW='full'
     >
-      <AppBrand />
-      <Flex
-        align='center'
-        justify='center'
-        flex='1'
+      <Card.Root
+        width='xl'
         maxW='full'
+        bg='bg.canvas'
+        p={{ base: '6', md: '12' }}
+        {...childrenProps}
       >
-        <Card.Root
-          width='xl'
-          maxW='full'
-          bg='bg.canvas'
-          p={{ base: '6', md: '12' }}
-        >
-          {children}
-        </Card.Root>
-      </Flex>
+        {children}
+      </Card.Root>
     </Flex>
-  );
-}
+  </Flex>
+);

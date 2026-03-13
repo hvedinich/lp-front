@@ -7,6 +7,8 @@ export type {
   AuthSession,
   AuthSessionPayload,
   AuthSessionState,
+  AuthUserSummary,
+  AuthAccountSummary,
   LoginPayload,
   LoginResponse,
   RegisterPayload,

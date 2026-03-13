@@ -1,3 +1,10 @@
 #!/bin/sh
 # Full validation before push: tsc + eslint (all files) + prettier + steiger + all tests
 npm run validate && npm run test && npm run test:e2e
+
+# Check translation files keys matching
+echo "🔍 Running translations check..."
+npm run check-translations || {
+  echo "❌ Translations check failed. Please fix translations before pushing."
+  exit 1
+}

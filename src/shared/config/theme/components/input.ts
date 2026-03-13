@@ -15,7 +15,7 @@ import { defineRecipe } from '@chakra-ui/react';
  */
 export const inputRecipe = defineRecipe({
   base: {
-    borderRadius: 'control',
+    borderRadius: '2xl',
     color: 'fg.default',
     _placeholder: {
       color: 'fg.subtle',
