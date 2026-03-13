@@ -1,15 +1,15 @@
 import {
-  buildSentryRelease,
-  resolveSentryReleaseSha,
-  resolveSentryRuntimeMode,
-  type SentryEnvironment,
-} from '@/shared/config';
-import {
   getBrowserSentryRuntimeEnv,
   getServerSentryRuntimeEnv,
   type BrowserSentryRuntimeEnv,
   type ServerSentryRuntimeEnv,
-} from '@/shared/config';
+} from '@/shared/config/env';
+import {
+  buildSentryRelease,
+  resolveSentryReleaseSha,
+  resolveSentryRuntimeMode,
+  type SentryEnvironment,
+} from '@/shared/config/sentry';
 import { beforeBrowserSentryBreadcrumb, beforeSendBrowserSentryEvent } from './browser-filtering';
 
 type SentryRuntimeOptions = {
