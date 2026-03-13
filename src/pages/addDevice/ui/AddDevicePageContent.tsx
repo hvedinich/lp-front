@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { AuthPageLayout } from '@/widgets/authLayout';
-import { useSubmitOnboarding } from '../lib/useSubmitOnboarding';
+import { useSubmitOnboarding } from '../model/useSubmitOnboarding';
 import { buildLoginRedirect } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
 import type { OnboardingFormValues, OnboardingStep } from '../model/types';

@@ -2,7 +2,7 @@ import { Box, Flex, Grid, IconProps, Text, chakra } from '@chakra-ui/react';
 import { FC } from 'react';
 import { PLATFORM_ICON } from '../lib/constants';
 import { getPlatformLabel } from '../lib/helpers';
-import { ContactPlatform } from '@/shared/lib';
+import type { ContactPlatform } from '@/entities/hostedPage';
 
 interface PlatformCardsListProps {
   title: string;

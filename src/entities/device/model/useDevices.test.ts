@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
 import { getDevices } from '../api/getDevices';
 import { useDevices } from './useDevices';
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from './types';
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn((options: unknown) => options),

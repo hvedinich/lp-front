@@ -4,7 +4,7 @@ import {
   mapConfigureDeviceFormValues,
   mapDeviceToFormValues,
 } from './device.mapper';
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from '../model/types';
 
 describe('deviceForm', () => {
   it('provides stable default values', () => {

@@ -1,4 +1,4 @@
-import { ContactPlatform, ReviewPlatform } from '@/shared/lib';
+import type { ContactPlatform, ReviewPlatform } from '@/entities/hostedPage';
 
 export const REVIEW_PLATFORMS: ReviewPlatform[] = [
   'google',

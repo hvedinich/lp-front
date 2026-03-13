@@ -6,7 +6,7 @@ import { Button, Flex, Text, Card } from '@chakra-ui/react';
 import { InputField } from '@/shared/ui';
 import { GooglePlacesField } from '@/features/google';
 import { getPlatformLabel } from '../lib/helpers';
-import { ContactPlatform } from '@/shared/lib';
+import type { ContactPlatform } from '@/entities/hostedPage';
 
 interface PlatformInputProps {
   index: number;

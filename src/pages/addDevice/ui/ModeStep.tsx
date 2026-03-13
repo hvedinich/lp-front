@@ -5,7 +5,7 @@ import type { OnboardingFormValues } from '../model/types';
 import { SelectOptionCard } from '@/shared/ui';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
-import { DeviceModeEnum } from '@/shared/lib';
+import { DeviceModeEnum } from '@/entities/device';
 
 interface ModeStepProps {
   onNext: () => void;

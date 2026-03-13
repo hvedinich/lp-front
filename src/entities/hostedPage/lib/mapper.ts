@@ -1,6 +1,5 @@
-import { PlatformLink } from '@/shared/lib';
 import type { HostedPageDTO } from '../api/dto';
-import type { HostedPage } from '../model/types';
+import type { HostedPage, PlatformLink } from '../model/types';
 
 export const mapHostedPageDTO = (dto: HostedPageDTO): HostedPage => ({
   id: dto.id,

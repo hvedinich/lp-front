@@ -3,25 +3,23 @@ import {
   type ActivateSingleDevicePayload,
   type ActivateMultiDevicePayload,
   useDeviceActions,
+  DeviceModeEnum,
 } from '@/entities/device';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
-import { OnboardingFormValues } from '../model/types';
+import {
+  OnboardingFormValues,
+  OnboardMultiDevicePayload,
+  OnboardSingleDevicePayload,
+} from './types';
 import { useTranslation } from 'react-i18next';
-import {
-  type OnboardMultiDevicePayload,
-  type OnboardSingleDevicePayload,
-  useHasActiveSession,
-  useOnboardDevice,
-} from '@/entities/auth';
-import { ContactPlatform, DeviceModeEnum, PlatformLink } from '@/shared/lib';
-import {
-  locationSelectionSelectors,
-  useCreateLocation,
-  type CreateLocationDtoRequest,
-} from '@/entities/location';
+import { useHasActiveSession } from '@/entities/auth';
+import type { ContactPlatform, PlatformLink } from '@/entities/hostedPage';
+import { locationSelectionSelectors } from '@/entities/location';
 import { useUiStore } from '@/shared/store';
-import { getDeviceName } from './helpers';
+import { getDeviceName } from '../lib/helpers';
+import { useOnboardLocation } from './useOnboardLocation';
+import { useOnboardDevice } from './useOnboardDevice';
 
 export const useSubmitOnboarding = ({
   methods,
@@ -51,11 +49,11 @@ export const useSubmitOnboarding = ({
     },
     scope: {},
   });
-  const createLocationMutation = useCreateLocation({ scope: { accountId } });
+  const onboardLocation = useOnboardLocation({ scope: { accountId } });
 
   const { activateDevice, isActivatePending } = useDeviceActions({ accountId });
 
-  const isSubmitting = isActivatePending || isOnboarding || createLocationMutation.isPending;
+  const isSubmitting = isActivatePending || isOnboarding || onboardLocation.isPending;
 
   const onSubmit = async () => {
     const formData = methods.getValues();
@@ -67,18 +65,21 @@ export const useSubmitOnboarding = ({
       .filter((l) => l.type && l.url)
       .map((l) => ({ type: l.type as ContactPlatform, url: l.url }));
 
-    const locationPayload: CreateLocationDtoRequest = {
+    const locationBase = {
       ...googleLocation?.location,
       name: googleLocation?.location?.name || t('addDevice.location.defaultName'),
       address: googleLocation?.location?.address || t('addDevice.location.defaultAddress'),
-      pageConfig: {
-        links: JSON.stringify(prepLinks),
-      },
     };
+    const linksConfig = { links: JSON.stringify(prepLinks) };
 
     if (isAuth) {
       const locationId = isNewLocation
-        ? (await createLocationMutation.mutateAsync(locationPayload)).id
+        ? (
+            await onboardLocation.mutateAsync({
+              ...locationBase,
+              publishedConfig: linksConfig,
+            })
+          ).location.id
         : currentLocationId;
 
       const activateDevicePayload =
@@ -108,7 +109,7 @@ export const useSubmitOnboarding = ({
           region: device.locale,
           contentLanguage: device.locale,
         },
-        location: locationPayload,
+        location: { ...locationBase, pageConfig: linksConfig },
         device: onboardingDevicePayload,
         deviceName,
       });
