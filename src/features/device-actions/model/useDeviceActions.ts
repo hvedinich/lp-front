@@ -2,18 +2,17 @@ import { useTranslation } from 'react-i18next';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useUiStore } from '@/shared/store';
 import { toaster } from '@/shared/ui';
-import { resolveDeviceToastMessage } from './deviceErrorUi';
 import {
-  ActivateMultiDevicePayload,
-  ActivateSingleDevicePayload,
-  Device,
-  DeviceFormValues,
-} from './types';
-import { mapConfigureDeviceFormValues } from '../lib/device.mapper';
-import { DeviceError } from './errors';
-import { useActivateDevice } from './useActivateDevice';
-import { useConfigureDevice } from './useConfigureDevice';
-import { useDeactivateDevice } from './useDeactivateDevice';
+  type ActivateMultiDevicePayload,
+  type ActivateSingleDevicePayload,
+  type Device,
+  type DeviceError,
+  useActivateDevice,
+  useConfigureDevice,
+  useDeactivateDevice,
+} from '@/entities/device';
+import { resolveDeviceToastMessage } from './deviceErrorUi';
+import { type DeviceFormValues, mapConfigureDeviceFormValues } from './deviceForm';
 
 interface UseDeviceActionsOptions {
   accountId: string;

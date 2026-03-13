@@ -17,7 +17,7 @@ export interface DeviceDto {
   updatedAt: string;
 }
 
-interface DeviceLifecycleDtoRequest {
+export interface DeviceLifecycleDtoRequest {
   locationId: string;
   mode: DeviceModeEnum;
   locale?: string | null;
@@ -25,10 +25,6 @@ interface DeviceLifecycleDtoRequest {
   singleLinkUrl?: string | null;
   type?: string | null;
 }
-
-export type ActivateDeviceDtoRequest = DeviceLifecycleDtoRequest;
-
-export type ConfigureDeviceDtoRequest = DeviceLifecycleDtoRequest;
 
 export type DeviceListFilters = {
   locationId?: string;

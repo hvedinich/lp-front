@@ -1,10 +1,10 @@
+import { DeviceModeEnum } from '@/entities/device';
 import { describe, expect, it } from 'vitest';
 import {
   deviceFormDefaultValues,
   mapConfigureDeviceFormValues,
   mapDeviceToFormValues,
-} from './device.mapper';
-import { DeviceModeEnum } from '../model/types';
+} from './deviceForm';
 
 describe('deviceForm', () => {
   it('provides stable default values', () => {

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   type ActivateSingleDevicePayload,
   type ActivateMultiDevicePayload,
-  useDeviceActions,
   DeviceModeEnum,
 } from '@/entities/device';
 import { useRouter } from 'next/router';
@@ -20,6 +19,7 @@ import { useUiStore } from '@/shared/store';
 import { getDeviceName } from '../lib/helpers';
 import { useOnboardLocation } from './useOnboardLocation';
 import { useOnboardDevice } from './useOnboardDevice';
+import { useDeviceActions } from '@/features/device-actions';
 
 export const useSubmitOnboarding = ({
   methods,
