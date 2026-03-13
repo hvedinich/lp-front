@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { DeviceModeEnum } from '@/entities/device';
 import { useDeviceActions } from './useDeviceActions';
-import { DeviceModeEnum } from './types';
 
 const {
   activateMutateAsync,

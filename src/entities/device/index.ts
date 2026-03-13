@@ -1,3 +1,6 @@
+export { useDeactivateDevice } from './model/useDeactivateDevice';
+export { useConfigureDevice } from './model/useConfigureDevice';
+export { useActivateDevice } from './model/useActivateDevice';
 export type { DeviceError } from './model/errors';
 export { useDeviceById } from './model/useDeviceById';
 export { useDevices } from './model/useDevices';
@@ -9,5 +12,4 @@ export type {
 } from './model/types';
 export { DeviceModeEnum } from './model/types';
 export { usePublicDevice } from './model/usePublicDevice';
-export { useDeviceActions } from './model/useDeviceActions';
-export { resolveDeviceToastMessage } from './model/deviceErrorUi';
+export type { DeviceLifecycleDtoRequest } from './api/device.dto';

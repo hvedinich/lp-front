@@ -45,11 +45,3 @@ export interface ActivateSingleDevicePayload {
   targetMode: DeviceModeEnum.SINGLE;
   singleLinkUrl: string;
 }
-
-export interface DeviceFormValues {
-  locale: string;
-  mode: DeviceModeEnum;
-  name: string;
-  singleLinkUrl: string;
-  type: string;
-}

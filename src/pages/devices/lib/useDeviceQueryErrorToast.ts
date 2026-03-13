@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { resolveDeviceToastMessage, type DeviceError } from '@/entities/device';
+import { type DeviceError } from '@/entities/device';
 import { toaster } from '@/shared/ui';
+import { resolveDeviceToastMessage } from '@/features/device-actions';
 
 interface UseDeviceQueryErrorToastOptions {
   error: DeviceError | null | undefined;

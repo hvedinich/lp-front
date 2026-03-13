@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { configureDevice } from '../api/configureDevice';
-import type { ConfigureDeviceDtoRequest } from '../api/device.dto';
+import type { DeviceLifecycleDtoRequest } from '../api/device.dto';
 import { mapDeviceDto } from '../lib/device.mapper';
 import { mapToDeviceError, type DeviceError } from './errors';
 import { invalidateDevices } from './invalidateDevices';
@@ -10,7 +10,7 @@ import type { MutationHookOptions } from '@/shared/lib';
 
 export interface ConfigureDeviceVariables {
   id: string;
-  input: ConfigureDeviceDtoRequest;
+  input: DeviceLifecycleDtoRequest;
   previousLocationId?: string | null;
 }
 
