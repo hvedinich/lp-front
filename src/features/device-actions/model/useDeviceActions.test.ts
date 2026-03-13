@@ -41,26 +41,24 @@ vi.mock('@/shared/store', () => ({
     }),
 }));
 
-vi.mock('./useActivateDevice', () => ({
-  useActivateDevice: vi.fn(() => ({
-    isPending: false,
-    mutateAsync: activateMutateAsync,
-  })),
-}));
-
-vi.mock('./useConfigureDevice', () => ({
-  useConfigureDevice: vi.fn(() => ({
-    isPending: true,
-    mutateAsync: configureMutateAsync,
-  })),
-}));
-
-vi.mock('./useDeactivateDevice', () => ({
-  useDeactivateDevice: vi.fn(() => ({
-    isPending: false,
-    mutateAsync: deactivateMutateAsync,
-  })),
-}));
+vi.mock('@/entities/device', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/entities/device')>();
+  return {
+    ...actual,
+    useActivateDevice: vi.fn(() => ({
+      isPending: false,
+      mutateAsync: activateMutateAsync,
+    })),
+    useConfigureDevice: vi.fn(() => ({
+      isPending: true,
+      mutateAsync: configureMutateAsync,
+    })),
+    useDeactivateDevice: vi.fn(() => ({
+      isPending: false,
+      mutateAsync: deactivateMutateAsync,
+    })),
+  };
+});
 
 describe('useDeviceActions', () => {
   beforeEach(() => {

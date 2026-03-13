@@ -4,9 +4,13 @@ import { onboardDevice } from './onboarding';
 import { DeviceModeEnum } from '@/entities/device';
 import { DeviceOnboardingResponse, OnboardPayload } from './types';
 
-vi.mock('@/shared/api', () => ({
-  apiRequest: vi.fn(),
-}));
+vi.mock('@/shared/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/shared/api')>();
+  return {
+    ...actual,
+    apiRequest: vi.fn(),
+  };
+});
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 

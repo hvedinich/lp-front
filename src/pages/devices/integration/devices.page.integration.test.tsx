@@ -29,9 +29,13 @@ vi.mock('react-i18next', async (importOriginal) => {
   };
 });
 
-vi.mock('@/entities/device', () => ({
-  useDevices,
-}));
+vi.mock('@/entities/device', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/entities/device')>();
+  return {
+    ...actual,
+    useDevices,
+  };
+});
 
 vi.mock('@/features/location-selection', () => ({
   useLocationSelection,
