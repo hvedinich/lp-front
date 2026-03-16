@@ -224,7 +224,7 @@
     },
     "location": {
       "title": "Choose a location for this device",
-      "description": "Select existed one or add a new location for device",
+      "description": "Select en existed one or add a new location for the device",
       "newLocationTitle": "Create new location",
       "newLocationDescription": "Set up this device from scratch with its own page and review links",
       "defaultName": "New location",
@@ -292,7 +292,8 @@
       "requiredField": "The field cannot be empty",
       "nameMin": "Name must be at least 2 characters",
       "passwordMin": "Password must be at least 8 characters",
-      "passwordsMismatch": "Passwords do not match"
+      "passwordsMismatch": "Passwords do not match",
+      "consentRequired": "Please confirm your consent"
     }
   },
   "login": {

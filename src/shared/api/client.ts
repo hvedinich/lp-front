@@ -48,12 +48,21 @@ client.setRefreshHandler(async () => {
 export const apiRequest = async <TResponse, TBody = unknown>(
   options: ApiRequestOptions<TBody>,
 ): Promise<TResponse> => {
-  const queryParams = new URLSearchParams(options?.params).toString();
+  const newParams = new URLSearchParams(options?.params);
+  const separatorIndex = options.path.indexOf('?');
+  const basePath = separatorIndex === -1 ? options.path : options.path.slice(0, separatorIndex);
+  const existingParams = new URLSearchParams(
+    separatorIndex === -1 ? '' : options.path.slice(separatorIndex + 1),
+  );
+  for (const [key, val] of newParams) {
+    existingParams.set(key, val);
+  }
+  const merged = existingParams.toString();
 
   try {
     return await client.request<TResponse, TBody>({
       ...options,
-      path: queryParams ? `${options.path}?${queryParams}` : options.path,
+      path: merged ? `${basePath}?${merged}` : basePath,
       skipAuthRefresh: options.skipAuthRefresh ?? nonRefreshablePaths.has(options.path),
     });
   } catch (error) {

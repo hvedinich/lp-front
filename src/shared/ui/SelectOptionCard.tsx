@@ -1,4 +1,4 @@
-import { Box, Card, CardRootProps, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Card, CardRootProps, Flex, Heading, Text, chakra } from '@chakra-ui/react';
 
 type SelectOptionCardProps = {
   title?: string;
@@ -18,58 +18,60 @@ export function SelectOptionCard({
   ...props
 }: SelectOptionCardProps) {
   return (
-    <Card.Root
-      borderColor={isSelected ? 'border.focus' : 'border.muted'}
-      cursor='button'
-      p='6'
-      borderWidth='thin'
-      transition='opacity'
-      onClick={onSelect}
-      {...props}
-    >
-      {children}
-      <Flex
-        flexDir='column'
-        flexGrow={1}
-        gap='1'
+    <chakra.button>
+      <Card.Root
+        borderColor={isSelected ? 'border.focus' : 'border.muted'}
+        cursor='button'
+        p='6'
+        borderWidth='thin'
+        transition='opacity'
+        onClick={onSelect}
+        {...props}
       >
-        <Heading size='md'>{title}</Heading>
-        <Box
-          p='1'
-          position='absolute'
-          right='3'
-          top='3'
-          boxSize={4}
-          display={isSelected ? 'block' : 'none'}
-          borderRadius='full'
-          bg='bg.inverted'
+        {children}
+        <Flex
+          flexDir='column'
+          flexGrow={1}
+          gap='1'
         >
+          <Heading size='md'>{title}</Heading>
           <Box
-            bg='bg.subtle'
-            boxSize={2}
+            p='1'
+            position='absolute'
+            right='3'
+            top='3'
+            boxSize={4}
+            display={isSelected ? 'block' : 'none'}
             borderRadius='full'
-          />
-        </Box>
+            bg='bg.inverted'
+          >
+            <Box
+              bg='bg.subtle'
+              boxSize={2}
+              borderRadius='full'
+            />
+          </Box>
 
-        {(description || subDescription) && (
-          <Flex flexDir='column'>
-            <Text
-              lineHeight='short'
-              fontWeight='light'
-            >
-              {description}
-            </Text>
-            {subDescription && (
+          {(description || subDescription) && (
+            <Flex flexDir='column'>
               <Text
-                fontSize='sm'
+                lineHeight='short'
                 fontWeight='light'
               >
-                {subDescription}
+                {description}
               </Text>
-            )}
-          </Flex>
-        )}
-      </Flex>
-    </Card.Root>
+              {subDescription && (
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                >
+                  {subDescription}
+                </Text>
+              )}
+            </Flex>
+          )}
+        </Flex>
+      </Card.Root>
+    </chakra.button>
   );
 }

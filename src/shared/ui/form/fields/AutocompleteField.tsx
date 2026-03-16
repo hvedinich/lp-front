@@ -3,6 +3,7 @@ import { SearchIcon } from 'lucide-react';
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   useController,
+  type Control,
   type FieldError,
   type FieldPath,
   type FieldValues,
@@ -29,6 +30,7 @@ export interface AutocompleteFieldProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > {
   name: TName;
+  control?: Control<TFieldValues>;
   rules?: ValidationRules<TFieldValues, TName>;
   options: AutocompleteOption[];
   isLoading?: boolean;
@@ -45,7 +47,10 @@ export interface AutocompleteFieldProps<
   inputProps?: InputProps;
 }
 
-const AutocompleteField = ({
+const AutocompleteField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
   options,
   isLoading = false,
   onSearch,
@@ -58,9 +63,10 @@ const AutocompleteField = ({
   debounceMs = 300,
   minChars = 2,
   name,
+  control,
   rules,
   inputProps,
-}: AutocompleteFieldProps) => {
+}: AutocompleteFieldProps<TFieldValues, TName>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,7 +74,7 @@ const AutocompleteField = ({
   const {
     field: { onChange, value, ref },
     fieldState: { invalid, error },
-  } = useController({ name, rules });
+  } = useController({ name, control, rules });
 
   const collection = useMemo(() => createListCollection({ items: options }), [options]);
 

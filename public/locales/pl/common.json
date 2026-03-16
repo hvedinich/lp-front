@@ -292,7 +292,8 @@
       "requiredField": "To pole nie może być puste",
       "nameMin": "Imię musi mieć co najmniej 2 znaki",
       "passwordMin": "Hasło musi mieć co najmniej 8 znaków",
-      "passwordsMismatch": "Hasła nie są zgodne"
+      "passwordsMismatch": "Hasła nie są zgodne",
+      "consentRequired": "Proszę potwierdzić swoją zgodę"
     }
   },
   "login": {

@@ -28,6 +28,9 @@ export const createAddDeviceSchema = (t: TFunction<'common'>) =>
     mode: z.enum([DeviceModeEnum.MULTI, DeviceModeEnum.SINGLE]),
     links: createLinksSchema(t),
     isNotify: z.boolean(),
-    isConsent: z.boolean(),
+    isConsent: z.boolean().refine((val) => val === true, {
+      message: t('addDevice.validation.consentRequired'),
+    }),
+
     singleLinkUrl: z.string().optional(),
   });

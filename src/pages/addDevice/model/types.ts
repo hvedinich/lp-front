@@ -6,7 +6,7 @@ import type { AutocompleteOption } from '@/shared/ui';
 
 export type OnboardingStep = 'location' | 'mode' | 'platformLinks' | 'userInfo' | 'success';
 
-export interface UserFormValues {
+interface UserFormValues {
   email: string;
   name: string;
   phone: string;

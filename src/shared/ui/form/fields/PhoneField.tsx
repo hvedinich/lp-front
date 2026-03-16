@@ -2,6 +2,7 @@ import { Button, Field, Flex, Input, Menu } from '@chakra-ui/react';
 import { type ChangeEvent, type ReactNode, useState } from 'react';
 import {
   useController,
+  useFormState,
   type Control,
   type FieldPath,
   type FieldValues,
@@ -9,7 +10,7 @@ import {
 } from 'react-hook-form';
 import FormFieldMeta from './FormFieldMeta';
 import ReactCountryFlag from 'react-country-flag';
-import { applyPhoneMask, PHONE_COUNTRIES, maskDigitCount } from '@/shared/lib';
+import { applyPhoneMask, PHONE_COUNTRIES, maskDigitCount, PhoneCountry } from '@/shared/lib';
 
 type ValidationRules<
   TFieldValues extends FieldValues,
@@ -48,6 +49,7 @@ const PhoneField = <
     field,
     fieldState: { invalid, error },
   } = useController({ name, control, rules });
+  const { disabled } = useFormState({ control });
 
   const [countryCode, setCountryCode] = useState(defaultCountry);
   const country = PHONE_COUNTRIES.find((c) => c.code === countryCode) ?? PHONE_COUNTRIES[0]!;
@@ -61,7 +63,9 @@ const PhoneField = <
 
   const handleCountryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newCode = e.target.value;
-    const newCountry = PHONE_COUNTRIES.find((c) => c.code === newCode)!;
+    if (!newCode) return;
+
+    const newCountry: PhoneCountry = PHONE_COUNTRIES.find((c) => c.code === newCode)!;
 
     const trimmed = localDigits.slice(0, maskDigitCount(newCountry.mask));
     setCountryCode(newCode);
@@ -83,7 +87,7 @@ const PhoneField = <
 
       <Flex w='full'>
         <Menu.Root>
-          <Menu.Trigger>
+          <Menu.Trigger disabled={disabled}>
             <Button
               borderTopRightRadius='none'
               borderBottomRightRadius='none'
@@ -125,6 +129,7 @@ const PhoneField = <
         </Menu.Root>
 
         <Input
+          disabled={disabled}
           flexGrow={1}
           ref={field?.ref}
           type='tel'

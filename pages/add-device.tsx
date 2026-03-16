@@ -1,4 +1,3 @@
-// import { AddDevicePage } from '@/pages/addDevice';
 import { PageSpinner } from '@/shared/ui';
 import dynamic from 'next/dynamic';
 

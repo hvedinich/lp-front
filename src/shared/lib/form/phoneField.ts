@@ -1,11 +1,11 @@
-interface Country {
+export interface PhoneCountry {
   code: string;
   name: string;
   dialCode: string;
   mask: string;
 }
 
-export const PHONE_COUNTRIES: Country[] = [
+export const PHONE_COUNTRIES: PhoneCountry[] = [
   { code: 'us', name: 'United States', dialCode: '1', mask: '(###) ###-####' },
   { code: 'pl', name: 'Poland', dialCode: '48', mask: '### ### ###' },
   { code: 'at', name: 'Austria', dialCode: '43', mask: '### ### ####' },

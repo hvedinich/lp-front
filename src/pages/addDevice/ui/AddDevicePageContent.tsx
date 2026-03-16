@@ -6,7 +6,6 @@ import { AuthPageLayout } from '@/widgets/authLayout';
 import { useSubmitOnboarding } from '../model/useSubmitOnboarding';
 import { buildLoginRedirect } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
-import type { OnboardingFormValues, OnboardingStep } from '../model/types';
 import { createAddDeviceSchema } from '../model/schema';
 import { EmailConflictNotification } from './EmailConflictNotification';
 import LocationStep from './LocationStep';
@@ -14,6 +13,7 @@ import ModeStep from './ModeStep';
 import PlatformLinksStep from './PlatformLinksStep';
 import UserInfoStep from './UserInfoStep';
 import SuccessStep from './SuccessStep';
+import { OnboardingFormValues, OnboardingStep } from '../model/types';
 
 const AUTH_STEPS: OnboardingStep[] = ['location', 'mode', 'platformLinks', 'success'];
 const NEW_USER_STEPS: OnboardingStep[] = ['mode', 'platformLinks', 'userInfo', 'success'];
@@ -26,7 +26,7 @@ interface AddDevicePageContentProps {
 export default function AddDevicePageContent({ defaultValues, isAuth }: AddDevicePageContentProps) {
   const router = useRouter();
 
-  const shortCode = router.query.id;
+  const shortCode = typeof router.query.id === 'string' ? router.query.id : undefined;
   const isSuccess = router.query.success === 'true';
   const steps = isAuth ? AUTH_STEPS : NEW_USER_STEPS;
 

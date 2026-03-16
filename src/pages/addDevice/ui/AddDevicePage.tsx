@@ -16,10 +16,14 @@ export default function AddDevicePage() {
 
   const deviceQuery = usePublicDevice({ scope: { shortCode } });
   const sessionQuery = useHasActiveSession({ options: { enabled: router.isReady } });
-  const accountId = sessionQuery.data?.payload?.account.id ?? '';
-  const locationsQuery = useLocations({ scope: { accountId }, options: { enabled: true } });
 
   const isAuth = sessionQuery?.data?.state === 'authenticated';
+  const accountId = sessionQuery.data?.payload?.account.id ?? '';
+
+  const locationsQuery = useLocations({
+    scope: { accountId },
+    options: { enabled: isAuth && !!accountId },
+  });
 
   const isLoading =
     !router.isReady ||

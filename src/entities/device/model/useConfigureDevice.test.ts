@@ -75,7 +75,7 @@ describe('useConfigureDevice', () => {
     }) as unknown as {
       mutationFn: (input: {
         id: string;
-        input: { locationId: string; mode: DeviceModeEnum.MULTI };
+        input: { locationId: string; mode: DeviceModeEnum };
         previousLocationId?: string | null;
       }) => Promise<{ locationId: string }>;
       onSuccess?: (...args: unknown[]) => void;
@@ -85,7 +85,7 @@ describe('useConfigureDevice', () => {
       id: 'dev-1',
       input: {
         locationId: 'loc-1',
-        mode: DeviceModeEnum.MULTI as const,
+        mode: DeviceModeEnum.MULTI,
       },
       previousLocationId: 'loc-1',
     };
