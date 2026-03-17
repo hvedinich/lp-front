@@ -339,7 +339,7 @@ interface NewUserOnboardingFixtures {
 // newUserOnboardingTest: unauthenticated browser page + authenticated API context for device mgmt
 export const newUserOnboardingTest = test.extend<NewUserOnboardingFixtures>({
   deviceRequest: async ({ browser, appStorageStatePath }, applyFixture) => {
-    const baseURL = resolveE2EBaseUrl();
+    const baseURL = envTest.playwright.baseUrl;
     const ctx = await browser.newContext({ baseURL, storageState: appStorageStatePath });
     try {
       await applyFixture(ctx.request);

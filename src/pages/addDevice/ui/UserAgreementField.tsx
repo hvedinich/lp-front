@@ -2,9 +2,9 @@ import { Flex, Text, useToken } from '@chakra-ui/react';
 import { CheckboxField } from '@/shared/ui';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { env } from '@/shared/config';
+import { envApp } from '@/shared/config';
 
-const LANDING_URL = env.app.landingUrl;
+const LANDING_URL = envApp.app.landingUrl;
 
 const UserAgreementField = () => {
   const { t } = useTranslation('common');

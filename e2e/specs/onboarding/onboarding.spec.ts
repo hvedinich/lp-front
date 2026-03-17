@@ -1,7 +1,6 @@
 import type { Page, Request, Response } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { onboardingTest, newUserOnboardingTest } from '../../fixtures/test';
-import { env } from '../../../src/shared/config/env';
 import {
   deactivateDevice,
   deactivateDeviceWithToken,
@@ -27,6 +26,7 @@ import {
   expectSuccessStepVisible,
   clickFinishButton,
 } from '../../support/helpers/add-device-screen';
+import { envTest } from '@/shared/config';
 
 // Suppress unused import warnings for type-only imports used in JSDoc
 void (undefined as unknown as Page);
@@ -35,8 +35,8 @@ void (undefined as unknown as Request);
 // ─── Device Pool ──────────────────────────────────────────────────────────────
 
 const getDevice = (index: number): { shortCode: string; id: string } => {
-  const shortCodes = env.playwright.onboardingDeviceShortCodes;
-  const ids = env.playwright.onboardingDeviceIds;
+  const shortCodes = envTest.playwright.onboardingDeviceShortCodes;
+  const ids = envTest.playwright.onboardingDeviceIds;
 
   if (shortCodes.length === 0 || ids.length === 0) {
     throw new Error(

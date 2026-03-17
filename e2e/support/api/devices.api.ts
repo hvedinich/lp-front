@@ -1,7 +1,7 @@
 import type { APIRequestContext } from '@playwright/test';
 import { request as playwrightRequest } from '@playwright/test';
 import { apiRequest, ensureOk } from './client.api';
-import { resolveE2EBaseUrl } from '../helpers/base-url';
+import { envTest } from '@/shared/config';
 
 export const deactivateDevice = async (
   request: APIRequestContext,
@@ -21,7 +21,7 @@ export const deactivateDeviceWithToken = async (
   deviceId: string,
 ): Promise<void> => {
   const ctx = await playwrightRequest.newContext({
-    baseURL: resolveE2EBaseUrl(),
+    baseURL: envTest.playwright.baseUrl,
     extraHTTPHeaders: { Authorization: `Bearer ${accessToken}` },
   });
   try {
@@ -43,7 +43,7 @@ export const deleteOnboardedAccount = async (
   userId: string,
 ): Promise<void> => {
   const ctx = await playwrightRequest.newContext({
-    baseURL: resolveE2EBaseUrl(),
+    baseURL: envTest.playwright.baseUrl,
     extraHTTPHeaders: { Authorization: `Bearer ${accessToken}` },
   });
   try {

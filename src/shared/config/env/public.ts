@@ -11,6 +11,10 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_LOCALES: z.preprocess(emptyStringToUndefined, z.string().default('en,pl,ru')),
   NEXT_PUBLIC_SITE_URL: z.preprocess(emptyStringToUndefined, z.url().optional()),
   NEXT_PUBLIC_VERCEL_URL: z.preprocess(emptyStringToUndefined, z.string().min(1).optional()),
+  NEXT_PUBLIC_LANDING_URL: z.preprocess(
+    emptyStringToUndefined,
+    z.string().default('https://localprof.com'),
+  ),
 });
 
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
@@ -21,6 +25,7 @@ const publicEnvSource = {
   NEXT_PUBLIC_LOCALES: process.env.NEXT_PUBLIC_LOCALES,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+  NEXT_PUBLIC_LANDING_URL: process.env.NEXT_PUBLIC_LANDING_URL,
 } satisfies Record<string, unknown>;
 
 export const envPublic = parseEnv({
@@ -38,5 +43,6 @@ export const envApp = {
       explicitSiteUrl: envPublic.NEXT_PUBLIC_SITE_URL,
       publicVercelUrl: envPublic.NEXT_PUBLIC_VERCEL_URL,
     }),
+    landingUrl: envPublic.NEXT_PUBLIC_LANDING_URL,
   },
 } as const;
