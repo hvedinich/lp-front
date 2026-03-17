@@ -157,7 +157,7 @@ describe('useSubmitOnboarding', () => {
       const { onSubmit } = useSubmitOnboarding({
         methods: makeMethods({
           mode: DeviceModeEnum.SINGLE,
-          links: [{ type: 'GOOGLE', url: 'https://g.co/review' }],
+          links: [{ type: 'google', url: 'https://g.co/review' }],
         } as Partial<OnboardingFormValues>),
         isAuth: false,
         onComplete: vi.fn(),
@@ -193,9 +193,9 @@ describe('useSubmitOnboarding', () => {
       const { onSubmit } = useSubmitOnboarding({
         methods: makeMethods({
           links: [
-            { type: 'GOOGLE', url: 'https://g.co/review' },
+            { type: 'google', url: 'https://g.co/review' },
             { type: '', url: 'https://example.com' },
-            { type: 'FACEBOOK', url: '' },
+            { type: 'facebook', url: '' },
           ] as OnboardingFormValues['links'],
         }),
         isAuth: false,
@@ -204,9 +204,9 @@ describe('useSubmitOnboarding', () => {
 
       await onSubmit();
 
-      const calledWith = onboardDeviceMutateAsync.mock.calls[0][0];
+      const calledWith = onboardDeviceMutateAsync?.mock?.calls?.[0]?.[0];
       const parsedLinks = JSON.parse(calledWith.location.pageConfig.links);
-      expect(parsedLinks).toEqual([{ type: 'GOOGLE', url: 'https://g.co/review' }]);
+      expect(parsedLinks).toEqual([{ type: 'google', url: 'https://g.co/review' }]);
     });
   });
 

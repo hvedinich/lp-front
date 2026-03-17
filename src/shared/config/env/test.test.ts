@@ -25,6 +25,8 @@ describe('envTestRuntime', () => {
       PLAYWRIGHT_E2E_SCOPE: undefined,
       PLAYWRIGHT_LOCATION_PREFIX: 'PW-E2E',
       PLAYWRIGHT_WORKERS: undefined,
+      PLAYWRIGHT_ONBOARDING_DEVICE_IDS: 'id',
+      PLAYWRIGHT_ONBOARDING_DEVICE_SHORT_CODES: 'onbording-test',
     });
   });
 
