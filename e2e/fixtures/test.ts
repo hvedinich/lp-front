@@ -9,9 +9,9 @@ import {
 } from '../support/api/auth.api';
 import type { SessionPayload } from '../support/contracts/backend.types';
 import { apiRequest, toApiError } from '../support/api/client.api';
-import { resolveE2EBaseUrl } from '../support/helpers/base-url';
 import { createAuthFixture, type AuthFixture } from './auth.fixture';
 import { createLocationFixture, type LocationFixture } from './location.fixture';
+import { envTest } from '@/shared/config/env';
 
 interface E2EFixtures {
   auth: AuthFixture;
@@ -56,7 +56,7 @@ interface FailureAttachmentPayload {
   workerIndex: number;
 }
 
-const DEBUG_E2E_AUTH = process.env.PLAYWRIGHT_DEBUG_ARTIFACTS === '1';
+const DEBUG_E2E_AUTH = envTest.playwright.debugArtifacts;
 
 const logStorageBootstrap = (event: string, details: Record<string, unknown> = {}): void => {
   if (!DEBUG_E2E_AUTH) {
@@ -93,7 +93,7 @@ const createAppStorageStateFixture = async (
   applyFixture: (value: string) => Promise<void>,
   workerInfo: WorkerInfo,
 ) => {
-  const baseURL = resolveE2EBaseUrl();
+  const baseURL = envTest.playwright.baseUrl;
   const authDir = join(process.cwd(), 'e2e', 'storage');
   await mkdir(authDir, { recursive: true });
   const authScope = `app-worker-${workerInfo.workerIndex}`;

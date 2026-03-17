@@ -2,6 +2,7 @@ import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { sleep } from './client.api';
+import { envTest } from '@/shared/config';
 
 export interface SharedLoginResponse {
   headers?: Record<string, string>;
@@ -19,7 +20,7 @@ const AUTH_LOGIN_STATE_PATH = join(tmpdir(), 'lp-front-e2e-auth-login-state.json
 const AUTH_LOGIN_LOCK_TIMEOUT_MS = 90_000;
 const AUTH_LOGIN_LOCK_RETRY_MS = 200;
 const MIN_LOGIN_GAP_MS = 400;
-const DEBUG_E2E_AUTH = process.env.PLAYWRIGHT_DEBUG_ARTIFACTS === '1';
+const DEBUG_E2E_AUTH = envTest.playwright.debugArtifacts;
 
 const logSharedAuth = (event: string, details: Record<string, unknown> = {}): void => {
   if (!DEBUG_E2E_AUTH) {

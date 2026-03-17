@@ -26,7 +26,7 @@ const config = {
   test: {
     environment: 'node',
     globals: true,
-    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'config/**/*.test.ts'],
   },
 };
 

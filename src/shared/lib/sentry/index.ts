@@ -1,0 +1,1 @@
+export { captureAppError } from './captureAppError';

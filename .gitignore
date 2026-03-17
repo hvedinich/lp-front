@@ -51,3 +51,14 @@ chakra-config.json
 # Planning / scratch files — never commit
 *_PLAN.md
 .gitnexus
+
+# AI Factory — generated agent docs, skills, MCP config
+.ai-factory/
+.ai-factory.json
+.github/skills/aif*
+.claude/skills/aif*
+.codex/skills/aif*
+.mcp.json
+
+# LocalProf — generated reports
+/reports/
