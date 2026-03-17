@@ -6,8 +6,6 @@ import {
   Text,
   createListCollection,
   type ComboboxRootProps,
-  type ComboboxControlProps,
-  type ComboboxInputProps,
 } from '@chakra-ui/react';
 import { ChevronDown, MapPin } from 'lucide-react';
 import { useRouter } from 'next/router';
@@ -16,19 +14,14 @@ import { useTranslation } from 'react-i18next';
 import { AppIcon } from '@/shared/ui';
 import { useLocationSelection } from '../model/useLocationSelection';
 
-export interface LocationSelectorProps extends Partial<ComboboxRootProps> {
+export interface LocationSelectorProps extends Omit<ComboboxRootProps, 'variant' | 'collection'> {
   onLocationSelect?: () => void;
-  iconSize?: number;
-  inputProps?: ComboboxInputProps;
-  controlProps?: Omit<ComboboxControlProps, 'color'>;
+  variant?: 'default' | 'card';
 }
 
 export const LocationSelector = ({
   onLocationSelect,
-  iconSize = 16,
-  inputProps,
-  controlProps,
-  onClick,
+  variant = 'default',
   ...rest
 }: LocationSelectorProps) => {
   const router = useRouter();
@@ -64,13 +57,12 @@ export const LocationSelector = ({
 
   const hasLocations = locations.length > 0;
   const isLoading = locationsQuery.isPending;
+  const isDefaultUI = variant === 'default';
 
   return (
-    <Stack
-      gap='2'
-      onClick={(e) => onClick?.(e)}
-    >
+    <Stack gap='2'>
       <Combobox.Root
+        size={isDefaultUI ? 'md' : 'lg'}
         open={isOpen}
         collection={collection}
         data-testid='location-selector-root'
@@ -88,16 +80,6 @@ export const LocationSelector = ({
           setIsOpen(true);
           e.stopPropagation();
         }}
-        onValueChange={(details) => {
-          const locationId = details.value[0];
-          if (!locationId) {
-            return;
-          }
-
-          onSelectLocation(locationId);
-          setSearchQuery('');
-          onLocationSelect?.();
-        }}
         closeOnSelect
         {...rest}
       >
@@ -106,16 +88,15 @@ export const LocationSelector = ({
             color='fg.muted'
             position='absolute'
             insetY='1'
-            insetStart='3'
+            insetStart={isDefaultUI ? '3' : '2'}
             display='inline-flex'
             alignItems='center'
             justifyContent='center'
             pointerEvents='none'
-            {...controlProps}
           >
             <AppIcon
               icon={MapPin}
-              size={iconSize}
+              size={isDefaultUI ? 16 : 24}
             />
           </Box>
           <Combobox.Input
@@ -128,7 +109,7 @@ export const LocationSelector = ({
             }
             disabled={!hasLocations || isLoading}
             ps='10'
-            {...inputProps}
+            layerStyle={isDefaultUI ? 'none' : 'emptyInput'}
           />
           <Combobox.IndicatorGroup>
             <Combobox.Trigger data-testid='location-selector-trigger'>
@@ -151,6 +132,16 @@ export const LocationSelector = ({
                 key={option.value}
                 item={option}
                 borderRadius='2xl'
+                onClick={() => {
+                  const locationId = option.value;
+                  if (!locationId) {
+                    return;
+                  }
+
+                  onSelectLocation(locationId);
+                  setSearchQuery('');
+                  onLocationSelect?.();
+                }}
                 data-testid={`location-selector-option-${option.value}`}
               >
                 <Combobox.ItemText>{option.label}</Combobox.ItemText>

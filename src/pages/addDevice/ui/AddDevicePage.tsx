@@ -48,7 +48,7 @@ export default function AddDevicePage() {
       isAuth={isAuth}
       defaultValues={{
         ...DEFAULT_VALUES,
-        isNewLocation: !isAuth,
+        isNewLocation: locationsQuery?.data?.length && isAuth ? !isAuth : true,
         device: deviceQuery.data!,
       }}
     />

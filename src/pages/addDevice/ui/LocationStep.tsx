@@ -5,7 +5,7 @@ import { PlusIcon, SelectOptionCard } from '@/shared/ui';
 import type { OnboardingFormValues } from '../model/types';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
-import { LocationSelector } from '@/features/location-selection';
+import { LocationSelector, useLocationSelection } from '@/features/location-selection';
 
 interface LocationStepProps {
   onNext: () => void;
@@ -16,6 +16,9 @@ const LocationStep = ({ onNext }: LocationStepProps) => {
 
   const { setValue, getValues } = useFormContext<OnboardingFormValues>();
   const isNewLocation = getValues('isNewLocation');
+
+  const { locations } = useLocationSelection();
+  const hasLocation = !!locations?.length;
 
   const handleNext = async (isCreatingNew: boolean) => {
     setValue('isNewLocation', isCreatingNew);
@@ -36,23 +39,19 @@ const LocationStep = ({ onNext }: LocationStepProps) => {
         flexDir='column'
         gap='4'
       >
-        <SelectOptionCard
-          px='4'
-          isSelected={!isNewLocation}
-          onSelect={() => handleNext(false)}
-          overflow='visible'
-        >
-          <LocationSelector
-            size='lg'
-            iconSize={24}
-            onClick={(e) => e.preventDefault()}
-            onLocationSelect={() => handleNext(false)}
-            inputProps={{
-              layerStyle: 'emptyInput',
-            }}
-            controlProps={{ insetStart: '2' }}
-          />
-        </SelectOptionCard>
+        {hasLocation && (
+          <SelectOptionCard
+            px='4'
+            isSelected={!isNewLocation}
+            onSelect={() => handleNext(false)}
+            overflow='visible'
+          >
+            <LocationSelector
+              variant='card'
+              onLocationSelect={() => handleNext(false)}
+            />
+          </SelectOptionCard>
+        )}
 
         <SelectOptionCard
           alignItems='center'

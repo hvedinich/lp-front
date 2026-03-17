@@ -1,4 +1,4 @@
-import type { Browser, WorkerInfo } from '@playwright/test';
+import type { APIRequestContext, Browser, WorkerInfo } from '@playwright/test';
 import { expect, test as base } from '@playwright/test';
 import { access, mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -312,6 +312,40 @@ export const devicesTest = test.extend<SerializedLocationStateFixture>({
   },
   storageState: async ({ appStorageStatePath }, applyFixture) => {
     await applyFixture(appStorageStatePath);
+  },
+});
+
+// onboardingTest: authenticated browser session + location fixture (for auth-user onboarding tests)
+export const onboardingTest = test.extend<SerializedLocationStateFixture>({
+  locationTestPrefix: async ({ locations }, applyFixture, testInfo) => {
+    const prefix = await locations.cleanupForTest(testInfo.testId);
+
+    try {
+      await applyFixture(prefix);
+    } finally {
+      await locations.cleanupAfterTest(testInfo, prefix);
+    }
+  },
+  storageState: async ({ appStorageStatePath }, applyFixture) => {
+    await applyFixture(appStorageStatePath);
+  },
+});
+
+interface NewUserOnboardingFixtures {
+  // Authenticated API context for device setup/teardown; page remains unauthenticated
+  deviceRequest: APIRequestContext;
+}
+
+// newUserOnboardingTest: unauthenticated browser page + authenticated API context for device mgmt
+export const newUserOnboardingTest = test.extend<NewUserOnboardingFixtures>({
+  deviceRequest: async ({ browser, appStorageStatePath }, applyFixture) => {
+    const baseURL = resolveE2EBaseUrl();
+    const ctx = await browser.newContext({ baseURL, storageState: appStorageStatePath });
+    try {
+      await applyFixture(ctx.request);
+    } finally {
+      await ctx.close();
+    }
   },
 });
 

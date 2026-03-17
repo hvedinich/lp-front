@@ -39,7 +39,7 @@ export default function AddDevicePageContent({ defaultValues, isAuth }: AddDevic
   const methods = useZodForm<OnboardingFormValues>({
     schema,
     defaultValues,
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
   const onComplete = async () => {

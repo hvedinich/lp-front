@@ -83,7 +83,7 @@ const CheckboxField = <
           onBlur={onBlur}
           ref={ref}
         />
-        <Checkbox.Control>
+        <Checkbox.Control data-testid={`checkbox_${name}`}>
           <Checkbox.Indicator />
         </Checkbox.Control>
         <Checkbox.Label>{label}</Checkbox.Label>

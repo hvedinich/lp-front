@@ -40,6 +40,7 @@ export function PlatformCard({ platform, url, ...props }: PlatformCardProps) {
         <Link
           fontSize='xs'
           href={url}
+          onClick={(e) => e.stopPropagation()}
           color='fg.muted'
           target='_blank'
           overflow='hidden'
