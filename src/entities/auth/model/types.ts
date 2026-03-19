@@ -1,4 +1,4 @@
-import { AuthAccountSummary, AuthUserSummary } from '@/entities/contracts';
+import { AuthAccountSummary, AuthUserSummary } from '@/entities/_contracts';
 
 export interface RegisterAccountPayload {
   name: string;

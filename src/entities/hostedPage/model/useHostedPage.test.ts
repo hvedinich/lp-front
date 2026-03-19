@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useQuery } from '@tanstack/react-query';
-import { HostedPageDTO } from '@/entities/contracts';
+import { HostedPageDTO } from '@/entities/_contracts';
 import { getHostedPageByLocation } from '../api/api';
 import { useHostedPage } from './useHostedPage';
 

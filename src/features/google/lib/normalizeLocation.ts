@@ -1,4 +1,4 @@
-import { LocationPayload } from '@/entities/location';
+import type { LocationPayload } from '@/entities/location';
 import type { PlaceDetails } from './google-places.types';
 
 /**

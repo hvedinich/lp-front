@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { authQueryKeys } from '@/entities/contracts';
+import { authQueryKeys } from '@/entities/_contracts';
 import type { QueryHookOptions } from '@/shared/lib';
 import { getAuthSessionState } from '../api/session';
 import type { AuthSession } from './types';

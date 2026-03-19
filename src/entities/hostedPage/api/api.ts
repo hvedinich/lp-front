@@ -1,4 +1,4 @@
-import type { HostedPageDTO } from '@/entities/contracts';
+import type { HostedPageDTO } from '@/entities/_contracts';
 import { apiRequest } from '@/shared/api';
 
 export const getHostedPageByLocation = async (locationId: string): Promise<HostedPageDTO> => {

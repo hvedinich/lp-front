@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MutationHookOptions } from '@/shared/lib';
-import { authQueryKeys } from '@/entities/contracts';
+import { authQueryKeys } from '@/entities/_contracts';
 import { OnboardDevicePayload } from './types';
 import { onboardDevice } from '../api/onboardDevice';
 import { DeviceError, mapToDeviceError } from './errors';

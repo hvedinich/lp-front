@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authQueryKeys } from '@/entities/contracts';
+import { authQueryKeys } from '@/entities/_contracts';
 import type { MutationHookOptions } from '@/shared/lib';
 import { registerUser } from '../api/register';
 import type { RegisterPayload, RegisterResponse } from './types';

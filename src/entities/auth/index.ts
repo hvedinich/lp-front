@@ -1,5 +1,5 @@
 export { logoutUser } from './api/logout';
-export { authQueryKeys } from '../contracts/authQueryKeys';
+export { authQueryKeys } from '../_contracts/authQueryKeys';
 export { useHasActiveSession } from './model/useHasActiveSession';
 export { useLoginUser } from './model/useLoginUser';
 export { useRegisterUser } from './model/useRegisterUser';

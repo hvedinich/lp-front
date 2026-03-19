@@ -72,7 +72,7 @@ export default defineConfig([
             ...layerAllowRules(),
             {
               from: ['features', 'widgets', 'pages'],
-              disallow: [['entities', { slice: 'contracts' }]],
+              disallow: [['entities', { slice: '_contracts' }]],
             },
           ],
         },

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { apiRequest } from '@/shared/api';
-import type { HostedPageDTO } from '@/entities/contracts';
+import type { HostedPageDTO } from '@/entities/_contracts';
 import { getHostedPageByLocation } from './api';
 
 vi.mock('@/shared/api', () => ({

@@ -1,4 +1,4 @@
-import { LocationPayload } from '@/entities/contracts';
+import { LocationPayload } from '@/entities/_contracts';
 
 export type DeviceStatus = 'active' | 'disabled' | 'unconfigured';
 export interface PublicDevice {

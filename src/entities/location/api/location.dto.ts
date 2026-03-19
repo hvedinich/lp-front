@@ -1,4 +1,4 @@
-import { HostedPageDTO } from '@/entities/contracts';
+import { HostedPageDTO } from '@/entities/_contracts';
 import type { ListQueryParams } from '@/shared/lib';
 
 export interface LocationDto {

@@ -1,5 +1,5 @@
 import type { ListQueryParams } from '@/shared/lib';
-import { AuthAccountSummary, AuthUserSummary } from '@/entities/contracts';
+import { AuthAccountSummary, AuthUserSummary } from '@/entities/_contracts';
 import { DeviceModeEnum, DeviceStatus } from '../model/types';
 
 export interface DeviceDto {

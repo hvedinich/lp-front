@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authQueryKeys } from '@/entities/contracts';
+import { authQueryKeys } from '@/entities/_contracts';
 import type { MutationHookOptions } from '@/shared/lib';
 import { loginUser } from '../api/login';
 import type { LoginPayload, LoginResponse } from './types';
