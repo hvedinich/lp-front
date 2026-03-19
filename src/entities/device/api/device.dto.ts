@@ -1,4 +1,5 @@
 import type { ListQueryParams } from '@/shared/lib';
+import { AuthAccountSummary, AuthUserSummary } from '@/entities/contracts';
 import { DeviceModeEnum, DeviceStatus } from '../model/types';
 
 export interface DeviceDto {
@@ -31,3 +32,12 @@ export type DeviceListFilters = {
 };
 
 export type GetDevicesParams = ListQueryParams<DeviceListFilters>;
+
+export interface DeviceOnboardingResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUserSummary;
+  account: AuthAccountSummary;
+  locationId: string;
+  deviceId: string;
+}

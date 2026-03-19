@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { CheckboxField, InputField, PhoneField } from '@/shared/ui';
-import type { OnboardingFormValues } from '@/features/onboarding';
+import type { OnboardingFormValues } from '../model/types';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
 import UserAgreementField from './UserAgreementField';

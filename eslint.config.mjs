@@ -62,7 +62,21 @@ export default defineConfig([
     },
     rules: {
       // Layer dependency enforcement: default disallow, then allow downward
-      'boundaries/element-types': ['error', { default: 'disallow', rules: layerAllowRules() }],
+      // Note: features/widgets/pages cannot import `entities/contracts` directly;
+      // they must go through the owning entity's index.ts public API.
+      'boundaries/element-types': [
+        'error',
+        {
+          default: 'disallow',
+          rules: [
+            ...layerAllowRules(),
+            {
+              from: ['features', 'widgets', 'pages'],
+              disallow: [['entities', { slice: 'contracts' }]],
+            },
+          ],
+        },
+      ],
 
       // Public API enforcement: cross-slice imports only through index barrel
       'boundaries/entry-point': [

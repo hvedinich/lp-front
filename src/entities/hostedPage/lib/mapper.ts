@@ -1,4 +1,4 @@
-import type { HostedPageDTO } from '../api/dto';
+import { HostedPageDTO } from '@/entities/contracts';
 import type { HostedPage, PlatformLink } from '../model/types';
 
 export const mapHostedPageDTO = (dto: HostedPageDTO): HostedPage => ({

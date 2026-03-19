@@ -1,8 +1,9 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { apiRequest } from '@/shared/api';
-import { onboardDevice } from './onboarding';
+import { onboardDevice } from './onboardDevice';
 import { DeviceModeEnum } from '@/entities/device';
-import { DeviceOnboardingResponse, OnboardPayload } from '../model/types';
+import { OnboardDevicePayload } from '../model/types';
+import { DeviceOnboardingResponse } from './device.dto';
 
 vi.mock('@/shared/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/shared/api')>();
@@ -14,7 +15,7 @@ vi.mock('@/shared/api', async (importOriginal) => {
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
-const makePayload = (overrides: Partial<OnboardPayload> = {}): OnboardPayload => ({
+const makePayload = (overrides: Partial<OnboardDevicePayload> = {}): OnboardDevicePayload => ({
   email: 'owner@example.com',
   name: 'Jan Kowalski',
   phone: '+48123456345',

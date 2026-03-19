@@ -1,3 +1,5 @@
+import { LocationPayload } from '@/entities/contracts';
+
 export type DeviceStatus = 'active' | 'disabled' | 'unconfigured';
 export interface PublicDevice {
   id: string;
@@ -44,4 +46,30 @@ export interface ActivateSingleDevicePayload {
   locationId: string;
   targetMode: DeviceModeEnum.SINGLE;
   singleLinkUrl: string;
+}
+
+export interface OnboardMultiDevicePayload {
+  id: string;
+  mode: DeviceModeEnum.MULTI;
+}
+
+export interface OnboardSingleDevicePayload {
+  id: string;
+  mode: DeviceModeEnum.SINGLE;
+  targetUrl: string;
+}
+
+export interface OnboardDevicePayload {
+  email: string;
+  name: string;
+  phone: string;
+  password: string;
+  account: {
+    name: string;
+    region: string;
+    contentLanguage: string;
+  };
+  location: LocationPayload;
+  device: OnboardSingleDevicePayload | OnboardMultiDevicePayload;
+  deviceName: string;
 }

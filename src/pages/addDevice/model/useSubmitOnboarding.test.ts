@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { DeviceModeEnum } from '@/entities/device';
+import { DeviceError, DeviceModeEnum } from '@/entities/device';
 import type { UseFormReturn } from 'react-hook-form';
 import { useSubmitOnboarding } from './useSubmitOnboarding';
-import type { OnboardDeviceError, OnboardingFormValues } from '@/features/onboarding';
+import { OnboardingFormValues } from './types';
 
 // ── Hoisted mocks ─────────────────────────────────────────────────────────────
 
@@ -18,7 +18,7 @@ const {
   setIsEmailConflict: vi.fn(),
 }));
 
-let capturedOnboardDeviceOnError: ((err: OnboardDeviceError) => void) | undefined;
+let capturedOnboardDeviceOnError: ((err: DeviceError) => void) | undefined;
 let isOnboarding = false;
 let isOnboardLocationPending = false;
 let isActivatePending = false;
@@ -60,18 +60,27 @@ vi.mock('@/shared/store', () => ({
     selector({ selectedLocationIdByAccountId: { 'acc-1': 'loc-existing' } }),
 }));
 
-vi.mock('@/features/onboarding', () => ({
-  useOnboardDevice: vi.fn(
-    (params: { options?: { onError?: (err: OnboardDeviceError) => void } }) => {
+vi.mock('@/entities/location', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/entities/location')>();
+  return {
+    ...actual,
+    useOnboardLocation: vi.fn(() => ({
+      mutateAsync: onboardLocationMutateAsync,
+      isPending: isOnboardLocationPending,
+    })),
+  };
+});
+
+vi.mock('@/entities/device', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/entities/device')>();
+  return {
+    ...actual,
+    useOnboardDevice: vi.fn((params: { options?: { onError?: (err: DeviceError) => void } }) => {
       capturedOnboardDeviceOnError = params.options?.onError;
       return { mutateAsync: onboardDeviceMutateAsync, isPending: isOnboarding };
-    },
-  ),
-  useOnboardLocation: vi.fn(() => ({
-    mutateAsync: onboardLocationMutateAsync,
-    isPending: isOnboardLocationPending,
-  })),
-}));
+    }),
+  };
+});
 
 vi.mock('@/features/device-actions', () => ({
   useDeviceActions: vi.fn(() => ({

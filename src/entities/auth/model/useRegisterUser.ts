@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { authQueryKeys } from '@/entities/contracts';
+import type { MutationHookOptions } from '@/shared/lib';
 import { registerUser } from '../api/register';
 import type { RegisterPayload, RegisterResponse } from './types';
-import { authQueryKeys } from './queryKeys';
-import type { MutationHookOptions } from '@/shared/lib';
 
 export const useRegisterUser = (
   params: MutationHookOptions<Record<string, never>, RegisterResponse, RegisterPayload> = {

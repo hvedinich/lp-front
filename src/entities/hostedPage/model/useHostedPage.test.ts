@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useQuery } from '@tanstack/react-query';
+import { HostedPageDTO } from '@/entities/contracts';
 import { getHostedPageByLocation } from '../api/api';
 import { useHostedPage } from './useHostedPage';
-import type { HostedPageDTO } from '../api/dto';
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn((options: unknown) => options),

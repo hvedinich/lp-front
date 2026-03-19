@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { authQueryKeys } from '@/entities/contracts';
+import type { MutationHookOptions } from '@/shared/lib';
 import { loginUser } from '../api/login';
 import type { LoginPayload, LoginResponse } from './types';
-import { authQueryKeys } from './queryKeys';
-import type { MutationHookOptions } from '@/shared/lib';
 
 export const useLoginUser = (
   params: MutationHookOptions<Record<string, never>, LoginResponse, LoginPayload> = {
