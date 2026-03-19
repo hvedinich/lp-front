@@ -10,7 +10,7 @@ vi.mock('@tanstack/react-query', () => ({
   useQueryClient: vi.fn(),
 }));
 
-vi.mock('./onboarding', () => ({
+vi.mock('../api/onboarding', () => ({
   onboardDevice: vi.fn(),
   createOnboardingLocation: vi.fn(),
 }));

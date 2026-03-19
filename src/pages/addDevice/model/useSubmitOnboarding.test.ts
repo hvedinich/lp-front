@@ -60,16 +60,13 @@ vi.mock('@/shared/store', () => ({
     selector({ selectedLocationIdByAccountId: { 'acc-1': 'loc-existing' } }),
 }));
 
-vi.mock('./useOnboardDevice', () => ({
+vi.mock('@/features/onboarding', () => ({
   useOnboardDevice: vi.fn(
     (params: { options?: { onError?: (err: OnboardDeviceError) => void } }) => {
       capturedOnboardDeviceOnError = params.options?.onError;
       return { mutateAsync: onboardDeviceMutateAsync, isPending: isOnboarding };
     },
   ),
-}));
-
-vi.mock('./useOnboardLocation', () => ({
   useOnboardLocation: vi.fn(() => ({
     mutateAsync: onboardLocationMutateAsync,
     isPending: isOnboardLocationPending,
