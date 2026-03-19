@@ -4,8 +4,6 @@ import { LocationPayload } from '@/entities/location';
 import type { PlatformLink } from '@/entities/hostedPage';
 import type { AutocompleteOption } from '@/shared/ui';
 
-export type OnboardingStep = 'location' | 'mode' | 'platformLinks' | 'userInfo' | 'success';
-
 interface UserFormValues {
   email: string;
   name: string;

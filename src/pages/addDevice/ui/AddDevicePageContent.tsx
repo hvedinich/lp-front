@@ -13,7 +13,9 @@ import ModeStep from './ModeStep';
 import PlatformLinksStep from './PlatformLinksStep';
 import UserInfoStep from './UserInfoStep';
 import SuccessStep from './SuccessStep';
-import { OnboardingFormValues, OnboardingStep } from '../model/types';
+import { OnboardingFormValues } from '@/features/onboarding';
+
+type OnboardingStep = 'location' | 'mode' | 'platformLinks' | 'userInfo' | 'success';
 
 const AUTH_STEPS: OnboardingStep[] = ['location', 'mode', 'platformLinks', 'success'];
 const NEW_USER_STEPS: OnboardingStep[] = ['mode', 'platformLinks', 'userInfo', 'success'];

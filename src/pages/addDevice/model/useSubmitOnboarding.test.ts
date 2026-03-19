@@ -2,8 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DeviceModeEnum } from '@/entities/device';
 import type { UseFormReturn } from 'react-hook-form';
 import { useSubmitOnboarding } from './useSubmitOnboarding';
-import type { OnboardingFormValues } from './types';
-import type { OnboardDeviceError } from './errors';
+import type { OnboardDeviceError, OnboardingFormValues } from '@/features/onboarding';
 
 // ── Hoisted mocks ─────────────────────────────────────────────────────────────
 

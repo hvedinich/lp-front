@@ -2,7 +2,7 @@ import { Box, Grid, Stack, Text, Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { OnboardingFormValues } from '../model/types';
+import type { OnboardingFormValues } from '@/features/onboarding';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
 import PlatformInput from './PlatformInput';

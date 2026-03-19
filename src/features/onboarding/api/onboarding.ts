@@ -4,7 +4,7 @@ import type {
   OnboardPayload,
   OnboardLocationPayload,
   OnboardLocationResponse,
-} from './types';
+} from '../model/types';
 
 export const onboardDevice = async (payload: OnboardPayload): Promise<DeviceOnboardingResponse> => {
   return apiRequest<DeviceOnboardingResponse, OnboardPayload>({

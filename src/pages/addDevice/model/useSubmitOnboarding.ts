@@ -6,20 +6,20 @@ import {
 } from '@/entities/device';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
-import {
-  OnboardingFormValues,
-  OnboardMultiDevicePayload,
-  OnboardSingleDevicePayload,
-} from './types';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import type { ContactPlatform, PlatformLink } from '@/entities/hostedPage';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useUiStore } from '@/shared/store';
 import { getDeviceName } from '../lib/helpers';
-import { useOnboardLocation } from './useOnboardLocation';
-import { useOnboardDevice } from './useOnboardDevice';
 import { useDeviceActions } from '@/features/device-actions';
+import {
+  type OnboardingFormValues,
+  type OnboardMultiDevicePayload,
+  type OnboardSingleDevicePayload,
+  useOnboardDevice,
+  useOnboardLocation,
+} from '@/features/onboarding';
 
 export const useSubmitOnboarding = ({
   methods,

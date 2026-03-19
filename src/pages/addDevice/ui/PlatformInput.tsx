@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { OnboardingFormValues } from '../model/types';
+import type { OnboardingFormValues } from '@/features/onboarding';
 import { PLATFORM_ICON, PLATFORM_URL_PATTERNS } from '../lib/constants';
 import { Button, Flex, Text, Card } from '@chakra-ui/react';
 import { InputField } from '@/shared/ui';

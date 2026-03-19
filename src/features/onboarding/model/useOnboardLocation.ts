@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { locationQueryKeys } from '@/entities/location';
 import type { MutationHookOptions } from '@/shared/lib';
 import { mapToOnboardDeviceError, type OnboardDeviceError } from './errors';
-import { createOnboardingLocation } from './onboarding';
 import type { OnboardLocationResponse, OnboardLocationPayload } from './types';
+import { createOnboardingLocation } from '../api/onboarding';
 
 interface OnboardLocationScope {
   accountId: string;

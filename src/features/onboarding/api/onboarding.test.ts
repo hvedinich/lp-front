@@ -2,7 +2,7 @@ import { describe, expect, it, vi, afterEach } from 'vitest';
 import { apiRequest } from '@/shared/api';
 import { onboardDevice } from './onboarding';
 import { DeviceModeEnum } from '@/entities/device';
-import { DeviceOnboardingResponse, OnboardPayload } from './types';
+import { DeviceOnboardingResponse, OnboardPayload } from '../model/types';
 
 vi.mock('@/shared/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/shared/api')>();

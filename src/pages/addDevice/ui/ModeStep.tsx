@@ -1,7 +1,7 @@
 import { Flex, Stack } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { OnboardingFormValues } from '../model/types';
+import type { OnboardingFormValues } from '@/features/onboarding';
 import { SelectOptionCard } from '@/shared/ui';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';

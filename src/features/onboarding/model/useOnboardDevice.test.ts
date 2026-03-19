@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
 import { DeviceModeEnum } from '@/entities/device';
-import { onboardDevice } from './onboarding';
 import { useOnboardDevice } from './useOnboardDevice';
 import type { OnboardPayload, DeviceOnboardingResponse } from './types';
+import { onboardDevice } from '../api/onboarding';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),

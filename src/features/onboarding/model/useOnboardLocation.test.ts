@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
-import { createOnboardingLocation } from './onboarding';
 import { useOnboardLocation } from './useOnboardLocation';
 import type { OnboardLocationPayload, OnboardLocationResponse } from './types';
+import { createOnboardingLocation } from '../api/onboarding';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),
