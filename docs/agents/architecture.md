@@ -140,7 +140,7 @@ In this repository, an entity includes:
 Entity public API rules:
 
 - entities must expose React Query hooks from `index.ts` (not raw transport functions)
-- pages/features/widgets must consume entity hooks, not direct `api/*` functions
+- pages/features/widgets must consume entity hooks, not direct `api/*` functions; exception: a pages/features/widgets slice may call `api/*` functions directly when the logic is specific to that slice and is not reused elsewhere
 - mutation usage style is hook-first, for example: `const { mutate: loginUser } = useLoginUser()`
 
 Recommended entity layout:
@@ -185,7 +185,7 @@ Layer usage:
 
 - `entities`: base query/mutation hooks
 - `features`: workflow orchestration and side effects
-- `pages/widgets`: composition and UI wiring only
+- `pages/widgets`: composition and UI wiring only; exception: a page or widget slice may define a `useMutation` directly when the mutation logic is specific to that slice and is not reused elsewhere
 
 ## 8.1 Client State Standard (Zustand)
 

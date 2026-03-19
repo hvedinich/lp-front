@@ -1,16 +1,19 @@
-const jsonResponse = (status: number, payload: unknown): Response => {
-  return new Response(JSON.stringify(payload), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    status,
-  });
-};
+import { ApiError } from '@/shared/api';
+import { getAuthSessionState } from './session';
+import { vi, beforeEach } from 'vitest';
 
-const loadSessionApi = async () => {
-  vi.resetModules();
-  return import('./session');
-};
+const { apiRequestMock } = vi.hoisted(() => ({
+  apiRequestMock: vi.fn(),
+}));
+
+vi.mock('@/shared/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/shared/api')>();
+
+  return {
+    ...actual,
+    apiRequest: apiRequestMock,
+  };
+});
 
 const authSessionPayload = {
   account: {
@@ -29,119 +32,47 @@ const authSessionPayload = {
   },
 } as const;
 
+const createApiError = (status: number): ApiError =>
+  new ApiError({
+    code: null,
+    context: {
+      attempt: 0,
+      method: 'GET',
+      path: '/auth/me',
+      skipAuthRefresh: false,
+      url: 'http://localhost:3000/auth/me',
+    },
+    durationMs: 1,
+    message: 'Request failed',
+    status,
+  });
+
 describe('getAuthSessionState', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
+  beforeEach(() => {
+    apiRequestMock.mockReset();
   });
 
   it('returns authenticated when /auth/me succeeds', async () => {
-    const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
-      const url = String(input);
+    apiRequestMock.mockResolvedValue(authSessionPayload);
 
-      if (url.endsWith('/auth/me')) {
-        return jsonResponse(200, authSessionPayload);
-      }
-
-      return new Response(null, { status: 404 });
-    });
-
-    vi.stubGlobal('fetch', fetchSpy);
-
-    const { getAuthSessionState } = await loadSessionApi();
     await expect(getAuthSessionState()).resolves.toEqual({
       payload: authSessionPayload,
       state: 'authenticated',
     });
   });
 
-  it('refreshes and retries when /auth/me returns nested TOKEN_EXPIRED', async () => {
-    let sessionCalls = 0;
-    let refreshCalls = 0;
+  it('returns unauthenticated when /auth/me returns 401', async () => {
+    apiRequestMock.mockRejectedValue(createApiError(401));
 
-    const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
-      const url = String(input);
-
-      if (url.endsWith('/auth/refresh')) {
-        refreshCalls += 1;
-        return jsonResponse(200, {
-          accessToken: 'next-access-token',
-          refreshToken: 'next-refresh-token',
-        });
-      }
-
-      if (url.endsWith('/auth/me')) {
-        sessionCalls += 1;
-
-        if (sessionCalls === 1) {
-          return jsonResponse(401, {
-            error: {
-              code: 'TOKEN_EXPIRED',
-              message: 'Access token expired',
-            },
-          });
-        }
-
-        return jsonResponse(200, authSessionPayload);
-      }
-
-      return new Response(null, { status: 404 });
-    });
-
-    vi.stubGlobal('fetch', fetchSpy);
-
-    const { getAuthSessionState } = await loadSessionApi();
-    await expect(getAuthSessionState()).resolves.toEqual({
-      payload: authSessionPayload,
-      state: 'authenticated',
-    });
-    expect(sessionCalls).toBe(2);
-    expect(refreshCalls).toBe(1);
-  });
-
-  it('returns unauthenticated when refresh fails', async () => {
-    let refreshCalls = 0;
-
-    const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
-      const url = String(input);
-
-      if (url.endsWith('/auth/refresh')) {
-        refreshCalls += 1;
-        return jsonResponse(401, {
-          code: 'refresh_expired',
-          message: 'Refresh expired',
-        });
-      }
-
-      if (url.endsWith('/auth/me')) {
-        return jsonResponse(401, {
-          code: 'token_expired',
-          message: 'Token expired',
-        });
-      }
-
-      return new Response(null, { status: 404 });
-    });
-
-    vi.stubGlobal('fetch', fetchSpy);
-
-    const { getAuthSessionState } = await loadSessionApi();
     await expect(getAuthSessionState()).resolves.toEqual({
       payload: null,
       state: 'unauthenticated',
     });
-    expect(refreshCalls).toBe(1);
   });
 
   it('returns unknown on transport failures', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => {
-        throw new TypeError('Network down');
-      }),
-    );
+    apiRequestMock.mockRejectedValue(new TypeError('Network down'));
 
-    const { getAuthSessionState } = await loadSessionApi();
     await expect(getAuthSessionState()).resolves.toEqual({
       payload: null,
       state: 'unknown',

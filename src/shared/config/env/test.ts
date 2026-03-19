@@ -28,6 +28,11 @@ const testRuntimeEnvSchema = z.object({
     emptyStringToUndefined,
     z.coerce.number().int().positive().max(16).optional(),
   ),
+  PLAYWRIGHT_ONBOARDING_DEVICE_SHORT_CODES: z.preprocess(
+    emptyStringToUndefined,
+    z.string().default('onbording-test'),
+  ),
+  PLAYWRIGHT_ONBOARDING_DEVICE_IDS: z.preprocess(emptyStringToUndefined, z.string().default('id')),
 });
 
 export type TestRuntimeEnv = z.infer<typeof testRuntimeEnvSchema>;
@@ -79,5 +84,13 @@ export const envTest = {
     locationPrefix: envTestRuntime.PLAYWRIGHT_LOCATION_PREFIX,
     scope: envTestRuntime.PLAYWRIGHT_E2E_SCOPE,
     workers: envTestRuntime.PLAYWRIGHT_WORKERS,
+    onboardingDeviceShortCodes:
+      envTestRuntime.PLAYWRIGHT_ONBOARDING_DEVICE_SHORT_CODES?.split(',')
+        .map((s) => s.trim())
+        .filter(Boolean) ?? [],
+    onboardingDeviceIds:
+      envTestRuntime.PLAYWRIGHT_ONBOARDING_DEVICE_IDS?.split(',')
+        .map((s) => s.trim())
+        .filter(Boolean) ?? [],
   },
 } as const;

@@ -1,16 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { activateDevice } from '../api/activateDevice';
-import type { ActivateDeviceDtoRequest } from '../api/device.dto';
 import { mapDeviceDto } from '../lib/device.mapper';
 import { mapToDeviceError, type DeviceError } from './errors';
 import { invalidateDevices } from './invalidateDevices';
 import { deviceQueryKeys } from './queryKeys';
-import type { Device } from './types';
+import type { ActivateMultiDevicePayload, ActivateSingleDevicePayload, Device } from './types';
 import type { MutationHookOptions } from '@/shared/lib';
 
 export interface ActivateDeviceVariables {
   id: string;
-  input: ActivateDeviceDtoRequest;
+  input: ActivateMultiDevicePayload | ActivateSingleDevicePayload;
   previousLocationId?: string | null;
 }
 
@@ -27,7 +26,7 @@ export const useActivateDevice = (
   return useMutation<Device, DeviceError, ActivateDeviceVariables>({
     mutationFn: async ({ id, input }) => {
       try {
-        const response = await activateDevice(id, input);
+        const response = await activateDevice({ id, input });
         return mapDeviceDto(response);
       } catch (error) {
         throw mapToDeviceError(error);

@@ -1,16 +1,20 @@
 import { Box, type StackProps } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Location, UpdateLocationDtoRequest } from '@/entities/location';
+import {
+  type Location,
+  type UpdateLocationDtoRequest,
+  type LocationFormValues,
+} from '@/entities/location';
 import { useZodForm } from '@/shared/lib';
 import { Form, FormControls, toaster } from '@/shared/ui';
+import { LocationFormFields } from './LocationFormFields';
+import { createLocationSchema } from '../lib/locationSchema';
 import {
   locationFormDefaultValues,
   mapLocationToFormValues,
   mapUpdateLocationFormValues,
-} from '../model/locationForm';
-import { createLocationSchema, type LocationFormValues } from '../model/locationSchema';
-import { LocationFormFields } from './LocationFormFields';
+} from '../lib/locationForm';
 
 type LocationEditorMode = 'create' | 'edit';
 

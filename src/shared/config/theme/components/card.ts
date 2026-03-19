@@ -16,7 +16,7 @@ export const cardSlotRecipe = defineSlotRecipe({
     root: {
       bg: 'bg.surface',
       shadow: 'card',
-      borderRadius: 'card',
+      borderRadius: '2xl',
       overflow: 'hidden',
     },
     header: {

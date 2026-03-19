@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
 import { getDevice } from '../api/getDevice';
 import { useDeviceById } from './useDeviceById';
+import { DeviceModeEnum } from './types';
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn((options: unknown) => options),
@@ -46,7 +47,7 @@ describe('useDeviceById', () => {
       id: 'dev-1',
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'multilink',
+      mode: DeviceModeEnum.MULTI,
       name: 'Lobby',
       shortCode: 'ABCD-1234',
       status: 'active',

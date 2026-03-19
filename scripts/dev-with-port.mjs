@@ -13,14 +13,14 @@ try {
 
 const port = process.env.PORT || '4000';
 
-const nextBin =
-  process.platform === 'win32'
-    ? path.resolve('node_modules', '.bin', 'next.cmd')
-    : path.resolve('node_modules', '.bin', 'next');
+const nextBin = process.platform === 'win32'
+  ? 'next'
+  : path.resolve('node_modules', '.bin', 'next');
 
 const child = spawn(nextBin, ['dev', '-p', port], {
   stdio: 'inherit',
   env: process.env,
+  shell: process.platform === 'win32',
 });
 
 child.on('exit', (code) => process.exit(code ?? 0));

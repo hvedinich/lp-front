@@ -4,10 +4,9 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import { toaster } from '@/shared/ui';
-import { canManageLocationsRole } from '../model/locationPermissions';
-import { useLocationActions } from '../model/useLocationActions';
-import type { LocationFormValues } from '../model/locationSchema';
+import { canManageLocationsRole } from '../lib/locationPermissions';
 import { LocationEditorForm } from './LocationEditorForm';
+import { LocationFormValues, useLocationActions } from '@/entities/location';
 
 export default function LocationCreatePage() {
   const router = useRouter();

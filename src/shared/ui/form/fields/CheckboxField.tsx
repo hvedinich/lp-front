@@ -55,7 +55,7 @@ const CheckboxField = <
   } = useController({
     name,
     control,
-    rules,
+    rules: { required: isRequired, ...rules },
   });
   const { disabled } = useFormState({ control });
 
@@ -83,7 +83,7 @@ const CheckboxField = <
           onBlur={onBlur}
           ref={ref}
         />
-        <Checkbox.Control>
+        <Checkbox.Control data-testid={`checkbox_${name}`}>
           <Checkbox.Indicator />
         </Checkbox.Control>
         <Checkbox.Label>{label}</Checkbox.Label>

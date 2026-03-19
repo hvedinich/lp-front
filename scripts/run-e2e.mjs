@@ -16,7 +16,7 @@ const runLane = async (lane, laneTargets) => {
 
   await new Promise((resolve, reject) => {
     const child = spawn(
-      process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      'npx',
       ['playwright', 'test', ...laneArgs],
       {
         cwd: process.cwd(),
@@ -25,6 +25,7 @@ const runLane = async (lane, laneTargets) => {
           PLAYWRIGHT_E2E_LANE: lane,
         },
         stdio: 'inherit',
+        shell: process.platform === 'win32',
       },
     );
 

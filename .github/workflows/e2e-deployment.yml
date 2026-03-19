@@ -56,6 +56,8 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           PLAYWRIGHT_E2E_EMAIL: ${{ secrets.PLAYWRIGHT_E2E_EMAIL }}
           PLAYWRIGHT_E2E_PASSWORD: ${{ secrets.PLAYWRIGHT_E2E_PASSWORD }}
+          PLAYWRIGHT_ONBOARDING_DEVICE_SHORT_CODES: ${{ secrets.PLAYWRIGHT_ONBOARDING_DEVICE_SHORT_CODES }}
+          PLAYWRIGHT_ONBOARDING_DEVICE_IDS: ${{ secrets.PLAYWRIGHT_ONBOARDING_DEVICE_IDS }}
         run: npm run test:e2e
 
       - name: Upload Playwright report

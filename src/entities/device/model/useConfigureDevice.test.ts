@@ -4,6 +4,7 @@ import { ApiError } from '@/shared/api';
 import { configureDevice } from '../api/configureDevice';
 import { invalidateDevices } from './invalidateDevices';
 import { useConfigureDevice } from './useConfigureDevice';
+import { DeviceModeEnum } from './types';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),
@@ -58,10 +59,10 @@ describe('useConfigureDevice', () => {
       id: 'dev-1',
       locale: 'en',
       locationId: 'loc-1',
-      mode: 'multilink',
+      mode: DeviceModeEnum.MULTI,
       name: 'Lobby',
       shortCode: 'ABCD-1234',
-      status: 'configured',
+      status: 'active',
       targetUrl: 'https://example.com',
       type: 'tablet',
       updatedAt: '2026-03-02T00:00:00.000Z',
@@ -74,7 +75,7 @@ describe('useConfigureDevice', () => {
     }) as unknown as {
       mutationFn: (input: {
         id: string;
-        input: { locationId: string; mode: 'multilink' };
+        input: { locationId: string; mode: DeviceModeEnum };
         previousLocationId?: string | null;
       }) => Promise<{ locationId: string }>;
       onSuccess?: (...args: unknown[]) => void;
@@ -84,7 +85,7 @@ describe('useConfigureDevice', () => {
       id: 'dev-1',
       input: {
         locationId: 'loc-1',
-        mode: 'multilink' as const,
+        mode: DeviceModeEnum.MULTI,
       },
       previousLocationId: 'loc-1',
     };
@@ -119,14 +120,14 @@ describe('useConfigureDevice', () => {
     }) as unknown as {
       mutationFn: (input: {
         id: string;
-        input: { locationId: string; mode: 'multilink' };
+        input: { locationId: string; mode: DeviceModeEnum.MULTI };
       }) => Promise<unknown>;
     };
 
     await expect(
       mutation.mutationFn({
         id: 'dev-1',
-        input: { locationId: 'loc-1', mode: 'multilink' },
+        input: { locationId: 'loc-1', mode: DeviceModeEnum.MULTI },
       }),
     ).rejects.toEqual({
       code: 'FORBIDDEN',

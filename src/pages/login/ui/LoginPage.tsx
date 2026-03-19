@@ -51,7 +51,7 @@ export default function LoginPage() {
       return;
     }
 
-    if (sessionState === 'authenticated') {
+    if (sessionState === 'authenticated' && !router.query.next) {
       void router.replace('/');
     }
   }, [router, router.isReady, sessionState, sessionQuery.isPending]);

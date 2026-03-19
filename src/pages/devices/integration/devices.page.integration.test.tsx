@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Device } from '@/entities/device';
+import { type Device, DeviceModeEnum } from '@/entities/device';
 import { system } from '@/shared/config';
 import DevicesPage from '../ui/DevicesPage';
 
@@ -29,15 +29,19 @@ vi.mock('react-i18next', async (importOriginal) => {
   };
 });
 
-vi.mock('@/entities/device', () => ({
-  useDevices,
-}));
+vi.mock('@/entities/device', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/entities/device')>();
+  return {
+    ...actual,
+    useDevices,
+  };
+});
 
 vi.mock('@/features/location-selection', () => ({
   useLocationSelection,
 }));
 
-vi.mock('../model/useDeviceQueryErrorToast', () => ({
+vi.mock('../lib/useDeviceQueryErrorToast', () => ({
   useDeviceQueryErrorToast,
 }));
 
@@ -48,7 +52,7 @@ const createDevice = (id: string): Device => ({
   createdAt: new Date('2026-03-01T10:00:00.000Z'),
   locale: 'en',
   locationId: 'loc-1',
-  mode: 'static',
+  mode: DeviceModeEnum.SINGLE,
   name: 'Lobby Tablet',
   shortCode: `SHORT-${id}`,
   status: 'active',
