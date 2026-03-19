@@ -1,4 +1,4 @@
-import { Stack, type StackProps } from '@chakra-ui/react';
+import { Grid, type StackProps } from '@chakra-ui/react';
 import type { Device } from '@/entities/device';
 import { DeviceCard } from './DeviceCard';
 
@@ -9,9 +9,9 @@ interface DevicesListProps extends Omit<StackProps, 'children'> {
 
 export function DevicesList({ devices, onOpen, ...rest }: DevicesListProps) {
   return (
-    <Stack
-      gap='3'
-      {...rest}
+    <Grid
+      gap='2'
+      templateColumns={{ base: '1fr', md: '1fr 1fr' }}
     >
       {devices.map((device) => (
         <DeviceCard
@@ -20,6 +20,6 @@ export function DevicesList({ devices, onOpen, ...rest }: DevicesListProps) {
           onOpen={onOpen}
         />
       ))}
-    </Stack>
+    </Grid>
   );
 }

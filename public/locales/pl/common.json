@@ -10,6 +10,9 @@
       "ru": "Rosyjski"
     }
   },
+  "common": {
+    "comingSoon": "Wkrótce"
+  },
   "workspace": {
     "title": "Obszar roboczy",
     "menuTitle": "Nawigacja",
@@ -133,6 +136,14 @@
       "noTargetUrl": "Docelowy URL nie jest skonfigurowany",
       "modeStatic": "Statyczny",
       "modeMultilink": "Wielolinkowy",
+      "table": {
+        "name": "Nazwa",
+        "shortCode": "Kod",
+        "status": "Status",
+        "mode": "Tryb",
+        "type": "Typ",
+        "targetUrl": "Docelowy URL"
+      },
       "errors": {
         "generic": "Coś poszło nie tak. Spróbuj ponownie.",
         "invalidDeviceId": "Ten link do urządzenia jest nieprawidłowy.",
@@ -141,6 +152,16 @@
         "network": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie.",
         "notFound": "To urządzenie nie istnieje lub nie jest dostępne na Twoim koncie.",
         "validation": "Sprawdź ustawienia urządzenia i spróbuj ponownie."
+      },
+      "addDeviceModal": {
+        "title": "Jak dodać nowe urządzenia",
+        "scanTitle": "Zeskanuj urządzenie",
+        "scanDescription": "Jeśli masz już urządzenie, zeskanuj jego kod QR aparatem telefonu, aby je aktywować.",
+        "orderTitle": "Zamów urządzenie",
+        "orderDescription": "Jeśli nie masz jeszcze urządzenia, możesz je teraz zamówić i wkrótce je otrzymasz.",
+        "manualTitle": "Dodaj urządzenie ręcznie",
+        "codePlaceholder": "Wprowadź kod urządzenia",
+        "shopButton": "Idź do sklepu"
       }
     },
     "devicesForm": {
@@ -151,6 +172,27 @@
         "singleLinkUrlMax": "Single link URL może mieć maksymalnie 2000 znaków",
         "typeMax": "Typ może mieć maksymalnie 80 znaków",
         "singleLinkUrlRequired": "Dla trybu statycznego wymagany jest Single link URL"
+      }
+    },
+    "devicePage": {
+      "tabs": {
+        "overview": "Przegląd",
+        "settings": "Ustawienia"
+      },
+      "settings": {
+        "modeTitle": "Tryb",
+        "singleModeTitle": "Natychmiastowa recenzja",
+        "singleModeDescription": "Klienci trafiają bezpośrednio na stronę z recenzjami",
+        "multiModeTitle": "Wybór platformy",
+        "multiModeDescription": "Klienci najpierw widzą stronę wyboru i decydują, gdzie zostawić recenzję",
+        "platformSectionTitle": "Co zobaczą klienci",
+        "singleModeInfo": "Klienci zostaną przekierowani bezpośrednio na tę stronę",
+        "multiModeInfo": "Klienci zobaczą stronę, na której mogą wybrać, gdzie zostawić recenzję",
+        "deleteButton": "Usuń urządzenie",
+        "deleteConfirmTitle": "Usuń urządzenie",
+        "deleteConfirmDescription": "Czy na pewno chcesz usunąć to urządzenie? Tej operacji nie można cofnąć.",
+        "deleteConfirmButton": "Usuń",
+        "deleteCancelButton": "Anuluj"
       }
     }
   },

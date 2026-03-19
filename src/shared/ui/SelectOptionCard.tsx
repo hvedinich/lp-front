@@ -18,7 +18,10 @@ export function SelectOptionCard({
   ...props
 }: SelectOptionCardProps) {
   return (
-    <chakra.button>
+    <chakra.button
+      w='full'
+      minH='full'
+    >
       <Card.Root
         borderColor={isSelected ? 'border.focus' : 'border.muted'}
         cursor='button'

@@ -1,7 +1,8 @@
 import type { ComponentProps } from 'react';
-import { Badge, Box, Card, HStack, Stack, Text } from '@chakra-ui/react';
+import { Badge, Card, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { type Device, DeviceModeEnum } from '@/entities/device';
+// import Link from 'next/link';
 
 interface DeviceCardProps extends Omit<
   ComponentProps<typeof Card.Root>,
@@ -25,12 +26,6 @@ export function DeviceCard({ device, onOpen, ...rest }: DeviceCardProps) {
       : device.mode === DeviceModeEnum.MULTI
         ? t('workspace.devicesPage.modeMultilink')
         : null;
-  const secondaryText = hasName(device)
-    ? `${t('workspace.devicesPage.shortCodeLabel')}: ${device.shortCode}`
-    : t('workspace.devicesPage.noName');
-  const details =
-    [device.targetUrl, device.type].filter(Boolean).join(' • ') ||
-    t('workspace.devicesPage.noTargetUrl');
 
   return (
     <Card.Root
@@ -49,34 +44,34 @@ export function DeviceCard({ device, onOpen, ...rest }: DeviceCardProps) {
       {...rest}
     >
       <Card.Body p='4'>
-        <Stack gap='3'>
-          <HStack
-            justify='space-between'
-            align='start'
+        <Badge
+          colorPalette={device.mode === DeviceModeEnum.MULTI ? 'brand' : 'accent'}
+          width='fit'
+          borderRadius='xl'
+        >
+          {modeLabel}
+        </Badge>
+
+        <Text
+          mt='2'
+          fontWeight='semibold'
+        >
+          {getDeviceTitle(device)}
+        </Text>
+
+        {/* <Text
+          _hover={{ textDecoration: 'underline' }}
+          maxW='full'
+          truncate
+          fontSize='sm'
+        >
+          <Link
+            target='_blank'
+            href={device.targetUrl!}
           >
-            <Box>
-              <HStack flexWrap='wrap'>
-                <Text fontWeight='semibold'>{getDeviceTitle(device)}</Text>
-                {modeLabel ? <Badge variant='subtle'>{modeLabel}</Badge> : null}
-                <Badge variant='outline'>{device.status}</Badge>
-              </HStack>
-              <Text
-                mt='1'
-                color='fg.muted'
-                fontSize='sm'
-              >
-                {secondaryText}
-              </Text>
-              <Text
-                mt='1'
-                color='fg.muted'
-                fontSize='sm'
-              >
-                {details}
-              </Text>
-            </Box>
-          </HStack>
-        </Stack>
+            {`• ${device.targetUrl}`}
+          </Link>
+        </Text> */}
       </Card.Body>
     </Card.Root>
   );

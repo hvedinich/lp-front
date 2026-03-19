@@ -64,10 +64,7 @@ export const cardSlotRecipe = defineSlotRecipe({
         root: {
           bg: 'bg.surface',
           shadow: 'none',
-          borderWidth: 'thin',
-          borderColor: 'border.default',
           _hover: {
-            borderColor: 'border.accent',
             bg: 'bg.accent.hover',
           },
           _focusVisible: {

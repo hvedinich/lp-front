@@ -41,12 +41,13 @@ export function Modal({ children, footer, open, onOpenChange, title }: ModalProp
 
   return (
     <Dialog.Root
+      placement='center'
       open={open}
       onOpenChange={({ open: nextOpen }) => onOpenChange(nextOpen)}
     >
       <Dialog.Backdrop />
       <Dialog.Positioner>
-        <Dialog.Content>
+        <Dialog.Content borderRadius='2xl'>
           <Dialog.Header>
             <Dialog.Title>{title}</Dialog.Title>
             <Dialog.CloseTrigger>

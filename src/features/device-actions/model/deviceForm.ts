@@ -37,7 +37,7 @@ export const mapDeviceToFormValues = (device: Device): DeviceFormValues => ({
   locale: device.locale ?? '',
   mode: mapDeviceMode(device.mode),
   name: device.name ?? '',
-  singleLinkUrl: device.mode === DeviceModeEnum.SINGLE ? (device.targetUrl ?? '') : '',
+  singleLinkUrl: device.targetUrl ?? '',
   type: device.type ?? '',
 });
 

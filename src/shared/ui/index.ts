@@ -30,3 +30,4 @@ export { AppToaster, toaster } from './toaster';
 export * from './icons';
 export { SelectOptionCard } from './SelectOptionCard';
 export { default as Tooltip } from './Tooltip';
+export { default as PlatformCardsList } from './PlatformCardsList';
