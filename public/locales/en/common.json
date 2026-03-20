@@ -120,7 +120,6 @@
       }
     },
     "devicesPage": {
-      "selectedLocationDescription": "Showing devices for the currently selected location.",
       "locationRequiredTitle": "Select a location to view devices",
       "locationRequiredDescription": "Choose a location in the sidebar before opening the devices list.",
       "locationRequiredActionsTitle": "You may need",
@@ -192,7 +191,9 @@
         "deleteDevice": "Delete device",
         "deleteConfirmDescription": "Are you sure you want to delete this device? This action cannot be undone.",
         "viewPageButton": "View Page",
-        "editPageButton": "Edit page"
+        "editPageButton": "Edit page",
+        "deviceNameLabel": "Device name",
+        "deviceNamePlaceholder": "Reception sticker"
       }
     }
   },

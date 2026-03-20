@@ -101,7 +101,7 @@ describe('button prop resolvers', () => {
 
     expect(secondary).toMatchObject({
       size: 'md',
-      variant: 'outline',
+      variant: 'subtle',
     });
   });
 });

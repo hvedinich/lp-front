@@ -1,8 +1,8 @@
-import { ContactPlatform } from '@/entities/hostedPage';
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-import { PLATFORM_URL_PATTERNS } from '../lib/constants';
+import { ContactPlatform } from '@/entities/_contracts';
 import { getPlatformLabel } from '../lib/helpers';
+import { PLATFORM_URL_PATTERNS } from '../lib/constants';
 
 export const createLinksSchema = (t: TFunction<'common'>) =>
   z.array(

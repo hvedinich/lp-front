@@ -67,6 +67,7 @@ export function DevicesTable({ devices, onOpen, 'data-testid': testId }: Devices
           return (
             <Table.Row
               key={device.id}
+              data-testid={`devices-card-${device.id}`}
               style={{ cursor: 'pointer' }}
               role='button'
               tabIndex={0}

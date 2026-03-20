@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
-import { DeviceModeEnum } from '@/entities/device';
 import { useOnboardDevice } from './useOnboardDevice';
-import { OnboardDevicePayload } from './types';
+import { DeviceModeEnum, OnboardDevicePayload } from './types';
 import { DeviceOnboardingResponse } from '../api/device.dto';
 import { onboardDevice } from '../api/onboardDevice';
 

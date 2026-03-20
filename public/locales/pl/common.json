@@ -120,7 +120,6 @@
       }
     },
     "devicesPage": {
-      "selectedLocationDescription": "Wyświetlane są urządzenia dla aktualnie wybranej lokalizacji.",
       "locationRequiredTitle": "Wybierz lokalizację, aby zobaczyć urządzenia",
       "locationRequiredDescription": "Wybierz lokalizację na pasku bocznym przed otwarciem listy urządzeń.",
       "locationRequiredActionsTitle": "Może Ci się przydać",
@@ -192,7 +191,9 @@
         "deleteDevice": "Usuń urządzenie",
         "deleteConfirmDescription": "Czy na pewno chcesz usunąć to urządzenie? Tej operacji nie można cofnąć.",
         "viewPageButton": "Wyświetl stronę",
-        "editPageButton": "Edytuj stronę"
+        "editPageButton": "Edytuj stronę",
+        "deviceNameLabel": "Nazwa urządzenia",
+        "deviceNamePlaceholder": "Naklejka na recepcję"
       }
     }
   },

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   type ActivateSingleDevicePayload,
   type ActivateMultiDevicePayload,
+  type OnboardDevicePayload,
   DeviceModeEnum,
   useOnboardDevice,
   OnboardMultiDevicePayload,
@@ -98,11 +99,10 @@ export const useSubmitOnboarding = ({
           ? ({ id: device.id, mode } as OnboardMultiDevicePayload)
           : ({ id: device.id, mode, targetUrl: links?.[0]?.url } as OnboardSingleDevicePayload);
 
-      await onboardDevice({
+      const input: OnboardDevicePayload = {
         email: user.email,
         name: user.name,
         password: user.password,
-        phone: user.phone,
         account: {
           name: user.name,
           region: device.locale,
@@ -111,7 +111,13 @@ export const useSubmitOnboarding = ({
         location: { ...locationBase, pageConfig: linksConfig },
         device: onboardingDevicePayload,
         deviceName,
-      });
+      };
+
+      if (!!user.phone) {
+        input.phone = user.phone;
+      }
+
+      await onboardDevice(input);
     }
 
     onComplete();

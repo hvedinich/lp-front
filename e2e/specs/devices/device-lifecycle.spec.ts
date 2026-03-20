@@ -26,6 +26,13 @@ import {
   expectSuccessStepVisible,
   clickFinishButton,
 } from '../../support/helpers/add-device-screen';
+import {
+  expectDeviceSettingsVisible,
+  expectModeSelected,
+  selectDeviceMode,
+  fillDeviceName,
+  saveSettings,
+} from '../../support/helpers/device-page-screen';
 import { envTest } from '@/shared/config';
 
 // Suppress unused import warnings for type-only imports used in JSDoc
@@ -67,9 +74,9 @@ interface OnboardingBody {
 const isOnboardingPost = (r: Response): boolean =>
   r.url().includes('/onboarding') && r.request().method() === 'POST';
 
-// ─── New User Onboarding Tests ────────────────────────────────────────────────
+// ─── New User: Device Lifecycle Tests ─────────────────────────────────────────
 
-newUserOnboardingTest.describe('Onboarding — New User', () => {
+newUserOnboardingTest.describe('Device Lifecycle — New User', () => {
   newUserOnboardingTest.describe.configure({ mode: 'serial' });
 
   let lastOnboardingResult: OnboardingBody | null = null;
@@ -127,6 +134,10 @@ newUserOnboardingTest.describe('Onboarding — New User', () => {
     await expectSuccessStepVisible(page);
     await clickFinishButton(page);
     await expect(page).toHaveURL(new RegExp(`/devices/${lastOnboardingResult.deviceId}$`));
+
+    // Device page: verify initial settings state
+    await expectDeviceSettingsVisible(page);
+    await expectModeSelected(page, 'static');
   });
 
   newUserOnboardingTest(
@@ -151,6 +162,7 @@ newUserOnboardingTest.describe('Onboarding — New User', () => {
         name: 'Playwright E2E Conflict',
         email: existingUser.email,
         password: 'PlaywrightE2E123!',
+        phone: '123456789',
       });
       await checkConsentCheckbox(page);
       await clickUserInfoStepSubmit(page);
@@ -193,6 +205,7 @@ newUserOnboardingTest.describe('Onboarding — New User', () => {
       name: 'Playwright E2E Multi',
       email,
       password: 'PlaywrightE2E123!',
+      phone: '123456789',
     });
     await checkConsentCheckbox(page);
     await clickUserInfoStepSubmit(page);
@@ -204,12 +217,48 @@ newUserOnboardingTest.describe('Onboarding — New User', () => {
     await expectSuccessStepVisible(page);
     await clickFinishButton(page);
     await expect(page).toHaveURL(new RegExp(`/devices/${lastOnboardingResult.deviceId}$`));
+
+    // Device page: verify initial settings state
+    await expectDeviceSettingsVisible(page);
+    await expectModeSelected(page, 'multilink');
+  });
+
+  newUserOnboardingTest('updates device name on settings page', async ({ page }, testInfo) => {
+    const email = `pw-e2e-device-name-${testInfo.workerIndex}-${Date.now()}@localprof.dev`;
+    const onboardingResponsePromise = page.waitForResponse(isOnboardingPost);
+
+    await openAddDevicePage(page, NEW_USER_DEVICE.shortCode);
+    await expectModeStepVisible(page);
+    await selectSingleMode(page);
+    await expectPlatformLinksStepVisible(page);
+    await selectPlatformTile(page, 'Facebook');
+    await fillPlatformUrl(page, 0, TEST_FACEBOOK_URL);
+    await clickPlatformLinksStepNext(page);
+    await expectUserInfoStepVisible(page);
+    await fillUserInfoForm(page, {
+      name: 'Playwright E2E',
+      email,
+      password: 'PlaywrightE2E123!',
+    });
+    await checkConsentCheckbox(page);
+    await clickUserInfoStepSubmit(page);
+    const response = await onboardingResponsePromise;
+    lastOnboardingResult = (await response.json()) as OnboardingBody;
+    await expectSuccessStepVisible(page);
+    await clickFinishButton(page);
+    await expect(page).toHaveURL(new RegExp(`/devices/${lastOnboardingResult.deviceId}$`));
+
+    // Device page: update name and save
+    await expectDeviceSettingsVisible(page);
+    await fillDeviceName(page, 'Renamed Device');
+    await saveSettings(page);
+    await expect(page.getByRole('heading', { name: 'Renamed Device' })).toBeVisible();
   });
 });
 
-// ─── Authenticated User Onboarding Tests ─────────────────────────────────────
+// ─── Authenticated User: Device Lifecycle Tests ───────────────────────────────
 
-onboardingTest.describe('Onboarding — Authenticated User', () => {
+onboardingTest.describe('Device Lifecycle — Authenticated User', () => {
   onboardingTest.describe.configure({ mode: 'serial' });
 
   onboardingTest.beforeEach(async ({ request }) => {
@@ -245,6 +294,10 @@ onboardingTest.describe('Onboarding — Authenticated User', () => {
       await expectSuccessStepVisible(page);
       await clickFinishButton(page);
       await expect(page).toHaveURL(/\/devices\/[^/?#]+$/);
+
+      // Device page: verify initial settings state
+      await expectDeviceSettingsVisible(page);
+      await expectModeSelected(page, 'static');
     },
   );
 
@@ -267,6 +320,10 @@ onboardingTest.describe('Onboarding — Authenticated User', () => {
       await expectSuccessStepVisible(page);
       await clickFinishButton(page);
       await expect(page).toHaveURL(/\/devices\/[^/?#]+$/);
+
+      // Device page: verify initial settings state
+      await expectDeviceSettingsVisible(page);
+      await expectModeSelected(page, 'multilink');
     },
   );
 
@@ -322,4 +379,61 @@ onboardingTest.describe('Onboarding — Authenticated User', () => {
       await expect(page).toHaveURL(/\/devices\/[^/?#]+$/);
     },
   );
+
+  onboardingTest(
+    'switches device mode from SINGLE to MULTI and saves',
+    async ({ locationTestPrefix, locations, page }) => {
+      const seed = await locations.createSeed(locationTestPrefix);
+
+      await openAddDevicePage(page, AUTH_DEVICE.shortCode);
+      await expectLocationStepVisible(page);
+      await selectExistingLocation(page, seed.defaultLocation.id);
+      await expectModeStepVisible(page);
+      await selectSingleMode(page);
+      await expectPlatformLinksStepVisible(page);
+      await selectPlatformTile(page, 'Facebook');
+      await fillPlatformUrl(page, 0, TEST_FACEBOOK_URL);
+      await clickPlatformLinksStepNext(page);
+      await expectSuccessStepVisible(page);
+      await clickFinishButton(page);
+      await expect(page).toHaveURL(/\/devices\/[^/?#]+$/);
+
+      // Device page: switch mode SINGLE → MULTI and save
+      await expectDeviceSettingsVisible(page);
+      await expectModeSelected(page, 'static');
+      await selectDeviceMode(page, 'multilink');
+      await saveSettings(page);
+
+      // Reload and verify mode persisted
+      await page.reload();
+      await expectModeSelected(page, 'multilink');
+    },
+  );
+
+  onboardingTest('saves device name change', async ({ locationTestPrefix, locations, page }) => {
+    const seed = await locations.createSeed(locationTestPrefix);
+
+    await openAddDevicePage(page, AUTH_DEVICE.shortCode);
+    await expectLocationStepVisible(page);
+    await selectExistingLocation(page, seed.defaultLocation.id);
+    await expectModeStepVisible(page);
+    await selectSingleMode(page);
+    await expectPlatformLinksStepVisible(page);
+    await selectPlatformTile(page, 'Facebook');
+    await fillPlatformUrl(page, 0, TEST_FACEBOOK_URL);
+    await clickPlatformLinksStepNext(page);
+    await expectSuccessStepVisible(page);
+    await clickFinishButton(page);
+    await expect(page).toHaveURL(/\/devices\/[^/?#]+$/);
+
+    // Device page: rename device and save
+    await expectDeviceSettingsVisible(page);
+    await fillDeviceName(page, 'My Renamed Device');
+    await saveSettings(page);
+    await expect(page.getByRole('heading', { name: 'My Renamed Device' })).toBeVisible();
+
+    // Reload and verify name persisted
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'My Renamed Device' })).toBeVisible();
+  });
 });

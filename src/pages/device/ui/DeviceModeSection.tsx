@@ -20,6 +20,8 @@ export function DeviceModeSection() {
         {deviceModes.map(({ value, title, description }) => (
           <SelectOptionCard
             key={value}
+            data-testid={`device-mode-${value}`}
+            data-selected={currentMode === value ? true : undefined}
             isSelected={currentMode === value}
             onSelect={() => setValue('device.mode', value, { shouldDirty: true })}
             title={t(title)}

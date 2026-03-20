@@ -1,4 +1,4 @@
-import type { DeviceError } from '@/entities/device';
+import { DeviceError } from './errors';
 
 interface ResolveDeviceEditorStateOptions {
   canManage: boolean;

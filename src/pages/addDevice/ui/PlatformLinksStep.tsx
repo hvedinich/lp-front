@@ -16,8 +16,8 @@ import { useUiStore } from '@/shared/store';
 import { DeviceModeEnum } from '@/entities/device';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useHasActiveSession } from '@/entities/auth';
-import type { OnboardingFormValues } from '../model/types';
 import { PlatformCardsList, PlatformInput } from '@/widgets/platform';
+import type { OnboardingFormValues } from '../model/types';
 
 const reviewSet = new Set<string>(REVIEW_PLATFORMS);
 interface PlatformLinksStepProps {

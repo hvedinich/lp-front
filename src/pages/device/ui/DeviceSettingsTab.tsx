@@ -1,17 +1,15 @@
 import { Card } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Device } from '@/entities/device';
-import { DeviceModeEnum } from '@/entities/device';
+import { DeviceModeEnum, type Device } from '@/entities/device';
 import { useDeviceActions } from '@/features/device-actions';
 import type { DeviceFormValues } from '@/features/device-actions';
-import { Form, FormControls, toaster } from '@/shared/ui';
+import { Form, FormControls, InputField, toaster } from '@/shared/ui';
 import { useZodForm } from '@/shared/lib';
 import { useHostedPage } from '@/entities/hostedPage';
 import { useGetPlaceDetails } from '@/features/google';
 import { resolvePlatformFromUrl } from '../lib/resolvePlatformFromUrl';
 import { deviceSettingsFormSchema, DeviceSettingsFormValues } from '../lib/schema';
-import { DeviceNameSection } from './DeviceNameSection';
 import { DeviceModeSection } from './DeviceModeSection';
 import { DevicePlatformSection } from './DevicePlatformSection';
 
@@ -43,7 +41,12 @@ export function DeviceSettingsTab({ device, accountId }: DeviceSettingsTabProps)
         },
       ],
       googleLocation: { fieldData: { label: '', value: '' } },
-      device: { ...device, singleLinkUrl: device?.targetUrl || '' },
+      device: {
+        ...device,
+        name: device?.name || '',
+        singleLinkUrl: device?.targetUrl || '',
+        mode: device?.mode || DeviceModeEnum.SINGLE,
+      },
     },
     mode: 'onChange',
   });
@@ -70,10 +73,11 @@ export function DeviceSettingsTab({ device, accountId }: DeviceSettingsTabProps)
 
   const onSubmit = async ({ device: formDevice }: DeviceSettingsFormValues) => {
     const values: DeviceFormValues = {
-      ...device,
-      ...formDevice,
+      locale: formDevice.locale,
+      mode: formDevice.mode,
       name: formDevice.name,
-      singleLinkUrl: formDevice.mode == DeviceModeEnum.MULTI ? '' : formDevice.singleLinkUrl,
+      singleLinkUrl: formDevice.mode === DeviceModeEnum.MULTI ? '' : formDevice.singleLinkUrl,
+      type: formDevice.type,
     };
     await configureDevice({ deviceId: device?.id, locationId: device?.locationId }, values);
     toaster.success({ description: t('commonFeedback.saved') });
@@ -94,7 +98,12 @@ export function DeviceSettingsTab({ device, accountId }: DeviceSettingsTabProps)
         p='4'
         gap='4'
       >
-        <DeviceNameSection control={methods.control} />
+        <InputField
+          label={t('workspace.devicePage.settings.deviceNameLabel')}
+          placeholder={t('workspace.devicePage.settings.deviceNamePlaceholder')}
+          control={methods.control}
+          name='device.name'
+        />
         <DeviceModeSection />
         <DevicePlatformSection multiPlatformsAdded={multiPlatformsAdded} />
 

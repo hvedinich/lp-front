@@ -27,11 +27,15 @@ vi.mock('react-i18next', async (importOriginal) => {
   };
 });
 
-vi.mock('@/shared/ui', () => ({
-  toaster: {
-    error: toasterError,
-  },
-}));
+vi.mock('@/shared/ui', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/shared/ui')>();
+  return {
+    ...actual,
+    toaster: {
+      error: toasterError,
+    },
+  };
+});
 
 vi.mock('@/shared/store', () => ({
   useUiStore: (selector: (state: object) => unknown) =>
@@ -115,12 +119,10 @@ describe('useDeviceActions', () => {
     expect(configureMutateAsync).toHaveBeenCalledWith({
       id: 'dev-1',
       input: {
-        locale: null,
         locationId: 'loc-2',
-        mode: DeviceModeEnum.MULTI,
+        targetMode: DeviceModeEnum.MULTI,
         name: null,
         singleLinkUrl: null,
-        type: null,
       },
       previousLocationId: 'loc-1',
     });

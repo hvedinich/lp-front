@@ -120,7 +120,6 @@
       }
     },
     "devicesPage": {
-      "selectedLocationDescription": "Показаны устройства для текущей выбранной локации.",
       "locationRequiredTitle": "Выберите локацию, чтобы увидеть устройства",
       "locationRequiredDescription": "Выберите локацию в боковой панели перед открытием списка устройств.",
       "locationRequiredActionsTitle": "Возможно, вам нужно",
@@ -192,7 +191,9 @@
         "deleteDevice": "Удалить устройство",
         "deleteConfirmDescription": "Вы уверены, что хотите удалить это устройство? Это действие нельзя отменить.",
         "viewPageButton": "Просмотреть страницу",
-        "editPageButton": "Редактировать страницу"
+        "editPageButton": "Редактировать страницу",
+        "deviceNameLabel": "Название устройства",
+        "deviceNamePlaceholder": "Наклейка на ресепшене"
       }
     }
   },

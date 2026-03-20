@@ -1,40 +1,37 @@
 import { Device, DeviceLifecycleDtoRequest, DeviceModeEnum } from '@/entities/device';
 
 export interface DeviceFormValues {
+  locale: string;
   mode: DeviceModeEnum;
   name: string;
-  singleLinkUrl?: string;
+  singleLinkUrl: string;
+  type: string;
 }
 
 export const deviceFormDefaultValues: DeviceFormValues = {
+  locale: '',
   mode: DeviceModeEnum.SINGLE,
   name: '',
   singleLinkUrl: '',
-};
-
-const mapDeviceMode = (mode: DeviceModeEnum | null): DeviceModeEnum => {
-  return mode === DeviceModeEnum.SINGLE ? DeviceModeEnum.SINGLE : DeviceModeEnum.MULTI;
+  type: '',
 };
 
 export const mapDeviceToFormValues = (device: Device): DeviceFormValues => ({
-  mode: mapDeviceMode(device.mode),
+  locale: device.locale ?? '',
+  mode: device.mode === DeviceModeEnum.SINGLE ? DeviceModeEnum.SINGLE : DeviceModeEnum.MULTI,
   name: device.name ?? '',
   singleLinkUrl: device.targetUrl ?? '',
+  type: device.type ?? '',
 });
+
+const nullIfEmpty = (value: string): string | null => value.trim() || null;
 
 export const mapConfigureDeviceFormValues = (
   values: DeviceFormValues,
   locationId: string,
-): DeviceLifecycleDtoRequest => {
-  const input: DeviceLifecycleDtoRequest = {
-    locationId,
-    targetMode: values.mode,
-    name: values.name,
-  };
-
-  if (values.mode === DeviceModeEnum.SINGLE && !!values?.singleLinkUrl) {
-    input.singleLinkUrl = values.singleLinkUrl;
-  }
-
-  return input;
-};
+): DeviceLifecycleDtoRequest => ({
+  locationId,
+  targetMode: values.mode,
+  name: nullIfEmpty(values.name),
+  singleLinkUrl: values.mode === DeviceModeEnum.MULTI ? null : nullIfEmpty(values.singleLinkUrl),
+});
