@@ -13,7 +13,7 @@ import ModeStep from './ModeStep';
 import PlatformLinksStep from './PlatformLinksStep';
 import UserInfoStep from './UserInfoStep';
 import SuccessStep from './SuccessStep';
-import { OnboardingFormValues } from '@/features/onboarding';
+import type { OnboardingFormValues } from '../model/types';
 
 type OnboardingStep = 'location' | 'mode' | 'platformLinks' | 'userInfo' | 'success';
 

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { locationQueryKeys } from '@/entities/location';
 import type { MutationHookOptions } from '@/shared/lib';
-import { mapToOnboardDeviceError, type OnboardDeviceError } from './errors';
-import type { OnboardLocationResponse, OnboardLocationPayload } from './types';
-import { createOnboardingLocation } from '../api/onboarding';
+import { LocationError, mapToLocationError } from './errors';
+import { onboardLocation } from '../api/onboardLocation';
+import { OnboardLocationPayload, OnboardLocationResponse } from '../api/location.dto';
 
 interface OnboardLocationScope {
   accountId: string;
@@ -14,18 +14,18 @@ export const useOnboardLocation = (
     OnboardLocationScope,
     OnboardLocationResponse,
     OnboardLocationPayload,
-    OnboardDeviceError
+    LocationError
   >,
 ) => {
   const queryClient = useQueryClient();
   const { options, scope } = params;
 
-  return useMutation<OnboardLocationResponse, OnboardDeviceError, OnboardLocationPayload>({
+  return useMutation<OnboardLocationResponse, LocationError, OnboardLocationPayload>({
     mutationFn: async (input) => {
       try {
-        return await createOnboardingLocation(input);
+        return await onboardLocation(input);
       } catch (error) {
-        throw mapToOnboardDeviceError(error);
+        throw mapToLocationError(error);
       }
     },
     onSuccess: (data, variables, context, meta) => {

@@ -1,3 +1,4 @@
+import { HostedPageDTO } from '@/entities/_contracts';
 import type { ListQueryParams } from '@/shared/lib';
 
 export interface LocationDto {
@@ -40,3 +41,12 @@ export type LocationListFilters = {
 export type LocationSortField = 'name' | 'createdAt' | 'updatedAt';
 
 export type GetLocationsParams = ListQueryParams<LocationListFilters, LocationSortField>;
+
+export interface OnboardLocationPayload extends UpdateLocationDtoRequest {
+  publishedConfig?: Record<string, unknown>;
+}
+
+export interface OnboardLocationResponse {
+  location: LocationDto;
+  hostedPage: HostedPageDTO;
+}

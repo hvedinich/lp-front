@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
 import { useOnboardLocation } from './useOnboardLocation';
-import type { OnboardLocationPayload, OnboardLocationResponse } from './types';
-import { createOnboardingLocation } from '../api/onboarding';
+
+import { onboardLocation } from '../api/onboardLocation';
+import { OnboardLocationPayload, OnboardLocationResponse } from '../api/location.dto';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),
   useQueryClient: vi.fn(),
 }));
 
-vi.mock('../api/onboarding', () => ({
-  onboardDevice: vi.fn(),
-  createOnboardingLocation: vi.fn(),
+vi.mock('../api/onboardLocation', () => ({
+  onboardLocation: vi.fn(),
 }));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -74,19 +74,19 @@ const makeResponse = (
 describe('useOnboardLocation', () => {
   const useMutationMock = vi.mocked(useMutation);
   const useQueryClientMock = vi.mocked(useQueryClient);
-  const createOnboardingLocationMock = vi.mocked(createOnboardingLocation);
+  const onboardLocationMock = vi.mocked(onboardLocation);
   const invalidateQueries = vi.fn();
 
   beforeEach(() => {
     useMutationMock.mockClear();
-    createOnboardingLocationMock.mockReset();
+    onboardLocationMock.mockReset();
     invalidateQueries.mockReset();
     useQueryClientMock.mockReturnValue({ invalidateQueries } as never);
   });
 
   it('mutationFn calls createOnboardingLocation with the payload and returns the response', async () => {
     const response = makeResponse();
-    createOnboardingLocationMock.mockResolvedValue(response);
+    onboardLocationMock.mockResolvedValue(response);
 
     const mutation = useOnboardLocation({ scope: { accountId: 'acc-1' } }) as unknown as {
       mutationFn: (input: OnboardLocationPayload) => Promise<OnboardLocationResponse>;
@@ -94,12 +94,12 @@ describe('useOnboardLocation', () => {
 
     const result = await mutation.mutationFn(makePayload());
 
-    expect(createOnboardingLocationMock).toHaveBeenCalledWith(makePayload());
+    expect(onboardLocationMock).toHaveBeenCalledWith(makePayload());
     expect(result).toEqual(response);
   });
 
   it('mutationFn maps 422 transport error to VALIDATION_ERROR', async () => {
-    createOnboardingLocationMock.mockRejectedValue(
+    onboardLocationMock.mockRejectedValue(
       createApiError(422, {
         error: { code: 'VALIDATION_ERROR', message: 'Invalid location data' },
       }),
@@ -117,7 +117,7 @@ describe('useOnboardLocation', () => {
   });
 
   it('mutationFn maps 401 transport error to UNAUTHORIZED', async () => {
-    createOnboardingLocationMock.mockRejectedValue(
+    onboardLocationMock.mockRejectedValue(
       createApiError(401, { error: { message: 'Not authorized' } }),
     );
 

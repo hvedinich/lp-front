@@ -1,28 +1,29 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authQueryKeys } from '@/entities/auth';
 import type { MutationHookOptions } from '@/shared/lib';
-import { DeviceOnboardingResponse, OnboardPayload } from './types';
-import { mapToOnboardDeviceError, OnboardDeviceError } from './errors';
-import { onboardDevice } from '../api/onboarding';
+import { authQueryKeys } from '@/entities/_contracts';
+import { OnboardDevicePayload } from './types';
+import { onboardDevice } from '../api/onboardDevice';
+import { DeviceError, mapToDeviceError } from './errors';
+import { DeviceOnboardingResponse } from '../api/device.dto';
 
 export const useOnboardDevice = (
   params: MutationHookOptions<
     Record<string, never>,
     DeviceOnboardingResponse,
-    OnboardPayload,
-    OnboardDeviceError
+    OnboardDevicePayload,
+    DeviceError
   > = { scope: {} },
 ) => {
   const queryClient = useQueryClient();
   const { options, scope } = params;
   void scope;
 
-  return useMutation<DeviceOnboardingResponse, OnboardDeviceError, OnboardPayload>({
+  return useMutation<DeviceOnboardingResponse, DeviceError, OnboardDevicePayload>({
     mutationFn: async (input) => {
       try {
         return await onboardDevice(input);
       } catch (error) {
-        throw mapToOnboardDeviceError(error);
+        throw mapToDeviceError(error);
       }
     },
     onSuccess: (data, variables, context, meta) => {

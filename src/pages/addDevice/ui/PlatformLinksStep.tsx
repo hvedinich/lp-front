@@ -2,7 +2,6 @@ import { Box, Grid, Stack, Text, Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { OnboardingFormValues } from '@/features/onboarding';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
 import PlatformInput from './PlatformInput';
@@ -14,6 +13,7 @@ import { DeviceModeEnum } from '@/entities/device';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useHasActiveSession } from '@/entities/auth';
 import { ALL_PLATFORMS, REVIEW_PLATFORMS } from '../lib/linkPlatform';
+import type { OnboardingFormValues } from '../model/types';
 
 const reviewSet = new Set<string>(REVIEW_PLATFORMS);
 interface PlatformLinksStepProps {

@@ -3,23 +3,20 @@ import {
   type ActivateSingleDevicePayload,
   type ActivateMultiDevicePayload,
   DeviceModeEnum,
+  useOnboardDevice,
+  OnboardMultiDevicePayload,
+  OnboardSingleDevicePayload,
 } from '@/entities/device';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHasActiveSession } from '@/entities/auth';
 import type { ContactPlatform, PlatformLink } from '@/entities/hostedPage';
-import { locationSelectionSelectors } from '@/entities/location';
+import { locationSelectionSelectors, useOnboardLocation } from '@/entities/location';
+import { useDeviceActions } from '@/features/device-actions';
 import { useUiStore } from '@/shared/store';
 import { getDeviceName } from '../lib/helpers';
-import { useDeviceActions } from '@/features/device-actions';
-import {
-  type OnboardingFormValues,
-  type OnboardMultiDevicePayload,
-  type OnboardSingleDevicePayload,
-  useOnboardDevice,
-  useOnboardLocation,
-} from '@/features/onboarding';
+import { OnboardingFormValues } from './types';
 
 export const useSubmitOnboarding = ({
   methods,
@@ -49,11 +46,13 @@ export const useSubmitOnboarding = ({
     },
     scope: {},
   });
-  const onboardLocation = useOnboardLocation({ scope: { accountId } });
+  const { mutateAsync: onboardLocation, isPending: pendingOnboardLocation } = useOnboardLocation({
+    scope: { accountId },
+  });
 
   const { activateDevice, isActivatePending } = useDeviceActions({ accountId });
 
-  const isSubmitting = isActivatePending || isOnboarding || onboardLocation.isPending;
+  const isSubmitting = isActivatePending || isOnboarding || pendingOnboardLocation;
 
   const onSubmit = async () => {
     const formData = methods.getValues();
@@ -75,7 +74,7 @@ export const useSubmitOnboarding = ({
     if (isAuth) {
       const locationId = isNewLocation
         ? (
-            await onboardLocation.mutateAsync({
+            await onboardLocation({
               ...locationBase,
               publishedConfig: linksConfig,
             })

@@ -1,10 +1,10 @@
+import { AuthAccountSummary, AuthUserSummary } from '@/entities/_contracts';
+
 export interface RegisterAccountPayload {
   name: string;
   region: string;
   contentLanguage: string;
 }
-
-export type AccountRole = 'owner' | 'admin' | 'member';
 
 export interface LoginPayload {
   email: string;
@@ -20,19 +20,7 @@ export interface RegisterPayload {
   account?: RegisterAccountPayload;
 }
 
-export interface AuthUserSummary {
-  id: string;
-  email: string;
-  name: string | null;
-}
-
 export type RegisterUser = AuthUserSummary;
-
-export interface AuthAccountSummary {
-  id: string;
-  name: string;
-  role: AccountRole;
-}
 
 interface AuthTokens {
   accessToken: string;

@@ -30,7 +30,7 @@ Layers:
 - `pages` - page slices and page composition
 - `widgets` - large UI blocks composed from features/entities
 - `features` - user scenarios/use-cases
-- `entities` - business entities, contracts, and entity-level data access
+- `entities` - business entities, cross-entity contracts, and entity-level data access
 - `shared` - framework-agnostic/common foundation
 
 ## 3. Layer Dependency Rules
@@ -41,13 +41,14 @@ Allowed dependencies:
 - `pages` -> `widgets`, `features`, `entities`, `shared`
 - `widgets` -> `features`, `entities`, `shared`
 - `features` -> `entities`, `shared`
-- `entities` -> `shared`
+- `entities` -> `entities` (only via `entities/_contracts/index.ts`), `shared`
 - `shared` -> `shared`
 
 Forbidden:
 
 - upward imports (from a lower layer to a higher layer)
 - cross-slice deep imports through internal files
+- `features`, `widgets`, `pages` importing directly from `entities/_contracts` (must go through the owning entity's `index.ts`)
 
 ## 4. Slice Structure
 
@@ -61,6 +62,8 @@ Recommended slice structure:
   lib/
   index.ts
 ```
+
+The `entities` layer has one additional reserved slice: `entities/_contracts/`. See section 7.1.
 
 Rules:
 
@@ -159,6 +162,26 @@ src/entities/review/
     review.mapper.ts
   index.ts
 ```
+
+## 7.1 Cross-Entity Contracts
+
+Some types and query keys are domain-specific (cannot go in `shared`) but must be shared across multiple entity slices. The `entities/_contracts/` slice is the designated location for these.
+
+Structure:
+
+```txt
+src/entities/_contracts/
+  index.ts        ← barrel (re-exports only, same purity rules as all index.ts)
+  types.ts        ← cross-entity domain types
+  queryKeys.ts    ← shared query key fragments (if any)
+```
+
+Rules:
+
+- `entities/_contracts` is a **leaf node**: it must not import from any other entity slice
+- entity slices may import from `@/entities/_contracts` through its `index.ts`
+- `features`, `widgets`, and `pages` must **not** import from `@/entities/_contracts` directly; they access these types through the owning entity's `index.ts` (which re-exports what higher layers need)
+- only put a type or query key in `contracts` if it is needed by two or more entity slices; otherwise it belongs in the owning entity
 
 ## 8. Data Access Standard (React Query)
 

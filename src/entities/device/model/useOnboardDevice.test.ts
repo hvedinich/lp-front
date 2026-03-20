@@ -3,17 +3,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
 import { DeviceModeEnum } from '@/entities/device';
 import { useOnboardDevice } from './useOnboardDevice';
-import type { OnboardPayload, DeviceOnboardingResponse } from './types';
-import { onboardDevice } from '../api/onboarding';
+import { OnboardDevicePayload } from './types';
+import { DeviceOnboardingResponse } from '../api/device.dto';
+import { onboardDevice } from '../api/onboardDevice';
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: vi.fn((options: unknown) => options),
   useQueryClient: vi.fn(),
 }));
 
-vi.mock('../api/onboarding', () => ({
+vi.mock('../api/onboardDevice', () => ({
   onboardDevice: vi.fn(),
-  createOnboardingLocation: vi.fn(),
 }));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ const createApiError = (status: number, payload?: unknown) =>
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
-const makePayload = (overrides: Partial<OnboardPayload> = {}): OnboardPayload => ({
+const makePayload = (overrides: Partial<OnboardDevicePayload> = {}): OnboardDevicePayload => ({
   email: 'owner@example.com',
   name: 'Jan Kowalski',
   phone: '+48123456789',
@@ -80,7 +80,7 @@ describe('useOnboardDevice', () => {
     onboardDeviceMock.mockResolvedValue(response);
 
     const mutation = useOnboardDevice() as unknown as {
-      mutationFn: (input: OnboardPayload) => Promise<DeviceOnboardingResponse>;
+      mutationFn: (input: OnboardDevicePayload) => Promise<DeviceOnboardingResponse>;
     };
 
     const result = await mutation.mutationFn(makePayload());
@@ -95,7 +95,7 @@ describe('useOnboardDevice', () => {
     );
 
     const mutation = useOnboardDevice() as unknown as {
-      mutationFn: (input: OnboardPayload) => Promise<DeviceOnboardingResponse>;
+      mutationFn: (input: OnboardDevicePayload) => Promise<DeviceOnboardingResponse>;
     };
 
     await expect(mutation.mutationFn(makePayload())).rejects.toEqual({
@@ -111,7 +111,7 @@ describe('useOnboardDevice', () => {
     );
 
     const mutation = useOnboardDevice() as unknown as {
-      mutationFn: (input: OnboardPayload) => Promise<DeviceOnboardingResponse>;
+      mutationFn: (input: OnboardDevicePayload) => Promise<DeviceOnboardingResponse>;
     };
 
     await expect(mutation.mutationFn(makePayload())).rejects.toEqual({
