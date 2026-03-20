@@ -1,8 +1,5 @@
 import { DeviceModeEnum } from '@/entities/device';
 
-export const getPlatformLabel = (platform: string) =>
-  platform.charAt(0).toUpperCase() + platform.slice(1);
-
 export const getDeviceName = (type: string, mode: DeviceModeEnum): string => {
   if (mode === DeviceModeEnum.MULTI) {
     return `Multi device`;

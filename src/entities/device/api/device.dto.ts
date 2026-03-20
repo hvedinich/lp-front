@@ -20,7 +20,7 @@ export interface DeviceDto {
 
 export interface DeviceLifecycleDtoRequest {
   locationId: string;
-  mode: DeviceModeEnum;
+  targetMode: DeviceModeEnum;
   locale?: string | null;
   name?: string | null;
   singleLinkUrl?: string | null;

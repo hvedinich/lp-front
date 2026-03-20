@@ -1,4 +1,3 @@
-import type { ContactPlatform, ReviewPlatform } from '@/entities/hostedPage';
 import {
   AutotraderIcon,
   BookingsIcon,
@@ -21,8 +20,9 @@ import {
   YelpBurstIcon,
   YouTubeIcon,
 } from '@/shared/ui';
-import type { IconProps } from '@chakra-ui/react';
-import type { FC } from 'react';
+import { IconProps } from '@chakra-ui/react';
+import { FC } from 'react';
+import { ContactPlatform, ReviewPlatform } from '../model/types';
 
 export const PLATFORM_ICON: Record<ContactPlatform, FC<IconProps>> = {
   google: GoogleOfficialIcon,
@@ -47,26 +47,6 @@ export const PLATFORM_ICON: Record<ContactPlatform, FC<IconProps>> = {
   appointment: CalendarIcon,
 };
 
-export const PLATFORM_URL_PATTERNS: Partial<Record<ContactPlatform, RegExp>> = {
-  google: /(^|\.)google\.|^goo\.gl$|^g\.page$/i,
-  facebook: /(^|\.)facebook\.|^fb\.(com|me)$/i,
-  yelp: /(^|\.)yelp\./i,
-  tripadvisor: /(^|\.)tripadvisor\./i,
-  trustpilot: /(^|\.)trustpilot\./i,
-  autotrader: /(^|\.)autotrader\./i,
-  fresha: /(^|\.)fresha\./i,
-  booksy: /(^|\.)booksy\./i,
-  instagram: /(^|\.)instagram\./i,
-  tiktok: /(^|\.)tiktok\./i,
-  youtube: /(^|\.)youtube\.|^youtu\.be$/i,
-  whatsapp: /(^|\.)whatsapp\.|^wa\.me$/i,
-  linkedin: /(^|\.)linkedin\./i,
-  pinterest: /(^|\.)pinterest\.|^pin\.it$/i,
-  linktree: /^linktr\.ee$/i,
-  checkatrade: /(^|\.)checkatrade\./i,
-  treatwell: /(^|\.)treatwell\./i,
-};
-
 export const REVIEW_PLATFORMS: ReviewPlatform[] = [
   'google',
   'facebook',
@@ -78,5 +58,22 @@ export const REVIEW_PLATFORMS: ReviewPlatform[] = [
   'booksy',
 ];
 
-export const getPlatformLabel = (platform: string): string =>
-  platform.charAt(0).toUpperCase() + platform.slice(1);
+export const SOCIAL_MEDIA_PLATFORMS: ContactPlatform[] = [
+  'instagram',
+  'tiktok',
+  'youtube',
+  'whatsapp',
+  'linkedin',
+  'pinterest',
+  'linktree',
+  'checkatrade',
+  'treatwell',
+];
+
+export const CUSTOM_PLATFORMS: ContactPlatform[] = ['menu', 'bookings', 'appointment'];
+
+export const ALL_PLATFORMS: ContactPlatform[] = [
+  ...REVIEW_PLATFORMS,
+  ...SOCIAL_MEDIA_PLATFORMS,
+  ...CUSTOM_PLATFORMS,
+];

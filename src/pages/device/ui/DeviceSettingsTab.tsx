@@ -1,229 +1,116 @@
-import { Button, Card, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import { Info } from 'lucide-react';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { Card } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 import type { Device } from '@/entities/device';
 import { DeviceModeEnum } from '@/entities/device';
 import { useDeviceActions } from '@/features/device-actions';
 import type { DeviceFormValues } from '@/features/device-actions';
-import { Form, Modal, PlatformCardsList, SelectOptionCard, toaster } from '@/shared/ui';
+import { Form, FormControls, toaster } from '@/shared/ui';
 import { useZodForm } from '@/shared/lib';
-import { REVIEW_PLATFORMS } from '@/shared/config';
+import { useHostedPage } from '@/entities/hostedPage';
+import { useGetPlaceDetails } from '@/features/google';
 import { resolvePlatformFromUrl } from '../lib/resolvePlatformFromUrl';
-import type { ContactPlatform } from '@/entities/hostedPage';
+import { deviceSettingsFormSchema, DeviceSettingsFormValues } from '../lib/schema';
+import { DeviceNameSection } from './DeviceNameSection';
+import { DeviceModeSection } from './DeviceModeSection';
+import { DevicePlatformSection } from './DevicePlatformSection';
 
-// import PlatformInput from '@/pages/addDevice/ui/PlatformInput';
+const formId = 'device_form';
 
 interface DeviceSettingsTabProps {
   device: Device;
   accountId: string;
 }
 
-const schema = z.object({
-  mode: z.nativeEnum(DeviceModeEnum),
-  singleLinkUrl: z.string(),
-});
-
-type SettingsFormValues = z.infer<typeof schema>;
-
 export function DeviceSettingsTab({ device, accountId }: DeviceSettingsTabProps) {
   const { t } = useTranslation('common');
-  const router = useRouter();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const initialPlatform = device.targetUrl
-    ? (resolvePlatformFromUrl(device.targetUrl)?.platform ?? null)
-    : null;
-  const [selectedPlatform, setSelectedPlatform] = useState<ContactPlatform | null>(initialPlatform);
+    ? (resolvePlatformFromUrl(device.targetUrl)?.platform ?? 'google')
+    : 'google';
 
-  const actions = useDeviceActions({ accountId });
+  const { configureDevice, isConfigurePending } = useDeviceActions({ accountId });
+  const hostedPageQuery = useHostedPage({ scope: { locationId: device.locationId } });
+  const { mutateAsync: getPlaceDetails } = useGetPlaceDetails();
 
-  const methods = useZodForm<SettingsFormValues>({
-    schema,
+  const methods = useZodForm<DeviceSettingsFormValues>({
+    schema: deviceSettingsFormSchema(t),
     defaultValues: {
-      mode: device.mode ?? DeviceModeEnum.SINGLE,
-      singleLinkUrl: device.targetUrl ?? '',
+      links: [
+        {
+          type: initialPlatform,
+          url: device.mode === DeviceModeEnum.SINGLE && device?.targetUrl ? device.targetUrl : '',
+        },
+      ],
+      googleLocation: { fieldData: { label: '', value: '' } },
+      device: { ...device, singleLinkUrl: device?.targetUrl || '' },
     },
+    mode: 'onChange',
   });
 
-  const { control, setValue, watch, handleSubmit } = methods;
+  const { setValue, handleSubmit } = methods;
 
-  const currentMode = watch('mode');
+  useEffect(() => {
+    if (initialPlatform !== 'google' || !device.targetUrl) return;
+    let placeId: string | null = null;
 
-  const modes = [
-    {
-      value: DeviceModeEnum.SINGLE,
-      title: t('workspace.devicePage.settings.singleModeTitle'),
-      description: t('workspace.devicePage.settings.singleModeDescription'),
-    },
-    {
-      value: DeviceModeEnum.MULTI,
-      title: t('workspace.devicePage.settings.multiModeTitle'),
-      description: t('workspace.devicePage.settings.multiModeDescription'),
-    },
-  ];
+    try {
+      placeId = new URL(device.targetUrl).searchParams.get('placeid');
+    } catch {
+      return;
+    }
 
-  const infoText =
-    currentMode === DeviceModeEnum.SINGLE
-      ? t('workspace.devicePage.settings.singleModeInfo')
-      : t('workspace.devicePage.settings.multiModeInfo');
+    if (!placeId) return;
+    void getPlaceDetails({ placeId, sessionToken: crypto.randomUUID() }).then((details) => {
+      if (details) {
+        setValue('googleLocation.fieldData.label', details.name);
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onSubmit = async (formValues: SettingsFormValues) => {
+  const onSubmit = async ({ device: formDevice }: DeviceSettingsFormValues) => {
     const values: DeviceFormValues = {
-      locale: device.locale ?? '',
-      mode: formValues.mode,
-      name: device.name ?? '',
-      singleLinkUrl: formValues.singleLinkUrl,
-      type: device.type ?? '',
+      ...device,
+      ...formDevice,
+      name: formDevice.name,
+      singleLinkUrl: formDevice.mode == DeviceModeEnum.MULTI ? '' : formDevice.singleLinkUrl,
     };
-    try {
-      await actions.configureDevice({ deviceId: device.id, locationId: device.locationId }, values);
-      toaster.success({ description: t('commonFeedback.saved') });
-    } catch {
-      // errors toasted by useDeviceActions internally
-    }
+    await configureDevice({ deviceId: device?.id, locationId: device?.locationId }, values);
+    toaster.success({ description: t('commonFeedback.saved') });
   };
 
-  const handleDelete = async () => {
-    try {
-      await actions.deactivateDevice({ deviceId: device.id, locationId: device.locationId });
-      void router.push('/devices');
-    } catch {
-      // errors toasted internally
-    }
-  };
-
-  // const PlatformIcon = selectedPlatform ? PLATFORM_ICON[selectedPlatform] : null;
+  const multiPlatformsAdded = hostedPageQuery?.data?.publishedConfig?.links?.map(
+    ({ type }) => type,
+  );
 
   return (
     <Form
+      formId={formId}
       methods={methods}
-      onSubmit={() => void handleSubmit(onSubmit)()}
+      onSubmit={async () => handleSubmit(onSubmit)()}
     >
-      <Stack gap='6'>
-        <Card.Root
-          gap='3'
-          p='4'
-        >
-          <Heading size='sm'>{t('workspace.devicePage.settings.modeTitle')}</Heading>
-          <Flex
-            gap='3'
-            direction={{ base: 'column', md: 'row' }}
-          >
-            {modes.map(({ value, title, description }) => (
-              <SelectOptionCard
-                key={value}
-                isSelected={currentMode === value}
-                onSelect={() => setValue('mode', value)}
-                title={title}
-                minH='full'
-                bg='bg'
-                description={description}
-              />
-            ))}
-          </Flex>
-        </Card.Root>
-
-        {currentMode === DeviceModeEnum.SINGLE && (
-          <Card.Root
-            gap='3'
-            p='4'
-          >
-            <Heading size='sm'>{t('workspace.devicePage.settings.platformSectionTitle')}</Heading>
-
-            {/* {selectedPlatform && PlatformIcon && (
-              <PlatformInput
-                // key={field.id}
-                // index={index}
-                platform={selectedPlatform as ContactPlatform}
-                // onRemove={() => remove(index)}
-                // onUpdate={(url: string) => update(index, { type: field.type, url })}
-              />
-            )} */}
-            <PlatformCardsList
-              platforms={REVIEW_PLATFORMS.filter((platform) => selectedPlatform !== platform)}
-              togglePlatform={(platform) => setSelectedPlatform(platform)}
-              title={'Select another platform to configure'}
-            />
-
-            <Card.Root
-              p='3'
-              bg='bg'
-              variant='subtle'
-              alignItems='center'
-              flexDir='row'
-              gap='2'
-            >
-              <Info style={{ width: '16px', height: '16px', flexShrink: 0 }} />
-              <Text fontSize='sm'>{infoText}</Text>
-            </Card.Root>
-          </Card.Root>
-        )}
-
-        {currentMode === DeviceModeEnum.MULTI && (
-          <Card.Root
-            p='3'
-            bg='bg'
-            variant='subtle'
-            alignItems='center'
-            flexDir='row'
-            gap='2'
-          >
-            <Info style={{ width: '16px', height: '16px', flexShrink: 0 }} />
-            <Text fontSize='sm'>{infoText}</Text>
-          </Card.Root>
-        )}
-
-        <Flex justify='space-between'>
-          <Button
-            variant='ghost'
-            colorPalette='red'
-            size='sm'
-            type='button'
-            onClick={() => setIsDeleteModalOpen(true)}
-          >
-            {t('workspace.devicePage.settings.deleteButton')}
-          </Button>
-          <Button
-            type='submit'
-            loading={actions.isConfigurePending}
-          >
-            {t('commonActions.save')}
-          </Button>
-        </Flex>
-      </Stack>
-
-      <Modal
-        open={isDeleteModalOpen}
-        onOpenChange={setIsDeleteModalOpen}
-        title={t('workspace.devicePage.settings.deleteConfirmTitle')}
-        footer={
-          <Flex
-            gap='3'
-            justify='flex-end'
-          >
-            <Button
-              variant='ghost'
-              type='button'
-              onClick={() => setIsDeleteModalOpen(false)}
-            >
-              {t('workspace.devicePage.settings.deleteCancelButton')}
-            </Button>
-            <Button
-              colorPalette='red'
-              type='button'
-              loading={actions.isDeactivatePending}
-              onClick={() => void handleDelete()}
-            >
-              {t('workspace.devicePage.settings.deleteConfirmButton')}
-            </Button>
-          </Flex>
-        }
+      <Card.Root
+        mt='4'
+        p='4'
+        gap='4'
       >
-        <Text>{t('workspace.devicePage.settings.deleteConfirmDescription')}</Text>
-      </Modal>
+        <DeviceNameSection control={methods.control} />
+        <DeviceModeSection />
+        <DevicePlatformSection multiPlatformsAdded={multiPlatformsAdded} />
+
+        <FormControls
+          secondaryAction={{
+            label: t('commonActions.cancel'),
+            onClick: () => methods.reset(),
+            type: 'button',
+          }}
+          primaryAction={{
+            label: t('commonActions.save'),
+            disabled: !methods.formState.isDirty,
+            loading: isConfigurePending,
+          }}
+        />
+      </Card.Root>
     </Form>
   );
 }

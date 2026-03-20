@@ -1,14 +1,18 @@
-import { Button, Heading, Spinner, Stack, Tabs, Text } from '@chakra-ui/react';
+import { Button, Heading, Stack, Tabs, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useDeviceById } from '@/entities/device';
 import { useLocationSelection } from '@/features/location-selection';
 import { DeviceSettingsTab } from './DeviceSettingsTab';
 import { Trash2 } from 'lucide-react';
+import { ConfirmModal, PageSpinner } from '@/shared/ui';
+import { useDeviceActions } from '@/features/device-actions';
+import { useState } from 'react';
 
 export default function DevicePage() {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { accountId } = useLocationSelection();
   const deviceId = typeof router.query.id === 'string' ? router.query.id : null;
@@ -23,27 +27,27 @@ export default function DevicePage() {
     },
   });
 
-  if (deviceQuery.isPending) {
-    return (
-      <Stack
-        align='center'
-        justify='center'
-        minH='40'
-        w='full'
-      >
-        <Spinner size='lg' />
-      </Stack>
-    );
-  }
+  const { deactivateDevice, isDeactivatePending, configureDevice } = useDeviceActions({
+    accountId: accountId ?? '',
+  });
 
   const device = deviceQuery.data;
+
+  if (deviceQuery.isPending) {
+    return <PageSpinner />;
+  }
 
   if (!device) {
     return null;
   }
 
+  const handleDelete = async () => {
+    await deactivateDevice({ deviceId: device.id, locationId: device.locationId });
+    void router.push('/devices');
+  };
+
   return (
-    <Stack>
+    <Stack w='4xl'>
       <Stack
         direction='row'
         justify='space-between'
@@ -54,9 +58,10 @@ export default function DevicePage() {
           variant='subtle'
           size='xs'
           color='fg.muted'
-          // onClick={() => setIsModalOpen(true)}
+          loading={isDeactivatePending}
+          onClick={() => setIsDeleteModalOpen(true)}
         >
-          <Trash2 style={{ width: '12' }} /> {t('workspace.devicePage.settings.deleteButton')}
+          <Trash2 style={{ width: '12' }} /> {t('workspace.devicePage.settings.deleteDevice')}
         </Button>
       </Stack>
 
@@ -84,6 +89,16 @@ export default function DevicePage() {
           </Stack>
         </Tabs.Content>
       </Tabs.Root>
+      <ConfirmModal
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        title={t('workspace.devicePage.settings.deleteDevice')}
+        description={t('workspace.devicePage.settings.deleteConfirmDescription')}
+        confirmLabel={t('commonActions.delete')}
+        cancelLabel={t('commonActions.cancel')}
+        onConfirm={() => void handleDelete()}
+        isLoading={isDeactivatePending}
+      />
     </Stack>
   );
 }

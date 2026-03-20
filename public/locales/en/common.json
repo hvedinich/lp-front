@@ -154,6 +154,7 @@
         "validation": "Please check the device settings and try again."
       },
       "addDeviceModal": {
+        "triggerButton": "Add Device",
         "title": "How to add new devices",
         "scanTitle": "Scan device",
         "scanDescription": "If you already have a device, just scan its QR-code by phones camera to activate it.",
@@ -188,11 +189,10 @@
         "platformSectionTitle": "What customers will see",
         "singleModeInfo": "Customers will be redirected directly to this page",
         "multiModeInfo": "Customers will see a page where they can choose where to leave a review",
-        "deleteButton": "Delete device",
-        "deleteConfirmTitle": "Delete device",
+        "deleteDevice": "Delete device",
         "deleteConfirmDescription": "Are you sure you want to delete this device? This action cannot be undone.",
-        "deleteConfirmButton": "Delete",
-        "deleteCancelButton": "Cancel"
+        "viewPageButton": "View Page",
+        "editPageButton": "Edit page"
       }
     }
   },
@@ -362,7 +362,8 @@
     "continue": "Continue",
     "next": "Next",
     "login": "Log in",
-    "finish": "Finish"
+    "finish": "Finish",
+    "edit": "Edit"
   },
   "commonFeedback": {
     "saved": "Changes saved successfully.",

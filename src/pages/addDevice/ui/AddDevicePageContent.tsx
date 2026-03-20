@@ -6,7 +6,6 @@ import { AuthPageLayout } from '@/widgets/authLayout';
 import { useSubmitOnboarding } from '../model/useSubmitOnboarding';
 import { buildLoginRedirect } from '@/shared/config';
 import { useZodForm } from '@/shared/lib';
-import { createAddDeviceSchema } from '../model/schema';
 import { EmailConflictNotification } from './EmailConflictNotification';
 import LocationStep from './LocationStep';
 import ModeStep from './ModeStep';
@@ -14,6 +13,7 @@ import PlatformLinksStep from './PlatformLinksStep';
 import UserInfoStep from './UserInfoStep';
 import SuccessStep from './SuccessStep';
 import type { OnboardingFormValues } from '../model/types';
+import { onboardDeviceSchema } from '../model/schema';
 
 type OnboardingStep = 'location' | 'mode' | 'platformLinks' | 'userInfo' | 'success';
 
@@ -36,7 +36,7 @@ export default function AddDevicePageContent({ defaultValues, isAuth }: AddDevic
   const currentStep = steps[currentStepIndex];
 
   const { t } = useTranslation('common');
-  const schema = useMemo(() => createAddDeviceSchema(t), [t]);
+  const schema = useMemo(() => onboardDeviceSchema(t), [t]);
 
   const methods = useZodForm<OnboardingFormValues>({
     schema,

@@ -1,8 +1,7 @@
 import { Card, HStack, Text, Link, CardRootProps } from '@chakra-ui/react';
-import { PLATFORM_ICON } from '../lib/constants';
 import { Tooltip } from '@/shared/ui';
-import { getPlatformLabel } from '../lib/helpers';
-import { ContactPlatform } from '@/entities/hostedPage';
+import { ContactPlatform, PLATFORM_ICON } from '@/entities/hostedPage';
+import { getPlatformLabel } from '@/entities/device';
 
 interface PlatformCardProps extends CardRootProps {
   platform: ContactPlatform;

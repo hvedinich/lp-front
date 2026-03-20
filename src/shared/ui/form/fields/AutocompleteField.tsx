@@ -133,6 +133,7 @@ const AutocompleteField = <
             ref={ref}
             placeholder={placeholder}
             w='full'
+            value={inputValue}
             {...inputProps}
           />
           <Combobox.IndicatorGroup>

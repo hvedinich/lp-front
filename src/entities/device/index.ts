@@ -16,3 +16,5 @@ export type {
 export { DeviceModeEnum } from './model/types';
 export { usePublicDevice } from './model/usePublicDevice';
 export type { DeviceLifecycleDtoRequest } from './api/device.dto';
+export { getPlatformLabel } from './lib/helpers';
+export { createLinksSchema } from './model/schema';

@@ -1,5 +1,5 @@
-import { Heading, Spinner, Stack } from '@chakra-ui/react';
-import { MapPinIcon } from 'lucide-react';
+import { Button, Heading, Spinner, Stack } from '@chakra-ui/react';
+import { MapPinIcon, Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +9,7 @@ import { EmptyState } from '@/shared/ui';
 import { useDeviceQueryErrorToast } from '../lib/useDeviceQueryErrorToast';
 import { useDevicesListState } from '../lib/useDevicesListState';
 import { AddDeviceModal } from './AddDeviceModal';
-// import { DevicesTable } from './DevicesTable';
-import { DevicesList } from './DevicesList';
+import { DevicesTable } from './DevicesTable';
 
 export default function DevicesPage() {
   const router = useRouter();
@@ -63,15 +62,15 @@ export default function DevicesPage() {
         justify='space-between'
       >
         <Heading size='md'>{t('workspace.sections.devices.title')}</Heading>
-        {/* <Button
+        <Button
           w='fit'
           variant='subtle'
           size='xs'
           color='fg.muted'
           onClick={() => setIsModalOpen(true)}
         >
-          <Plus style={{ width: '12' }} /> Add Device
-        </Button> */}
+          <Plus style={{ width: '12' }} /> {t('workspace.devicesPage.addDeviceModal.triggerButton')}
+        </Button>
       </Stack>
 
       {listState.isLocationNotSelected ? (
@@ -110,7 +109,7 @@ export default function DevicesPage() {
       ) : null}
 
       {!listState.isLocationNotSelected && !listState.isEmpty && !listState.isLoading ? (
-        <DevicesList
+        <DevicesTable
           data-testid='devices-list'
           devices={listState.devices}
           onOpen={(deviceId) => {

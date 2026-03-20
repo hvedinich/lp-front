@@ -154,6 +154,7 @@
         "validation": "Sprawdź ustawienia urządzenia i spróbuj ponownie."
       },
       "addDeviceModal": {
+        "triggerButton": "Dodaj urządzenie",
         "title": "Jak dodać nowe urządzenia",
         "scanTitle": "Zeskanuj urządzenie",
         "scanDescription": "Jeśli masz już urządzenie, zeskanuj jego kod QR aparatem telefonu, aby je aktywować.",
@@ -188,11 +189,10 @@
         "platformSectionTitle": "Co zobaczą klienci",
         "singleModeInfo": "Klienci zostaną przekierowani bezpośrednio na tę stronę",
         "multiModeInfo": "Klienci zobaczą stronę, na której mogą wybrać, gdzie zostawić recenzję",
-        "deleteButton": "Usuń urządzenie",
-        "deleteConfirmTitle": "Usuń urządzenie",
+        "deleteDevice": "Usuń urządzenie",
         "deleteConfirmDescription": "Czy na pewno chcesz usunąć to urządzenie? Tej operacji nie można cofnąć.",
-        "deleteConfirmButton": "Usuń",
-        "deleteCancelButton": "Anuluj"
+        "viewPageButton": "Wyświetl stronę",
+        "editPageButton": "Edytuj stronę"
       }
     }
   },
@@ -362,7 +362,8 @@
     "continue": "Kontynuuj",
     "next": "Dalej",
     "login": "Zaloguj się",
-    "finish": "Zakończ"
+    "finish": "Zakończ",
+    "edit": "zredagować"
   },
   "commonFeedback": {
     "saved": "Zmiany zostały zapisane.",

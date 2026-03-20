@@ -16,9 +16,3 @@ export {
   resolveSentryRuntimeMode,
   type SentryEnvironment,
 } from './sentry';
-export {
-  PLATFORM_ICON,
-  PLATFORM_URL_PATTERNS,
-  REVIEW_PLATFORMS,
-  getPlatformLabel,
-} from './platforms';

@@ -1,4 +1,4 @@
-import { Button, Heading, Stack, Text } from '@chakra-ui/react';
+import { Button, Card, Heading, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,8 +69,11 @@ export function AddDeviceModal({ open, onOpenChange }: AddDeviceModalProps) {
       onOpenChange={onOpenChange}
       title={t('workspace.devicesPage.addDeviceModal.title')}
     >
-      <Stack gap='5'>
-        <Stack gap='0.5'>
+      <Stack gap='4'>
+        <Card.Root
+          gap='0.5'
+          p='4'
+        >
           <Stack direction='row'>
             <Scan style={{ width: '16' }} />
             <Heading size='md'>{t('workspace.devicesPage.addDeviceModal.scanTitle')}</Heading>
@@ -82,14 +85,15 @@ export function AddDeviceModal({ open, onOpenChange }: AddDeviceModalProps) {
           >
             {t('workspace.devicesPage.addDeviceModal.scanDescription')}
           </Text>
-        </Stack>
+        </Card.Root>
 
         <AppLink
           href={STORE_URL}
           target='_blank'
         >
-          <Stack
+          <Card.Root
             gap='0.5'
+            p='4'
             position='relative'
           >
             <Stack direction='row'>
@@ -102,9 +106,13 @@ export function AddDeviceModal({ open, onOpenChange }: AddDeviceModalProps) {
             >
               {t('workspace.devicesPage.addDeviceModal.orderDescription')}
             </Text>
-          </Stack>
+          </Card.Root>
         </AppLink>
-        <Stack gap='0.5'>
+
+        <Card.Root
+          p='4'
+          gap='0.5'
+        >
           <Stack direction='row'>
             <Keyboard style={{ width: '16' }} />
             <Heading size='md'>{t('workspace.devicesPage.addDeviceModal.manualTitle')}</Heading>
@@ -126,7 +134,7 @@ export function AddDeviceModal({ open, onOpenChange }: AddDeviceModalProps) {
               </Button>
             </Stack>
           </FormProvider>
-        </Stack>
+        </Card.Root>
         <Button
           mt='2'
           asChild

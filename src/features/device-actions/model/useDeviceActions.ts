@@ -12,10 +12,7 @@ import {
   useDeactivateDevice,
 } from '@/entities/device';
 import { resolveDeviceToastMessage } from './deviceErrorUi';
-import {
-  type DeviceFormValues,
-  mapConfigureDeviceFormValues,
-} from './deviceForm';
+import { type DeviceFormValues, mapConfigureDeviceFormValues } from './deviceForm';
 
 interface UseDeviceActionsOptions {
   accountId: string;
