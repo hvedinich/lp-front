@@ -1,5 +1,4 @@
 import { Device, DeviceLifecycleDtoRequest, DeviceModeEnum } from '@/entities/device';
-import { toNullable } from '@/shared/lib';
 
 export interface DeviceFormValues {
   locale: string;
@@ -17,31 +16,22 @@ export const deviceFormDefaultValues: DeviceFormValues = {
   type: '',
 };
 
-const mapDeviceMode = (mode: DeviceModeEnum | null): DeviceModeEnum => {
-  return mode === DeviceModeEnum.SINGLE ? DeviceModeEnum.SINGLE : DeviceModeEnum.MULTI;
-};
-
-const mapDeviceLifecycleFormValues = (
-  values: DeviceFormValues,
-  locationId: string,
-): DeviceLifecycleDtoRequest => ({
-  locale: toNullable(values.locale),
-  locationId,
-  mode: values.mode,
-  name: toNullable(values.name),
-  singleLinkUrl: values.mode === DeviceModeEnum.SINGLE ? toNullable(values.singleLinkUrl) : null,
-  type: toNullable(values.type),
-});
-
 export const mapDeviceToFormValues = (device: Device): DeviceFormValues => ({
   locale: device.locale ?? '',
-  mode: mapDeviceMode(device.mode),
+  mode: device.mode === DeviceModeEnum.SINGLE ? DeviceModeEnum.SINGLE : DeviceModeEnum.MULTI,
   name: device.name ?? '',
-  singleLinkUrl: device.mode === DeviceModeEnum.SINGLE ? (device.targetUrl ?? '') : '',
+  singleLinkUrl: device.targetUrl ?? '',
   type: device.type ?? '',
 });
+
+const nullIfEmpty = (value: string): string | null => value.trim() || null;
 
 export const mapConfigureDeviceFormValues = (
   values: DeviceFormValues,
   locationId: string,
-): DeviceLifecycleDtoRequest => mapDeviceLifecycleFormValues(values, locationId);
+): DeviceLifecycleDtoRequest => ({
+  locationId,
+  targetMode: values.mode,
+  name: nullIfEmpty(values.name),
+  singleLinkUrl: values.mode === DeviceModeEnum.MULTI ? null : nullIfEmpty(values.singleLinkUrl),
+});

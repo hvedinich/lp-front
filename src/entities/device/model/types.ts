@@ -15,7 +15,7 @@ export enum DeviceModeEnum {
 export interface Device extends PublicDevice {
   id: string;
   shortCode: string;
-  type: string | null;
+  type: string;
   connectedAt: Date | null;
   mode: DeviceModeEnum | null;
   targetUrl: string | null;
@@ -62,7 +62,7 @@ export interface OnboardSingleDevicePayload {
 export interface OnboardDevicePayload {
   email: string;
   name: string;
-  phone: string;
+  phone?: string;
   password: string;
   account: {
     name: string;

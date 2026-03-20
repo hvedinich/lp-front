@@ -107,16 +107,9 @@ export const buttonRecipe = defineRecipe({
         },
       },
     },
-
-    size: {
-      sm: { h: '8', px: '3', fontSize: 'sm' },
-      md: { h: '10', px: '4', fontSize: 'sm' },
-      lg: { h: '12', px: '6', fontSize: 'md' },
-    },
   },
 
   defaultVariants: {
     variant: 'solid',
-    size: 'md',
   },
 });

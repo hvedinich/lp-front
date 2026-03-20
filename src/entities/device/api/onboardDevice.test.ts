@@ -1,8 +1,7 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { apiRequest } from '@/shared/api';
 import { onboardDevice } from './onboardDevice';
-import { DeviceModeEnum } from '@/entities/device';
-import { OnboardDevicePayload } from '../model/types';
+import { DeviceModeEnum, OnboardDevicePayload } from '../model/types';
 import { DeviceOnboardingResponse } from './device.dto';
 
 vi.mock('@/shared/api', async (importOriginal) => {

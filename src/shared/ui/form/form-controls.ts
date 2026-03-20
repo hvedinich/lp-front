@@ -67,6 +67,6 @@ export const resolveSecondaryButtonProps = (action?: FormAction): ButtonProps | 
   return {
     ...action,
     size: action.size ?? 'md',
-    variant: action.variant ?? 'outline',
+    variant: action.variant ?? 'subtle',
   };
 };

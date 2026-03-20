@@ -6,7 +6,7 @@ export interface DeviceDto {
   id: string;
   shortCode: string;
   locale: string;
-  type: string | null;
+  type: string;
   connectedAt: string | null;
   status: DeviceStatus;
   mode: DeviceModeEnum | null;
@@ -20,11 +20,9 @@ export interface DeviceDto {
 
 export interface DeviceLifecycleDtoRequest {
   locationId: string;
-  mode: DeviceModeEnum;
-  locale?: string | null;
+  targetMode: DeviceModeEnum;
   name?: string | null;
   singleLinkUrl?: string | null;
-  type?: string | null;
 }
 
 export type DeviceListFilters = {

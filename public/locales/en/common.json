@@ -10,6 +10,9 @@
       "ru": "Russian"
     }
   },
+  "common": {
+    "comingSoon": "Coming soon"
+  },
   "workspace": {
     "title": "Workspace",
     "menuTitle": "Navigation",
@@ -117,7 +120,6 @@
       }
     },
     "devicesPage": {
-      "selectedLocationDescription": "Showing devices for the currently selected location.",
       "locationRequiredTitle": "Select a location to view devices",
       "locationRequiredDescription": "Choose a location in the sidebar before opening the devices list.",
       "locationRequiredActionsTitle": "You may need",
@@ -133,6 +135,14 @@
       "noTargetUrl": "No target URL configured",
       "modeStatic": "Static",
       "modeMultilink": "Multi-link",
+      "table": {
+        "name": "Name",
+        "shortCode": "Short code",
+        "status": "Status",
+        "mode": "Mode",
+        "type": "Type",
+        "targetUrl": "Target URL"
+      },
       "errors": {
         "generic": "Something went wrong. Please try again.",
         "invalidDeviceId": "This device link is invalid.",
@@ -141,6 +151,17 @@
         "network": "Network error. Check your connection and try again.",
         "notFound": "This device does not exist or is not available in your account.",
         "validation": "Please check the device settings and try again."
+      },
+      "addDeviceModal": {
+        "triggerButton": "Add Device",
+        "title": "How to add new devices",
+        "scanTitle": "Scan device",
+        "scanDescription": "If you already have a device, just scan its QR-code by phones camera to activate it.",
+        "orderTitle": "Order device",
+        "orderDescription": "If you don't have a device yet, you can order one now and receive it soon.",
+        "manualTitle": "Add device manually",
+        "codePlaceholder": "Device code",
+        "shopButton": "Go to shop"
       }
     },
     "devicesForm": {
@@ -151,6 +172,28 @@
         "singleLinkUrlMax": "Single link URL must be at most 2000 characters",
         "typeMax": "Type must be at most 80 characters",
         "singleLinkUrlRequired": "Single link URL is required for static mode"
+      }
+    },
+    "devicePage": {
+      "tabs": {
+        "overview": "Overview",
+        "settings": "Settings"
+      },
+      "settings": {
+        "modeTitle": "Device Mode",
+        "singleModeTitle": "Instant Review",
+        "singleModeDescription": "Customers go straight to the review page",
+        "multiModeTitle": "Multi-Platform Choice",
+        "multiModeDescription": "Customers first see a selection page and choose where to leave a review",
+        "platformSectionTitle": "What customers will see",
+        "singleModeInfo": "Customers will be redirected directly to this page",
+        "multiModeInfo": "Customers will see a page where they can choose where to leave a review",
+        "deleteDevice": "Delete device",
+        "deleteConfirmDescription": "Are you sure you want to delete this device? This action cannot be undone.",
+        "viewPageButton": "View Page",
+        "editPageButton": "Edit page",
+        "deviceNameLabel": "Device name",
+        "deviceNamePlaceholder": "Reception sticker"
       }
     }
   },
@@ -320,7 +363,8 @@
     "continue": "Continue",
     "next": "Next",
     "login": "Log in",
-    "finish": "Finish"
+    "finish": "Finish",
+    "edit": "Edit"
   },
   "commonFeedback": {
     "saved": "Changes saved successfully.",

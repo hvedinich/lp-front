@@ -1,6 +1,6 @@
-import { DeviceModeEnum } from '@/entities/device';
-import type { TFunction } from 'i18next';
-import { z } from 'zod';
+import { createLinksSchema, DeviceModeEnum } from '@/entities/device';
+import { TFunction } from 'i18next';
+import z from 'zod';
 
 const createUserSchema = (t: TFunction<'common'>) =>
   z.object({
@@ -11,15 +11,7 @@ const createUserSchema = (t: TFunction<'common'>) =>
     language: z.string(),
   });
 
-const createLinksSchema = (t: TFunction<'common'>) =>
-  z.array(
-    z.object({
-      type: z.string().min(1, t('addDevice.validation.requiredField')),
-      url: z.url(t('addDevice.validation.urlInvalid')),
-    }),
-  );
-
-export const createAddDeviceSchema = (t: TFunction<'common'>) =>
+export const onboardDeviceSchema = (t: TFunction<'common'>) =>
   z.object({
     googleLocation: z.any().optional(),
     isNewLocation: z.boolean().optional(),

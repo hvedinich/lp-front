@@ -1,17 +1,20 @@
-import { Heading, Spinner, Stack, Text } from '@chakra-ui/react';
-import { MapPinIcon } from 'lucide-react';
+import { Button, Heading, Spinner, Stack } from '@chakra-ui/react';
+import { MapPinIcon, Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDevices } from '@/entities/device';
 import { useLocationSelection } from '@/features/location-selection';
 import { EmptyState } from '@/shared/ui';
 import { useDeviceQueryErrorToast } from '../lib/useDeviceQueryErrorToast';
 import { useDevicesListState } from '../lib/useDevicesListState';
-import { DevicesList } from './DevicesList';
+import { AddDeviceModal } from './AddDeviceModal';
+import { DevicesTable } from './DevicesTable';
 
 export default function DevicesPage() {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { accountId, isHydrated, isSessionPending, selectedLocationId } = useLocationSelection();
 
@@ -54,16 +57,20 @@ export default function DevicesPage() {
       maxW='4xl'
       w='full'
     >
-      <Stack gap='1'>
-        <Heading size={{ base: '2xl', md: '4xl' }}>{t('workspace.sections.devices.title')}</Heading>
-        <Text
+      <Stack
+        flexDir='row'
+        justify='space-between'
+      >
+        <Heading size='md'>{t('workspace.sections.devices.title')}</Heading>
+        <Button
+          w='fit'
+          variant='subtle'
+          size='xs'
           color='fg.muted'
-          fontSize={{ base: 'sm', md: 'lg' }}
+          onClick={() => setIsModalOpen(true)}
         >
-          {selectedLocationId
-            ? t('workspace.devicesPage.selectedLocationDescription')
-            : t('workspace.sections.devices.description')}
-        </Text>
+          <Plus style={{ width: '12' }} /> {t('workspace.devicesPage.addDeviceModal.triggerButton')}
+        </Button>
       </Stack>
 
       {listState.isLocationNotSelected ? (
@@ -102,7 +109,7 @@ export default function DevicesPage() {
       ) : null}
 
       {!listState.isLocationNotSelected && !listState.isEmpty && !listState.isLoading ? (
-        <DevicesList
+        <DevicesTable
           data-testid='devices-list'
           devices={listState.devices}
           onOpen={(deviceId) => {
@@ -110,6 +117,11 @@ export default function DevicesPage() {
           }}
         />
       ) : null}
+
+      <AddDeviceModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+      />
     </Stack>
   );
 }

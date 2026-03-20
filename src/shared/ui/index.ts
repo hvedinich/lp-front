@@ -23,6 +23,7 @@ export {
 } from './EmptyState';
 export { FormErrorAlert } from './FormErrorAlert';
 export { LogoIcon } from './LogoIcon';
+export { ConfirmModal } from './ConfirmModal';
 export { Modal } from './Modal';
 export { PageSpinner } from './PageSpinner';
 export { ThemeSwitcher } from './ThemeSwitcher';

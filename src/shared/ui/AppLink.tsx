@@ -20,6 +20,7 @@ export function AppLink({
   replace,
   scroll,
   shallow,
+  target,
   ...rest
 }: AppLinkProps) {
   return (
@@ -34,6 +35,7 @@ export function AppLink({
         replace={replace}
         scroll={scroll}
         shallow={shallow}
+        target={target}
       >
         {children}
       </NextLink>

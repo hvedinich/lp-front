@@ -53,12 +53,10 @@ describe('deviceForm', () => {
     };
 
     expect(mapConfigureDeviceFormValues(values, 'loc-1')).toEqual({
-      locale: 'en',
       locationId: 'loc-1',
-      mode: DeviceModeEnum.SINGLE,
+      targetMode: DeviceModeEnum.SINGLE,
       name: 'Lobby',
       singleLinkUrl: 'https://example.com',
-      type: 'tablet',
     });
 
     expect(
@@ -71,12 +69,10 @@ describe('deviceForm', () => {
         'loc-1',
       ),
     ).toEqual({
-      locale: 'en',
       locationId: 'loc-1',
-      mode: DeviceModeEnum.MULTI,
+      targetMode: DeviceModeEnum.MULTI,
       name: 'Lobby',
       singleLinkUrl: null,
-      type: 'tablet',
     });
   });
 });

@@ -26,7 +26,12 @@ export function Modal({ children, footer, open, onOpenChange, title }: ModalProp
         <Drawer.Positioner>
           <Drawer.Content>
             <Drawer.Header>
-              <Drawer.Title>{title}</Drawer.Title>
+              <Drawer.Title
+                textAlign='center'
+                fontSize='xl'
+              >
+                {title}
+              </Drawer.Title>
               <Drawer.CloseTrigger>
                 <CloseButton />
               </Drawer.CloseTrigger>
@@ -41,14 +46,15 @@ export function Modal({ children, footer, open, onOpenChange, title }: ModalProp
 
   return (
     <Dialog.Root
+      placement='center'
       open={open}
       onOpenChange={({ open: nextOpen }) => onOpenChange(nextOpen)}
     >
       <Dialog.Backdrop />
       <Dialog.Positioner>
-        <Dialog.Content>
-          <Dialog.Header>
-            <Dialog.Title>{title}</Dialog.Title>
+        <Dialog.Content borderRadius='2xl'>
+          <Dialog.Header justifyContent='center'>
+            <Dialog.Title fontSize='xl'>{title}</Dialog.Title>
             <Dialog.CloseTrigger>
               <CloseButton />
             </Dialog.CloseTrigger>

@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type Device, DeviceModeEnum } from '@/entities/device';
@@ -63,9 +64,11 @@ const createDevice = (id: string): Device => ({
 
 const renderPage = () =>
   renderToStaticMarkup(
-    <ChakraProvider value={system}>
-      <DevicesPage />
-    </ChakraProvider>,
+    <QueryClientProvider client={new QueryClient()}>
+      <ChakraProvider value={system}>
+        <DevicesPage />
+      </ChakraProvider>
+    </QueryClientProvider>,
   );
 
 describe('devices page integration', () => {
@@ -131,7 +134,6 @@ describe('devices page integration', () => {
     });
     expect(html).toContain('data-testid="devices-empty-state"');
     expect(html).toContain('workspace.devicesPage.emptyTitle');
-    expect(html).toContain('workspace.devicesPage.selectedLocationDescription');
     expect(html).not.toContain('data-testid="devices-location-required"');
   });
 

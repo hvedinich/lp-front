@@ -4,15 +4,19 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StepsButtons } from './StepsButtons';
 import { BlockHeading } from './BlockHeading';
-import PlatformInput from './PlatformInput';
 import { PlatformCard } from './PlatformCard';
-import { useHostedPage, type ContactPlatform, type ReviewPlatform } from '@/entities/hostedPage';
-import PlatformCardsList from './PlatformCardsList';
+import {
+  ALL_PLATFORMS,
+  REVIEW_PLATFORMS,
+  useHostedPage,
+  type ContactPlatform,
+  type ReviewPlatform,
+} from '@/entities/hostedPage';
 import { useUiStore } from '@/shared/store';
 import { DeviceModeEnum } from '@/entities/device';
 import { locationSelectionSelectors } from '@/entities/location';
 import { useHasActiveSession } from '@/entities/auth';
-import { ALL_PLATFORMS, REVIEW_PLATFORMS } from '../lib/linkPlatform';
+import { PlatformCardsList, PlatformInput } from '@/widgets/platform';
 import type { OnboardingFormValues } from '../model/types';
 
 const reviewSet = new Set<string>(REVIEW_PLATFORMS);

@@ -48,7 +48,7 @@ client.setRefreshHandler(async () => {
 export const apiRequest = async <TResponse, TBody = unknown>(
   options: ApiRequestOptions<TBody>,
 ): Promise<TResponse> => {
-  const newParams = new URLSearchParams(options?.params);
+  const newParams = new URLSearchParams(options?.params || {});
   const separatorIndex = options.path.indexOf('?');
   const basePath = separatorIndex === -1 ? options.path : options.path.slice(0, separatorIndex);
   const existingParams = new URLSearchParams(
