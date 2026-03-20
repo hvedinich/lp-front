@@ -11,6 +11,7 @@ interface DevicePlatformSectionProps {
 }
 
 const PLATFORM_TYPE = 'links.0.type';
+const PLATFORM_URL = 'links.0.url';
 const MODE = 'device.mode';
 
 export function DevicePlatformSection({ multiPlatformsAdded }: DevicePlatformSectionProps) {
@@ -20,7 +21,7 @@ export function DevicePlatformSection({ multiPlatformsAdded }: DevicePlatformSec
 
   const onPlatformUpdate = (url: string) => {
     if (platformType === 'google') {
-      setValue(PLATFORM_TYPE, url, { shouldValidate: true });
+      setValue(PLATFORM_URL, url, { shouldValidate: true });
     }
     setValue('device.singleLinkUrl', url);
   };

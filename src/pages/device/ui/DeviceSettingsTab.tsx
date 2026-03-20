@@ -61,7 +61,7 @@ export function DeviceSettingsTab({ device, accountId }: DeviceSettingsTabProps)
     }
 
     if (!placeId) return;
-    void getPlaceDetails({ placeId, sessionToken: crypto.randomUUID() }).then((details) => {
+    void getPlaceDetails({ placeId }).then((details) => {
       if (details) {
         setValue('googleLocation.fieldData.label', details.name);
       }

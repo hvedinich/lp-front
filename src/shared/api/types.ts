@@ -11,7 +11,7 @@ export interface ApiRequestOptions<TBody = unknown> extends Omit<
   parseAs?: ApiResponseParser;
   timeoutMs?: number;
   skipAuthRefresh?: boolean;
-  params?: Record<string, string>;
+  params?: Record<string, string> | null;
 }
 
 export interface ApiRequestContext {

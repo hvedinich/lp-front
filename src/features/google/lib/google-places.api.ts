@@ -25,7 +25,7 @@ export const getPlaceDetails = async (
   placeId: string,
   sessionToken?: string,
 ): Promise<PlaceDetails | null> => {
-  const params = { sessionToken: sessionToken || '' };
+  const params = sessionToken ? { sessionToken } : null;
 
   return apiRequest<PlaceDetails>({
     method: 'GET',

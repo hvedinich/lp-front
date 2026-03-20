@@ -133,6 +133,7 @@ const AutocompleteField = <
             ref={ref}
             placeholder={placeholder}
             w='full'
+            borderRadius='2xl'
             value={inputValue}
             {...inputProps}
           />
